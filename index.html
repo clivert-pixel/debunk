@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Debunk — settle it with sources, not vibes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #0B0E14;
+    color: #F2F0EA;
+    font-family: 'Inter', system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px;
+    min-height: 100vh;
+  }
+  .wrap { width: 100%; max-width: 620px; }
+  .logo { display: flex; align-items: baseline; gap: 2px; margin-bottom: 6px; }
+  .logo span.name {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 30px; letter-spacing: -0.02em;
+  }
+  .logo span.dot { color: #E5484D; font-size: 30px; font-weight: 700; }
+  .tagline {
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6B7280; margin-bottom: 36px; letter-spacing: 0.02em;
+  }
+  form { display: flex; gap: 10px; margin-bottom: 18px; }
+  input[type=text] {
+    flex: 1; background: transparent; border: none; border-bottom: 2px solid #262B36;
+    color: #F2F0EA; font-size: 18px; padding: 10px 2px; outline: none; font-family: 'Inter', sans-serif;
+  }
+  input[type=text]:focus { border-bottom-color: #F2F0EA; }
+  button.go {
+    background: #3FA796; color: #0B0E14; border: none; border-radius: 4px; padding: 0 22px;
+    font-weight: 600; font-size: 14px; cursor: pointer; transition: background .15s;
+  }
+  button.go:hover { background: #E5484D; }
+  button.go:disabled { opacity: .6; cursor: default; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+  .chip {
+    background: transparent; border: 1px solid #262B36; color: #6B7280; border-radius: 20px;
+    padding: 7px 14px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s;
+  }
+  .chip:hover { border-color: #8A93A6; color: #F2F0EA; }
+  .loading {
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6B7280; padding: 20px 0;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: .3 } 50% { opacity: 1 } }
+  .error { color: #E5484D; font-size: 14px; margin-top: 10px; }
+  .card {
+    border: 1px dashed #333A48; border-radius: 8px; padding: 28px 26px; position: relative; margin-top: 8px; display: none;
+  }
+  .stamp {
+    position: absolute; top: -14px; right: 20px; transform: rotate(-6deg);
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    padding: 4px 10px; border-radius: 3px; background: #0B0E14; border: 1.5px solid;
+  }
+  .verdict { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.35; margin-bottom: 14px; }
+  .explanation { font-size: 14.5px; line-height: 1.6; color: #B8BEC9; margin-bottom: 22px; }
+  .sources-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6272; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .sources { display: flex; flex-direction: column; gap: 8px; }
+  .source {
+    display: flex; justify-content: space-between; align-items: center; border: 1px solid #1E232D; border-radius: 5px;
+    padding: 9px 12px; color: #F2F0EA; text-decoration: none; font-size: 13.5px; font-family: 'IBM Plex Mono', monospace;
+  }
+  .source .arrow { color: #4A5163; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
+  <div class="tagline">settle it with sources, not vibes.</div>
+
+  <form id="searchForm">
+    <input type="text" id="query" placeholder="Who is the richest man alive?" autocomplete="off" />
+    <button type="submit" class="go" id="goBtn">Settle it</button>
+  </form>
+
+  <div class="chips" id="chips">
+    <button class="chip" data-q="Who is the richest man alive?">Who is the richest man alive?</button>
+    <button class="chip" data-q="Fastest 100m sprint time ever">Fastest 100m sprint time ever</button>
+    <button class="chip" data-q="Has Messi won a World Cup?">Has Messi won a World Cup?</button>
+    <button class="chip" data-q="Tallest building in the world">Tallest building in the world</button>
+  </div>
+
+  <div class="loading" id="loading" style="display:none;">cross-checking authoritative sources...</div>
+  <div class="error" id="error" style="display:none;"></div>
+
+  <div class="card" id="card">
+    <div class="stamp" id="stamp"></div>
+    <div class="verdict" id="verdict"></div>
+    <div class="explanation" id="explanation"></div>
+    <div id="sourcesBlock">
+      <div class="sources-label">SOURCES</div>
+      <div class="sources" id="sources"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STATUS_STYLES = {
+    Verified: { color: "#3FA796", label: "VERIFIED" },
+    Disputed: { color: "#E8A33D", label: "DISPUTED" },
+    Unclear:  { color: "#8A93A6", label: "NO CLEAN SOURCE" },
+  };
+
+  const form = document.getElementById('searchForm');
+  const input = document.getElementById('query');
+  const goBtn = document.getElementById('goBtn');
+  const chips = document.getElementById('chips');
+  const loading = document.getElementById('loading');
+  const errorEl = document.getElementById('error');
+  const card = document.getElementById('card');
+
+  async function runSearch(q) {
+    if (!q || !q.trim()) return;
+    goBtn.disabled = true;
+    loading.style.display = 'block';
+    errorEl.style.display = 'none';
+    card.style.display = 'none';
+    chips.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q }),
+      });
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error);
+
+      const status = STATUS_STYLES[data.confidence] || STATUS_STYLES.Unclear;
+      const stamp = document.getElementById('stamp');
+      stamp.textContent = status.label;
+      stamp.style.color = status.color;
+      stamp.style.borderColor = status.color;
+
+      document.getElementById('verdict').textContent = data.verdict || '';
+      document.getElementById('explanation').textContent = data.explanation || '';
+
+      const sourcesEl = document.getElementById('sources');
+      sourcesEl.innerHTML = '';
+      const sourcesBlock = document.getElementById('sourcesBlock');
+      const sources = data.sources || [];
+      sourcesBlock.style.display = sources.length ? 'block' : 'none';
+      sources.forEach(s => {
+        const a = document.createElement('a');
+        a.href = s.url || '#';
+        a.target = '_blank';
+        a.rel = 'noreferrer';
+        a.className = 'source';
+        a.innerHTML = `<span>${s.name}</span><span class="arrow">&#8599;</span>`;
+        sourcesEl.appendChild(a);
+      });
+
+      card.style.display = 'block';
+    } catch (e) {
+      errorEl.textContent = "Couldn't reach the sources. Try again in a moment.";
+      errorEl.style.display = 'block';
+    } finally {
+      loading.style.display = 'none';
+      goBtn.disabled = false;
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    runSearch(input.value);
+  });
+
+  chips.addEventListener('click', (e) => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    const q = btn.dataset.q;
+    input.value = q;
+    runSearch(q);
+  });
+</script>
+</body>
+  </html>
