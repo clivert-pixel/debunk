@@ -1,0 +1,16 @@
+{
+  "name": "Debunk",
+  "short_name": "Debunk",
+  "description": "Settle it with sources, not vibes.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0E14",
+  "theme_color": "#0B0E14",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
