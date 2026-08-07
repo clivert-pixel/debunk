@@ -6,6 +6,7 @@
 <title>Debunk — settle it with sources, not vibes</title>
  <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icon-512.png">
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -76,7 +77,26 @@
 <div class="wrap">
   <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
   <div class="tagline">settle it with sources, not vibes.</div>
+<div id="authBar" style="position:absolute; top:48px; right:20px; font-family:'IBM Plex Mono',monospace; font-size:13px;">
+  <button id="signInBtn" onclick="openAuthModal()" style="background:transparent; border:1px solid #262B36; color:#B8BEC9; border-radius:20px; padding:6px 14px; cursor:pointer;">Sign in</button>
+  <span id="userBadge" style="display:none; color:#F2F0EA;"></span>
+</div>
 
+<div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; align-items:center; justify-content:center;">
+  <div style="background:#11151d; border:1px solid #262B36; border-radius:10px; padding:28px 24px; width:88%; max-width:340px;">
+    <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; margin-bottom:18px;">Sign in to Debunk</div>
+    <button onclick="signInWithGoogle()" style="width:100%; padding:11px; border-radius:6px; border:1px solid #333; background:#fff; color:#111; font-weight:600; margin-bottom:12px; cursor:pointer;">Continue with Google</button>
+    <div style="text-align:center; color:#5B6272; font-size:12px; margin:14px 0;">or use email</div>
+    <input id="authEmail" type="email" placeholder="Email" style="width:100%; padding:10px; margin-bottom:8px; background:#0B0E14; border:1px solid #262B36; border-radius:6px; color:#F2F0EA;">
+    <input id="authPassword" type="password" placeholder="Password" style="width:100%; padding:10px; margin-bottom:14px; background:#0B0E14; border:1px solid #262B36; border-radius:6px; color:#F2F0EA;">
+    <button onclick="signUpEmail()" style="width:48%; padding:10px; border-radius:6px; border:none; background:#3FA796; color:#0B0E14; font-weight:600; margin-right:4%; cursor:pointer;">Sign up</button>
+    <button onclick="signInEmail()" style="width:48%; padding:10px; border-radius:6px; border:1px solid #333; background:transparent; color:#F2F0EA; cursor:pointer;">Sign in</button>
+    <div id="authError" style="color:#E5484D; font-size:12px; margin-top:10px;"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button onclick="closeAuthModal()" style="background:none; border:none; color:#6B7280; font-size:13px; cursor:pointer;">Continue as guest</button>
+    </div>
+  </div>
+</div>
   <form id="searchForm">
     <input type="text" id="query" placeholder="Who is the richest man alive?" autocomplete="off" />
     <button type="submit" class="go" id="goBtn">Settle it</button>
@@ -182,6 +202,42 @@
     input.value = q;
     runSearch(q);
   });
+ <script>
+  const sb = supabase.createClient('https://axjavfnqxdlqpjirvpmn.supabase.co/rest/v1/', 'sb_publishable_VZ5GKmIEmUQvDh7VsFvuBA_QTTUwu6o');
+
+  function openAuthModal(){ document.getElementById('authModal').style.display='flex'; }
+  function closeAuthModal(){ document.getElementById('authModal').style.display='none'; }
+
+  async function signInWithGoogle(){
+    await sb.auth.signInWithOAuth({ provider: 'google' });
+  }
+  async function signUpEmail(){
+    const email = document.getElementById('authEmail').value;
+    const password = document.getElementById('authPassword').value;
+    const { error } = await sb.auth.signUp({ email, password });
+    document.getElementById('authError').textContent = error ? error.message : 'Check your email to confirm.';
+  }
+  async function signInEmail(){
+    const email = document.getElementById('authEmail').value;
+    const password = document.getElementById('authPassword').value;
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) { document.getElementById('authError').textContent = error.message; return; }
+    closeAuthModal();
+    checkUser();
+  }
+  async function checkUser(){
+    const { data: { user } } = await sb.auth.getUser();
+    if (user) {
+      document.getElementById('signInBtn').style.display='none';
+      const badge = document.getElementById('userBadge');
+      badge.style.display='inline';
+      badge.textContent = user.email.split('@')[0] + ' | logout';
+      badge.style.cursor='pointer';
+      badge.onclick = async () => { await sb.auth.signOut(); location.reload(); };
+    }
+  }
+  checkUser();
+</script>
 </script>
 </body>
   </html>
