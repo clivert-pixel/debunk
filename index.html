@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Debunk — settle it with sources, not vibes</title>
+<title>Debunk — settle it with sources</title>
 
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icon-512.png">
@@ -12,417 +12,481 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
-  background:#0B0E14;
-  color:#F2F0EA;
-  font-family:Inter,system-ui,sans-serif;
   min-height:100vh;
+  background:#07131A;
+  color:#F1F7F5;
+  font-family:"DM Sans",sans-serif;
   overflow-x:hidden;
 }
 
-button,input{font-family:inherit}
+/* =========================
+   BACKGROUND
+========================= */
 
-.bg-glow{
+.background{
   position:fixed;
   inset:0;
-  z-index:-1;
+  z-index:-2;
   overflow:hidden;
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(68,190,170,.14),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 45%,
+      rgba(65,130,170,.12),
+      transparent 30%
+    ),
+    #07131A;
 }
 
-.bg-glow span{
+.glow{
   position:absolute;
   border-radius:50%;
-  filter:blur(80px);
+  filter:blur(100px);
   opacity:.18;
-  animation:float 18s ease-in-out infinite;
 }
 
-.bg-glow span:nth-child(1){
-  width:320px;
-  height:320px;
-  background:#3FA796;
-  top:-80px;
-  left:-60px;
+.glow.one{
+  width:360px;
+  height:360px;
+  background:#35B6A0;
+  top:-150px;
+  left:-130px;
 }
 
-.bg-glow span:nth-child(2){
-  width:260px;
-  height:260px;
-  background:#E5484D;
-  top:40%;
-  right:-80px;
-  animation-delay:4s;
+.glow.two{
+  width:300px;
+  height:300px;
+  background:#397CA0;
+  right:-130px;
+  top:35%;
 }
 
-.bg-glow span:nth-child(3){
-  width:280px;
-  height:280px;
-  background:#E8A33D;
-  bottom:-100px;
+.glow.three{
+  width:300px;
+  height:300px;
+  background:#2C9B91;
   left:30%;
-  animation-delay:8s;
-}
-
-@keyframes float{
-  0%,100%{transform:translate(0,0) scale(1)}
-  50%{transform:translate(30px,-30px) scale(1.15)}
+  bottom:-180px;
 }
 
 /* =========================
-   WELCOME PAGE
+   HEADER
 ========================= */
 
-#welcomeScreen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:25px 20px;
-}
-
-.welcome{
+.header{
   width:100%;
-  max-width:620px;
-  text-align:center;
-}
-
-.welcomeLogo{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:42px;
-  font-weight:800;
-  letter-spacing:-.04em;
-  margin-bottom:42px;
-}
-
-.welcomeLogo span{
-  color:#E5484D;
-}
-
-.tag{
-  font-family:"IBM Plex Mono",monospace;
-  color:#3FA796;
-  font-size:11px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin-bottom:18px;
-}
-
-.welcome h1{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:clamp(38px,10vw,58px);
-  line-height:1;
-  letter-spacing:-.05em;
-  margin:0 0 20px;
-}
-
-.welcome h1 span{
-  color:#3FA796;
-}
-
-.welcomeText{
-  color:#8A93A6;
-  font-size:15px;
-  line-height:1.65;
-  max-width:480px;
-  margin:0 auto 30px;
-}
-
-.quote{
-  max-width:500px;
-  margin:0 auto 30px;
-  padding:20px 22px;
-  border-left:2px solid #3FA796;
-  border-radius:0 10px 10px 0;
-  background:rgba(17,21,29,.55);
-  text-align:left;
-}
-
-.quote p{
-  margin:0;
-  color:#D7D5CF;
-  font-family:"Space Grotesk",sans-serif;
-  font-size:15px;
-  line-height:1.55;
-}
-
-.quote small{
-  display:block;
-  margin-top:10px;
-  color:#5B6272;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:10px;
-}
-
-.welcomeButtons{
-  max-width:390px;
+  max-width:1180px;
   margin:auto;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.welcomeButtons button{
-  width:100%;
-  padding:14px;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:14px;
-  font-weight:600;
-}
-
-.googleBtn{
-  background:#F2F0EA;
-  color:#0B0E14;
-  border:0;
-}
-
-.googleBtn:hover{
-  transform:translateY(-1px);
-}
-
-.guestBtn{
-  background:transparent;
-  color:#B8BEC9;
-  border:1px solid #262B36;
-}
-
-.guestBtn:hover{
-  border-color:#3FA796;
-  color:#F2F0EA;
-}
-
-.note{
-  color:#4F5665;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:10px;
-  margin-top:15px;
-}
-
-/* =========================
-   MAIN APP
-========================= */
-
-#app{
-  display:none;
-}
-
-.wrap{
-  width:100%;
-  max-width:680px;
-  margin:auto;
-  padding:24px 20px 80px;
-}
-
-nav{
+  padding:22px 24px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  flex-wrap:wrap;
-  gap:10px;
-  padding:8px 0 34px;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:13px;
 }
 
-.logo{
-  display:flex;
-  align-items:baseline;
-}
-
-.logo .name{
+.brand{
   font-family:"Space Grotesk",sans-serif;
-  font-weight:800;
-  font-size:24px;
+  font-size:25px;
+  font-weight:700;
+  letter-spacing:-.04em;
 }
 
-.logo .dot{
-  color:#E5484D;
-  font-size:24px;
-  font-weight:800;
+.brand span{
+  color:#55CBB8;
 }
 
-.navlinks{
+.menuButton{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(132,191,185,.18);
+  border-radius:12px;
+  background:rgba(15,35,43,.7);
   display:flex;
-  gap:16px;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.navlinks a{
-  color:#6B7280;
-  text-decoration:none;
+.menuButton:hover{
+  border-color:#55CBB8;
+  background:rgba(25,60,66,.8);
 }
 
-.navlinks a:hover,
-.navlinks a.active{
-  color:#F2F0EA;
+.menuButton span{
+  width:18px;
+  height:2px;
+  border-radius:2px;
+  background:#DCEBE8;
 }
 
-#authBar{
+/* =========================
+   MENU
+========================= */
+
+.menu{
+  position:fixed;
+  top:0;
+  right:-330px;
+  width:310px;
+  height:100vh;
+  background:rgba(7,20,27,.97);
+  border-left:1px solid rgba(105,181,172,.16);
+  z-index:100;
+  padding:28px 24px;
+  transition:right .3s ease;
+  box-shadow:-20px 0 60px rgba(0,0,0,.3);
+}
+
+.menu.open{
+  right:0;
+}
+
+.menuTop{
   display:flex;
   align-items:center;
+  justify-content:space-between;
+  margin-bottom:42px;
 }
 
-#signInBtn{
+.menuTitle{
+  font-family:"Space Grotesk",sans-serif;
+  font-weight:700;
+  font-size:22px;
+}
+
+.closeMenu{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  border:1px solid #21363D;
   background:transparent;
-  border:1px solid #262B36;
-  color:#B8BEC9;
-  border-radius:20px;
-  padding:6px 14px;
+  color:#B8C9C6;
   cursor:pointer;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:13px;
+  font-size:20px;
 }
 
-#userBadge{
-  display:none;
-  color:#F2F0EA;
+.menuLinks{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.menuLinks a,
+.menuLinks button{
+  display:block;
+  width:100%;
+  padding:14px 12px;
+  border-radius:9px;
+  text-align:left;
+  background:transparent;
+  border:0;
+  color:#A7B9B6;
+  text-decoration:none;
+  font-size:15px;
   cursor:pointer;
 }
+
+.menuLinks a:hover,
+.menuLinks button:hover{
+  background:#10262D;
+  color:#F1F7F5;
+}
+
+.menuDivider{
+  height:1px;
+  background:#1A3037;
+  margin:18px 0;
+}
+
+.googleMenu{
+  color:#55CBB8 !important;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main{
+  max-width:900px;
+  margin:auto;
+  padding:55px 24px 80px;
+}
+
+/* =========================
+   HERO
+========================= */
 
 .hero{
   text-align:center;
-  padding:30px 0 40px;
+  max-width:760px;
+  margin:auto;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#55CBB8;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  margin-bottom:22px;
+}
+
+.eyebrow::before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#55CBB8;
+  box-shadow:0 0 12px #55CBB8;
 }
 
 .hero h1{
   font-family:"Space Grotesk",sans-serif;
-  font-weight:800;
-  font-size:34px;
-  line-height:1.2;
-  margin:0 0 14px;
+  font-size:clamp(44px,8vw,76px);
+  line-height:.98;
+  letter-spacing:-.055em;
+  margin:0;
+  font-weight:700;
 }
 
 .hero h1 span{
-  color:#3FA796;
+  color:#55CBB8;
 }
 
-.hero p{
-  color:#8A93A6;
-  font-size:15px;
-  max-width:460px;
-  margin:0 auto 30px;
-  line-height:1.6;
+.heroDescription{
+  max-width:590px;
+  margin:25px auto 34px;
+  color:#8FA5A3;
+  line-height:1.7;
+  font-size:16px;
 }
 
-#searchForm{
+/* =========================
+   SEARCH
+========================= */
+
+.searchBox{
+  max-width:700px;
+  margin:auto;
+  padding:7px;
   display:flex;
-  gap:10px;
-  margin-bottom:16px;
+  gap:7px;
+  background:rgba(18,38,46,.8);
+  border:1px solid rgba(108,180,173,.2);
+  border-radius:15px;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.25),
+    inset 0 1px rgba(255,255,255,.03);
 }
 
 #query{
   flex:1;
-  background:#11151d;
-  border:1px solid #262B36;
-  border-radius:10px;
-  color:#F2F0EA;
-  font-size:16px;
-  padding:14px 16px;
-  outline:none;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#F1F7F5;
+  padding:15px 16px;
+  font-size:15px;
 }
 
-#query:focus{
-  border-color:#3FA796;
+#query::placeholder{
+  color:#617775;
 }
 
-.go{
-  background:#3FA796;
-  color:#0B0E14;
+.settle{
   border:0;
   border-radius:10px;
   padding:0 22px;
-  font-weight:600;
+  background:#55CBB8;
+  color:#06201D;
+  font-weight:700;
   cursor:pointer;
+  transition:.2s;
 }
 
-.go:hover{
-  background:#E5484D;
+.settle:hover{
+  background:#79D9CA;
+  transform:translateY(-1px);
 }
 
-.go:disabled{
-  opacity:.6;
+.settle:disabled{
+  opacity:.5;
+  cursor:default;
 }
 
-.chips{
+/* =========================
+   EXAMPLES
+========================= */
+
+.examples{
+  margin-top:17px;
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
   gap:8px;
 }
 
-.chip{
-  background:transparent;
-  border:1px solid #262B36;
-  color:#6B7280;
-  border-radius:20px;
-  padding:7px 14px;
-  font-size:13px;
+.example{
+  border:1px solid #1D343B;
+  background:rgba(12,29,36,.55);
+  color:#77908D;
+  border-radius:30px;
+  padding:8px 13px;
+  font-size:12px;
   cursor:pointer;
 }
 
-.chip:hover{
-  border-color:#8A93A6;
-  color:#F2F0EA;
+.example:hover{
+  color:#D9E9E6;
+  border-color:#37635F;
 }
 
-.loading{
+/* =========================
+   INTRO
+========================= */
+
+.intro{
+  margin-top:90px;
+  padding:32px;
+  border:1px solid rgba(99,167,160,.13);
+  border-radius:18px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(24,54,61,.42),
+      rgba(8,24,31,.4)
+    );
+}
+
+.introLabel{
+  color:#55CBB8;
   font-family:"IBM Plex Mono",monospace;
-  font-size:13px;
-  color:#6B7280;
+  font-size:10px;
+  letter-spacing:.14em;
+  margin-bottom:13px;
+}
+
+.intro h2{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:27px;
+  margin:0 0 12px;
+  letter-spacing:-.025em;
+}
+
+.intro p{
+  color:#829A97;
+  line-height:1.7;
+  font-size:14px;
+  margin:0;
+}
+
+/* =========================
+   QUOTE
+========================= */
+
+.quoteSection{
+  margin:85px auto 0;
+  max-width:650px;
   text-align:center;
-  padding:24px 0;
+}
+
+.quoteMark{
+  font-family:Georgia,serif;
+  font-size:55px;
+  color:#55CBB8;
+  line-height:.5;
+  opacity:.7;
+}
+
+.quote{
+  margin:25px 0 12px;
+  font-family:"Space Grotesk",sans-serif;
+  font-size:25px;
+  line-height:1.5;
+  letter-spacing:-.02em;
+  color:#DCE8E6;
+}
+
+.quoteAuthor{
+  color:#617876;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;
+}
+
+/* =========================
+   RESULTS
+========================= */
+
+.loading{
+  text-align:center;
+  color:#66817D;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:12px;
+  padding:30px;
 }
 
 .error{
-  color:#E5484D;
-  font-size:14px;
   text-align:center;
-  margin-top:10px;
+  color:#E77D83;
+  margin-top:15px;
+  font-size:13px;
 }
 
 .card{
   display:none;
-  border:1px dashed #333A48;
-  border-radius:12px;
-  padding:30px 26px;
-  margin-top:18px;
-  background:rgba(17,21,29,.5);
-  backdrop-filter:blur(6px);
-  position:relative;
+  margin-top:35px;
+  padding:30px;
+  border-radius:16px;
+  border:1px solid rgba(99,167,160,.17);
+  background:rgba(12,29,36,.65);
+  backdrop-filter:blur(12px);
 }
 
 .stamp{
-  position:absolute;
-  top:-14px;
-  right:20px;
-  transform:rotate(-6deg);
+  display:inline-block;
   font-family:"IBM Plex Mono",monospace;
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:3px;
-  background:#0B0E14;
-  border:1.5px solid;
+  font-size:10px;
+  padding:5px 9px;
+  border:1px solid;
+  border-radius:4px;
+  margin-bottom:18px;
 }
 
 .verdict{
   font-family:"Space Grotesk",sans-serif;
-  font-weight:700;
-  font-size:22px;
+  font-size:24px;
   line-height:1.35;
-  margin-bottom:14px;
+  font-weight:700;
+  margin-bottom:15px;
 }
 
 .explanation{
-  font-size:14.5px;
-  line-height:1.6;
-  color:#B8BEC9;
+  color:#A4B6B3;
+  font-size:14px;
+  line-height:1.7;
   margin-bottom:22px;
 }
 
@@ -430,84 +494,74 @@ nav{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
-  margin-bottom:22px;
+  margin-bottom:24px;
 }
 
 .actbtn{
+  border:1px solid #223A41;
   background:transparent;
-  border:1px solid #262B36;
-  color:#8A93A6;
+  color:#78908D;
   border-radius:8px;
-  padding:7px 12px;
-  font-size:12.5px;
+  padding:8px 12px;
   cursor:pointer;
 }
 
 .actbtn:hover,
 .actbtn.active{
-  border-color:#3FA796;
-  color:#3FA796;
+  border-color:#55CBB8;
+  color:#55CBB8;
 }
 
-.sources-label,
-.related-label{
+.label{
+  color:#506A67;
   font-family:"IBM Plex Mono",monospace;
-  font-size:11px;
-  color:#5B6272;
-  letter-spacing:.1em;
+  font-size:10px;
+  letter-spacing:.12em;
   margin-bottom:10px;
 }
 
 .sources{
   display:flex;
   flex-direction:column;
-  gap:8px;
-  margin-bottom:22px;
+  gap:7px;
+  margin-bottom:24px;
 }
 
 .source{
   display:flex;
   justify-content:space-between;
-  border:1px solid #1E232D;
-  border-radius:5px;
-  padding:9px 12px;
-  color:#F2F0EA;
+  align-items:center;
+  padding:10px 12px;
+  border:1px solid #1B3239;
+  border-radius:7px;
+  color:#D6E4E1;
   text-decoration:none;
-  font-size:13.5px;
-  font-family:"IBM Plex Mono",monospace;
+  font-size:13px;
 }
 
-.source .arrow{
-  color:#4A5163;
+.source:hover{
+  border-color:#37635F;
 }
 
 .related{
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:7px;
 }
 
 .related button{
   text-align:left;
+  border:1px solid #1B3239;
   background:transparent;
-  border:1px solid #1E232D;
+  color:#91A7A4;
   border-radius:8px;
-  color:#B8BEC9;
-  padding:10px 12px;
+  padding:11px 12px;
   cursor:pointer;
 }
 
 .related button:hover{
-  border-color:#3FA796;
-  color:#F2F0EA;
-}
-
-footer{
-  text-align:center;
-  color:#3A4150;
-  font-size:12px;
-  font-family:"IBM Plex Mono",monospace;
-  margin-top:60px;
+  color:#E1EFEC;
+  border-color:#37635F;
 }
 
 /* =========================
@@ -518,118 +572,144 @@ footer{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.7);
-  z-index:50;
+  z-index:200;
+  background:rgba(3,12,17,.76);
   align-items:center;
   justify-content:center;
+  padding:20px;
 }
 
 .authBox{
-  background:#11151d;
-  border:1px solid #262B36;
-  border-radius:10px;
-  padding:28px 24px;
-  width:88%;
-  max-width:340px;
+  width:100%;
+  max-width:350px;
+  padding:28px;
+  border-radius:16px;
+  border:1px solid #244148;
+  background:#0C2028;
+  box-shadow:0 30px 90px rgba(0,0,0,.5);
 }
 
 .authBox h3{
   font-family:"Space Grotesk",sans-serif;
-  font-size:20px;
-  margin:0 0 18px;
+  margin:0 0 20px;
+  font-size:22px;
 }
 
-.googleAuth{
+.googleBtn{
   width:100%;
-  padding:11px;
-  border-radius:6px;
-  border:1px solid #333;
-  background:#fff;
-  color:#111;
-  font-weight:600;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  background:#F1F7F5;
+  color:#07131A;
+  font-weight:700;
   cursor:pointer;
 }
 
 .divider{
   text-align:center;
-  color:#5B6272;
-  font-size:12px;
-  margin:14px 0;
+  color:#526B68;
+  font-size:11px;
+  margin:18px 0;
 }
 
 .authBox input{
   width:100%;
-  padding:10px;
-  margin-bottom:8px;
-  background:#0B0E14;
-  border:1px solid #262B36;
-  border-radius:6px;
-  color:#F2F0EA;
+  padding:11px;
+  margin-bottom:9px;
+  background:#07171E;
+  border:1px solid #20383F;
+  border-radius:8px;
+  outline:0;
+  color:#F1F7F5;
 }
 
 .authRow{
   display:flex;
-  gap:4%;
+  gap:8px;
 }
 
 .authRow button{
   flex:1;
-  padding:10px;
-  border-radius:6px;
+  padding:11px;
+  border-radius:8px;
   cursor:pointer;
   font-weight:600;
 }
 
 .signup{
   border:0;
-  background:#3FA796;
-  color:#0B0E14;
+  background:#55CBB8;
+  color:#06201D;
 }
 
 .signin{
-  border:1px solid #333;
+  border:1px solid #29444A;
   background:transparent;
-  color:#F2F0EA;
+  color:#D8E7E4;
 }
 
 #authError{
-  color:#E5484D;
+  color:#E77D83;
   font-size:12px;
   margin-top:10px;
 }
 
-.modalGuest{
+.closeAuth{
   display:block;
   margin:16px auto 0;
-  background:none;
   border:0;
-  color:#6B7280;
+  background:none;
+  color:#607976;
   cursor:pointer;
 }
 
-@media(max-width:600px){
+/* =========================
+   FOOTER
+========================= */
 
-  .navlinks{
-    order:3;
-    width:100%;
-    justify-content:center;
-    gap:13px;
+footer{
+  text-align:center;
+  margin-top:100px;
+  color:#405854;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;
+}
+
+@media(max-width:650px){
+
+  .header{
+    padding:18px;
   }
 
-  #searchForm{
+  main{
+    padding:42px 18px 70px;
+  }
+
+  .hero h1{
+    font-size:47px;
+  }
+
+  .searchBox{
     flex-direction:column;
+    padding:8px;
   }
 
-  .go{
-    height:48px;
+  .settle{
+    height:46px;
   }
 
-  .welcomeLogo{
-    margin-bottom:30px;
+  .intro{
+    margin-top:65px;
+    padding:24px;
   }
 
-  .welcome h1{
-    font-size:43px;
+  .quote{
+    font-size:21px;
+  }
+
+  .card{
+    padding:22px;
   }
 }
 </style>
@@ -637,262 +717,355 @@ footer{
 
 <body>
 
-<div class="bg-glow">
-  <span></span>
-  <span></span>
-  <span></span>
+<div class="background">
+  <div class="glow one"></div>
+  <div class="glow two"></div>
+  <div class="glow three"></div>
 </div>
 
 
 <!-- =========================
-     WELCOME PAGE
+     HEADER
 ========================= -->
 
-<section id="welcomeScreen">
+<header class="header">
 
-  <div class="welcome">
+  <div class="brand">
+    DEBUNK<span>.</span>
+  </div>
 
-    <div class="welcomeLogo">
-      DEBUNK<span>.</span>
+  <button
+    class="menuButton"
+    id="menuButton"
+    aria-label="Open menu">
+
+    <span></span>
+    <span></span>
+    <span></span>
+
+  </button>
+
+</header>
+
+
+<!-- =========================
+     SIDE MENU
+========================= -->
+
+<aside class="menu" id="menu">
+
+  <div class="menuTop">
+
+    <div class="menuTitle">
+      DEBUNK<span style="color:#55CBB8">.</span>
     </div>
 
-    <div class="tag">
-      SETTLE IT WITH SOURCES
+    <button
+      class="closeMenu"
+      id="closeMenu">
+      ×
+    </button>
+
+  </div>
+
+
+  <div class="menuLinks">
+
+    <a href="index.html">
+      Home
+    </a>
+
+    <a href="trending.html">
+      Trending
+    </a>
+
+    <a href="history.html">
+      History
+    </a>
+
+    <a href="about.html">
+      About Debunk
+    </a>
+
+    <div class="menuDivider"></div>
+
+    <button
+      class="googleMenu"
+      id="signInBtn">
+      Sign in with Google
+    </button>
+
+    <button
+      id="logoutBtn"
+      style="display:none;">
+      Log out
+    </button>
+
+  </div>
+
+</aside>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main>
+
+  <section class="hero">
+
+    <div class="eyebrow">
+      TRUST THE SOURCE
     </div>
 
     <h1>
-      Stop arguing.<br>
-      <span>Find out.</span>
+      Ask anything.<br>
+      <span>Know what's true.</span>
     </h1>
 
-    <p class="welcomeText">
-      Debunk settles everyday arguments with answers
-      backed by trustworthy sources instead of random
-      internet noise.
+    <p class="heroDescription">
+      Debunk settles everyday arguments using
+      trustworthy sources instead of random internet noise.
+      Ask a question and see what the evidence says.
     </p>
+
+
+    <form
+      class="searchBox"
+      id="searchForm">
+
+      <input
+        type="text"
+        id="query"
+        placeholder="What are you trying to settle?"
+        autocomplete="off">
+
+      <button
+        class="settle"
+        id="goBtn"
+        type="submit">
+
+        Settle it →
+
+      </button>
+
+    </form>
+
+
+    <div
+      class="examples"
+      id="chips">
+
+      <button
+        class="example"
+        data-q="Who is the richest man alive?">
+
+        Who is the richest man alive?
+
+      </button>
+
+      <button
+        class="example"
+        data-q="Fastest 100m sprint time ever">
+
+        Fastest 100m sprint time ever
+
+      </button>
+
+      <button
+        class="example"
+        data-q="Has Messi won a World Cup?">
+
+        Has Messi won a World Cup?
+
+      </button>
+
+      <button
+        class="example"
+        data-q="Tallest building in the world">
+
+        Tallest building in the world
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       EXPLANATION
+  ========================= -->
+
+  <section class="intro">
+
+    <div class="introLabel">
+      WHAT IS DEBUNK?
+    </div>
+
+    <h2>
+      The internet has plenty of answers.
+      We care about the evidence.
+    </h2>
+
+    <p>
+      Debunk searches for relevant information and
+      separates trustworthy sources from internet noise.
+      Instead of telling you what sounds right,
+      it shows you what reliable sources support.
+    </p>
+
+  </section>
+
+
+  <!-- =========================
+       QUOTE
+  ========================= -->
+
+  <section class="quoteSection">
+
+    <div class="quoteMark">
+      “
+    </div>
 
     <div class="quote">
 
-      <p>
-        “I stopped arguing with people.”
-        <br><br>
-        “That's impossible.”
-        <br><br>
-        “You're right.”
-      </p>
+      “I stopped arguing with people.”
 
-      <small>
-        Sometimes you don't need to win the argument.
-      </small>
+      <br>
+
+      “That's impossible.”
+
+      <br>
+
+      “You're right.”
 
     </div>
 
-    <div class="welcomeButtons">
-
-      <button
-        type="button"
-        class="googleBtn"
-        id="welcomeGoogleBtn">
-        Continue with Google
-      </button>
-
-      <button
-        type="button"
-        class="guestBtn"
-        id="welcomeGuestBtn">
-        Continue as Guest
-      </button>
-
+    <div class="quoteAuthor">
+      Sometimes you don't need to win the argument.
     </div>
 
-    <div class="note">
-      No account required to use Debunk.
-    </div>
+  </section>
+
+
+  <!-- =========================
+       LOADING / ERROR
+  ========================= -->
+
+  <div
+    class="loading"
+    id="loading"
+    style="display:none;">
+
+    Checking the sources...
 
   </div>
 
-</section>
+
+  <div
+    class="error"
+    id="error"
+    style="display:none;">
+  </div>
 
 
-<!-- =========================
-     MAIN APP
-========================= -->
+  <!-- =========================
+       RESULT
+  ========================= -->
 
-<div id="app">
-
-  <div class="wrap">
-
-    <nav>
-
-      <div class="logo">
-        <span class="name">DEBUNK</span>
-        <span class="dot">.</span>
-      </div>
-
-      <div class="navlinks">
-        <a href="index.html" class="active">Home</a>
-        <a href="trending.html">Trending</a>
-        <a href="history.html">History</a>
-        <a href="about.html">About</a>
-      </div>
-
-      <div id="authBar">
-
-        <button id="signInBtn">
-          Sign in
-        </button>
-
-        <span id="userBadge"></span>
-
-      </div>
-
-    </nav>
-
-
-    <div class="hero">
-
-      <h1>
-        Ask anything.<br>
-        Get answers backed by
-        <span>real sources</span>.
-      </h1>
-
-      <p>
-        No random blogs, no forum guesses.
-        Debunk pulls from trusted sources so you get
-        an answer you can actually stand on.
-      </p>
-
-      <form id="searchForm">
-
-        <input
-          type="text"
-          id="query"
-          placeholder="Who is the richest man alive?"
-          autocomplete="off">
-
-        <button
-          type="submit"
-          class="go"
-          id="goBtn">
-          Settle it
-        </button>
-
-      </form>
-
-      <div class="chips" id="chips">
-
-        <button class="chip"
-          data-q="Who is the richest man alive?">
-          Who is the richest man alive?
-        </button>
-
-        <button class="chip"
-          data-q="Fastest 100m sprint time ever">
-          Fastest 100m sprint time ever
-        </button>
-
-        <button class="chip"
-          data-q="Has Messi won a World Cup?">
-          Has Messi won a World Cup?
-        </button>
-
-        <button class="chip"
-          data-q="Tallest building in the world">
-          Tallest building in the world
-        </button>
-
-      </div>
-
-    </div>
-
+  <section
+    class="card"
+    id="card">
 
     <div
-      class="loading"
-      id="loading"
-      style="display:none;">
-      Thinking...
+      class="stamp"
+      id="stamp">
     </div>
 
     <div
-      class="error"
-      id="error"
-      style="display:none;">
+      class="verdict"
+      id="verdict">
+    </div>
+
+    <div
+      class="explanation"
+      id="explanation">
     </div>
 
 
-    <div class="card" id="card">
+    <div class="actions">
 
-      <div class="stamp" id="stamp"></div>
+      <button
+        class="actbtn"
+        id="copyBtn">
+        📋 Copy
+      </button>
 
-      <div class="verdict" id="verdict"></div>
+      <button
+        class="actbtn"
+        id="shareBtn">
+        ↗ Share
+      </button>
 
-      <div class="explanation" id="explanation"></div>
+      <button
+        class="actbtn"
+        id="saveBtn">
+        🔖 Save
+      </button>
 
-      <div class="actions">
+      <button
+        class="actbtn"
+        id="likeBtn">
+        👍
+      </button>
 
-        <button class="actbtn" id="copyBtn">
-          📋 Copy
-        </button>
+      <button
+        class="actbtn"
+        id="dislikeBtn">
+        👎
+      </button>
 
-        <button class="actbtn" id="shareBtn">
-          ↗ Share
-        </button>
+    </div>
 
-        <button class="actbtn" id="saveBtn">
-          🔖 Save
-        </button>
 
-        <button class="actbtn" id="likeBtn">
-          👍
-        </button>
+    <div id="sourcesBlock">
 
-        <button class="actbtn" id="dislikeBtn">
-          👎
-        </button>
-
+      <div class="label">
+        SOURCES
       </div>
-
-
-      <div id="sourcesBlock">
-
-        <div class="sources-label">
-          SOURCES
-        </div>
-
-        <div
-          class="sources"
-          id="sources">
-        </div>
-
-      </div>
-
 
       <div
-        id="relatedBlock"
-        style="display:none;">
-
-        <div class="related-label">
-          RELATED
-        </div>
-
-        <div
-          class="related"
-          id="related">
-        </div>
-
+        class="sources"
+        id="sources">
       </div>
 
     </div>
 
 
-    <footer>
-      Debunk — built to settle arguments, not start them.
-    </footer>
+    <div
+      id="relatedBlock"
+      style="display:none;">
 
-  </div>
+      <div class="label">
+        RELATED
+      </div>
 
-</div>
+      <div
+        class="related"
+        id="related">
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <footer>
+    DEBUNK — built to settle arguments, not start them.
+  </footer>
+
+</main>
 
 
 <!-- =========================
@@ -908,13 +1081,15 @@ footer{
     </h3>
 
     <button
-      class="googleAuth"
-      id="modalGoogleBtn">
+      class="googleBtn"
+      id="googleAuthBtn">
+
       Continue with Google
+
     </button>
 
     <div class="divider">
-      or use email
+      OR USE EMAIL
     </div>
 
     <input
@@ -946,9 +1121,9 @@ footer{
     <div id="authError"></div>
 
     <button
-      class="modalGuest"
-      id="modalGuestBtn">
-      Continue as guest
+      class="closeAuth"
+      id="closeAuth">
+      Cancel
     </button>
 
   </div>
@@ -963,10 +1138,10 @@ footer{
 ========================= */
 
 const SUPABASE_URL =
-  'https://axjavfnqxdlqpjirvpmn.supabase.co';
+  "https://axjavfnqxdlqpjirvpmn.supabase.co";
 
 const SUPABASE_KEY =
-  'sb_publishable_VZ5GKmIEmUQvDh7VsFvuBA_QTTUwu6o';
+  "sb_publishable_VZ5GKmIEmUQvDh7VsFvuBA_QTTUwu6o";
 
 const sb =
   window.supabase.createClient(
@@ -976,105 +1151,100 @@ const sb =
 
 
 /* =========================
-   ELEMENTS
+   MENU
 ========================= */
 
-const welcomeScreen =
-  document.getElementById('welcomeScreen');
+const menu =
+  document.getElementById("menu");
 
-const app =
-  document.getElementById('app');
+const menuButton =
+  document.getElementById("menuButton");
 
-const welcomeGuestBtn =
-  document.getElementById('welcomeGuestBtn');
+const closeMenu =
+  document.getElementById("closeMenu");
 
-const welcomeGoogleBtn =
-  document.getElementById('welcomeGoogleBtn');
 
-const modalGoogleBtn =
-  document.getElementById('modalGoogleBtn');
+menuButton.onclick =
+  function(){
 
-const modalGuestBtn =
-  document.getElementById('modalGuestBtn');
+    menu.classList.add("open");
 
-const signInBtn =
-  document.getElementById('signInBtn');
+  };
+
+
+closeMenu.onclick =
+  function(){
+
+    menu.classList.remove("open");
+
+  };
+
+
+/* =========================
+   AUTH
+========================= */
 
 const authModal =
-  document.getElementById('authModal');
+  document.getElementById("authModal");
+
+const signInBtn =
+  document.getElementById("signInBtn");
+
+const googleAuthBtn =
+  document.getElementById("googleAuthBtn");
+
+const closeAuth =
+  document.getElementById("closeAuth");
 
 const authError =
-  document.getElementById('authError');
-
-const form =
-  document.getElementById('searchForm');
-
-const input =
-  document.getElementById('query');
-
-const goBtn =
-  document.getElementById('goBtn');
-
-const chips =
-  document.getElementById('chips');
-
-const loading =
-  document.getElementById('loading');
-
-const errorEl =
-  document.getElementById('error');
-
-const card =
-  document.getElementById('card');
-
-let currentData = null;
+  document.getElementById("authError");
 
 
-/* =========================
-   SHOW APP
-========================= */
+signInBtn.onclick =
+  function(){
 
-function showApp(){
+    menu.classList.remove("open");
 
-  welcomeScreen.style.display =
-    'none';
+    authModal.style.display =
+      "flex";
 
-  app.style.display =
-    'block';
-
-  window.scrollTo(0,0);
-}
+  };
 
 
-/* =========================
-   GUEST
-========================= */
+closeAuth.onclick =
+  function(){
 
-function continueAsGuest(){
+    authModal.style.display =
+      "none";
 
-  localStorage.setItem(
-    'debunk_entered',
-    'true'
-  );
-
-  showApp();
-}
+  };
 
 
-/* =========================
-   GOOGLE LOGIN
-========================= */
+authModal.onclick =
+  function(e){
 
-async function loginGoogle(){
+    if(e.target === authModal){
 
-  authError.textContent = '';
+      authModal.style.display =
+        "none";
+
+    }
+
+  };
+
+
+/* GOOGLE */
+
+async function googleLogin(){
+
+  authError.textContent = "";
 
   try{
 
     const { error } =
       await sb.auth.signInWithOAuth({
 
-        provider:'google',
+        provider:"google",
 
         options:{
           redirectTo:
@@ -1089,249 +1259,99 @@ async function loginGoogle(){
 
   }catch(error){
 
-    console.error(
-      'Google login error:',
-      error
-    );
+    console.error(error);
 
     authError.textContent =
       error.message ||
-      'Google login failed.';
+      "Google sign-in failed.";
 
-    authModal.style.display =
-      'flex';
   }
+
 }
 
 
-/* =========================
-   AUTH MODAL
-========================= */
-
-function openAuth(){
-
-  authError.textContent = '';
-
-  authModal.style.display =
-    'flex';
-}
-
-function closeAuth(){
-
-  authModal.style.display =
-    'none';
-}
+googleAuthBtn.onclick =
+  googleLogin;
 
 
 /* =========================
    EMAIL SIGN UP
 ========================= */
 
-async function signUpEmail(){
+document
+  .getElementById("signupBtn")
+  .onclick =
+  async function(){
 
-  const email =
-    document
-      .getElementById('authEmail')
-      .value
-      .trim();
+    const email =
+      document
+        .getElementById("authEmail")
+        .value
+        .trim();
 
-  const password =
-    document
-      .getElementById('authPassword')
-      .value;
+    const password =
+      document
+        .getElementById("authPassword")
+        .value;
 
 
-  if(!email || !password){
+    if(!email || !password){
+
+      authError.textContent =
+        "Enter your email and password.";
+
+      return;
+
+    }
+
+
+    const { error } =
+      await sb.auth.signUp({
+
+        email,
+        password
+
+      });
+
 
     authError.textContent =
-      'Enter your email and password.';
+      error
+        ? error.message
+        : "Check your email to confirm your account.";
 
-    return;
-  }
-
-
-  const { error } =
-    await sb.auth.signUp({
-      email,
-      password
-    });
-
-
-  if(error){
-
-    authError.textContent =
-      error.message;
-
-  }else{
-
-    authError.textContent =
-      'Check your email to confirm your account.';
-
-  }
-}
+  };
 
 
 /* =========================
    EMAIL SIGN IN
 ========================= */
 
-async function signInEmail(){
+document
+  .getElementById("signinBtn")
+  .onclick =
+  async function(){
 
-  const email =
-    document
-      .getElementById('authEmail')
-      .value
-      .trim();
+    const email =
+      document
+        .getElementById("authEmail")
+        .value
+        .trim();
 
-  const password =
-    document
-      .getElementById('authPassword')
-      .value;
-
-
-  if(!email || !password){
-
-    authError.textContent =
-      'Enter your email and password.';
-
-    return;
-  }
+    const password =
+      document
+        .getElementById("authPassword")
+        .value;
 
 
-  const { error } =
-    await sb.auth.signInWithPassword({
-      email,
-      password
-    });
+    if(!email || !password){
+
+      authError.textContent =
+        "Enter your email and password.";
+
+      return;
+
+    }
 
 
-  if(error){
-
-    authError.textContent =
-      error.message;
-
-    return;
-  }
-
-
-  localStorage.setItem(
-    'debunk_entered',
-    'true'
-  );
-
-  closeAuth();
-
-  checkUser();
-
-  showApp();
-}
-
-
-/* =========================
-   CHECK USER
-========================= */
-
-async function checkUser(){
-
-  const {
-    data:{user}
-  } =
-    await sb.auth.getUser();
-
-
-  if(!user){
-    return;
-  }
-
-
-  localStorage.setItem(
-    'debunk_entered',
-    'true'
-  );
-
-
-  signInBtn.style.display =
-    'none';
-
-
-  const badge =
-    document.getElementById('userBadge');
-
-
-  badge.style.display =
-    'inline';
-
-
-  badge.textContent =
-    user.email.split('@')[0] +
-    ' | logout';
-
-
-  badge.onclick =
-    async function(){
-
-      await sb.auth.signOut();
-
-      localStorage.removeItem(
-        'debunk_entered'
-      );
-
-      location.reload();
-
-    };
-}
-
-
-/* =========================
-   SEARCH
-========================= */
-
-const STATUS_STYLES = {
-
-  Verified:{
-    color:'#3FA796',
-    label:'VERIFIED'
-  },
-
-  Disputed:{
-    color:'#E8A33D',
-    label:'DISPUTED'
-  },
-
-  Unclear:{
-    color:'#8A93A6',
-    label:'NO CLEAN SOURCE'
-  }
-
-};
-
-
-async function runSearch(q){
-
-  if(!q || !q.trim()){
-    return;
-  }
-
-
-  goBtn.disabled =
-    true;
-
-  loading.style.display =
-    'block';
-
-  errorEl.style.display =
-    'none';
-
-  card.style.display =
-    'none';
-
-
-  try{
-
-    const res =
-      await fetch('/api/ask',{
-
-        method:'POST',
-
-        headers:{
-          'Content-T
+    const { error } =
+      await sb.auth.sig
