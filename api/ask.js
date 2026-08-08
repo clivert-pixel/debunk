@@ -134,19 +134,21 @@ export default async function handler(req, res) {
 
         body: JSON.stringify({
 
-          api_key: tavilyKey,
+  api_key: tavilyKey,
 
-          query: cleanQuery,
+  query: cleanQuery,
 
-          search_depth: "advanced",
+  search_depth: "advanced",
 
-          max_results: 8,
+  max_results: 8,
 
-          include_answer: false,
+  include_answer: false,
 
-          include_raw_content: false
+  include_raw_content: false,
 
-        })
+  include_images: true
+
+})
       }
     );
 
@@ -625,23 +627,27 @@ ${evidence}`
 
     return res.status(200).json({
 
-      verdict:
-        parsed.verdict,
+  verdict:
+    parsed.verdict,
 
-      confidence:
-        parsed.confidence,
+  confidence:
+    parsed.confidence,
 
-      explanation:
-        parsed.explanation,
+  explanation:
+    parsed.explanation,
 
-      sources:
-        parsed.sources,
+  sources:
+    parsed.sources,
 
-      related:
-        parsed.related.slice(0, 3)
+  related:
+    parsed.related.slice(0, 3),
 
-    });
+  images:
+    Array.isArray(searchData.images)
+      ? searchData.images.slice(0, 8)
+      : []
 
+});
 
   } catch (error) {
 
