@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>History — Debunk</title>
+<link rel="icon" href="/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#0B0E14; color:#F2F0EA; font-family:'Inter',sans-serif; }
+  .wrap { max-width:640px; margin:0 auto; padding:24px 20px 80px; }
+  nav { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:8px 0 34px; font-family:'IBM Plex Mono',monospace; font-size:13px; }
+  .logo span.name { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:24px; }
+  .logo span.dot { color:#E5484D; font-size:24px; font-weight:800; }
+  .navlinks { display:flex; gap:16px; }
+  .navlinks a { color:#6B7280; text-decoration:none; }
+  .navlinks a:hover, .navlinks a.active { color:#F2F0EA; }
+  h1 { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:26px; margin-bottom:8px; }
+  p.sub { color:#6B7280; font-size:13.5px; margin-bottom:28px; font-family:'IBM Plex Mono',monospace; }
+  .empty { color:#5B6272; font-size:14px; border:1px dashed #333A48; border-radius:10px; padding:30px; text-align:center; }
+  .list { display:flex; flex-direction:column; gap:10px; }
+  .item { border:1px solid #1E232D; border-radius:10px; padding:16px 18px; }
+  .item .q { font-weight:600; margin-bottom:6px; }
+  .item .v { color:#8A93A6; font-size:13.5px; margin-bottom:10px; }
+  .item .row { display:flex; gap:10px; }
+  .item a, .item button {
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:#3FA796; background:none; border:none;
+    cursor:pointer; text-decoration:none; padding:0;
+  }
+  .item button.del { color:#E5484D; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
+    <div class="navlinks">
+      <a href="index.html">Home</a>
+      <a href="trending.html">Trending</a>
+      <a href="history.html" class="active">History</a>
+      <a href="about.html">About</a>
+    </div>
+  </nav>
+
+  <h1>Your history</h1>
+  <p class="sub">Answers you've saved, stored right on this device.</p>
+
+  <div id="content"></div>
+</div>
+
+<script>
+  const saved = JSON.parse(localStorage.getItem('debunk_saved') || '[]');
+  const content = document.getElementById('content');
+
+  if (!saved.length) {
+    content.innerHTML = '<div class="empty">Nothing saved yet — tap 🔖 Save on any answer to keep it here.</div>';
+  } else {
+    const list = document.createElement('div');
+    list.className = 'list';
+    saved.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <div class="q">${item.query}</div>
+        <div class="v">${item.verdict || ''}</div>
+        <div class="row">
+          <a href="index.html?q=${encodeURIComponent(item.query)}">Reopen</a>
+          <button class="del" data-i="${i}">Remove</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+    content.appendChild(list);
+
+    content.addEventListener('click', (e) => {
+      if (e.target.classList.contains('del')) {
+        const i = parseInt(e.target.dataset.i);
+        const arr = JSON.parse(localStorage.getItem('debunk_saved') || '[]');
+        arr.splice(i, 1);
+        localStorage.setItem('debunk_saved', JSON.stringify(arr));
+        location.reload();
+      }
+    });
+  }
+</script>
+</body>
+</html>
