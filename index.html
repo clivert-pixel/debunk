@@ -659,6 +659,38 @@ footer {
     padding: 22px;
   }
 }
+/* DEBUNK IMAGES */
+
+.debunk-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0 0 25px;
+}
+
+.debunk-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #E1E2DD;
+  background: #F1F2EE;
+  display: block;
+}
+
+.debunk-image:hover {
+  border-color: #2F8F83;
+}
+
+@media (max-width: 650px) {
+  .debunk-images {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .debunk-image {
+    height: 120px;
+  }
+}
 </style>
 </head>
 
@@ -816,7 +848,15 @@ footer {
       <div class="sources" id="sources"></div>
 
     </div>
+<div id="imagesSection" style="display:none;">
 
+  <div class="result-label">
+    IMAGES
+  </div>
+
+  <div class="debunk-images" id="debunkImages"></div>
+
+</div>
     <div id="relatedSection" style="display:none;">
 
       <div class="result-label">
