@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Debunk — settle it with sources</title>
+<title>Debunk — Settle it with sources</title>
 
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icon-512.png">
@@ -12,704 +12,884 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-*{
-  box-sizing:border-box;
+* {
+  box-sizing: border-box;
 }
 
-html{
-  scroll-behavior:smooth;
+html {
+  scroll-behavior: smooth;
 }
 
-body{
-  margin:0;
-  min-height:100vh;
-  background:#07131A;
-  color:#F1F7F5;
-  font-family:"DM Sans",sans-serif;
-  overflow-x:hidden;
-}
-
-/* =========================
-   BACKGROUND
-========================= */
-
-.background{
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  overflow:hidden;
-  background:
-    radial-gradient(
-      circle at 15% 10%,
-      rgba(68,190,170,.14),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 90% 45%,
-      rgba(65,130,170,.12),
-      transparent 30%
-    ),
-    #07131A;
-}
-
-.glow{
-  position:absolute;
-  border-radius:50%;
-  filter:blur(100px);
-  opacity:.18;
-}
-
-.glow.one{
-  width:360px;
-  height:360px;
-  background:#35B6A0;
-  top:-150px;
-  left:-130px;
-}
-
-.glow.two{
-  width:300px;
-  height:300px;
-  background:#397CA0;
-  right:-130px;
-  top:35%;
-}
-
-.glow.three{
-  width:300px;
-  height:300px;
-  background:#2C9B91;
-  left:30%;
-  bottom:-180px;
+body {
+  margin: 0;
+  background: #F7F6F1;
+  color: #172326;
+  font-family: "Inter", sans-serif;
 }
 
 /* =========================
    HEADER
 ========================= */
 
-.header{
-  width:100%;
-  max-width:1180px;
-  margin:auto;
-  padding:22px 24px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+.header {
+  height: 74px;
+  max-width: 1180px;
+  margin: auto;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.brand{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:25px;
-  font-weight:700;
-  letter-spacing:-.04em;
+.logo {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -1px;
 }
 
-.brand span{
-  color:#55CBB8;
+.logo span {
+  color: #2F8F83;
 }
 
-.menuButton{
-  width:44px;
-  height:44px;
-  border:1px solid rgba(132,191,185,.18);
-  border-radius:12px;
-  background:rgba(15,35,43,.7);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-  cursor:pointer;
-  transition:.2s;
+.menu-button {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  border: 1px solid #D9D9D2;
+  border-radius: 8px;
+
+  background: #FFFFFF;
+  cursor: pointer;
 }
 
-.menuButton:hover{
-  border-color:#55CBB8;
-  background:rgba(25,60,66,.8);
+.menu-button:hover {
+  border-color: #2F8F83;
 }
 
-.menuButton span{
-  width:18px;
-  height:2px;
-  border-radius:2px;
-  background:#DCEBE8;
+.menu-button span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #172326;
 }
 
 /* =========================
-   MENU
+   SIDE MENU
 ========================= */
 
-.menu{
-  position:fixed;
-  top:0;
-  right:-330px;
-  width:310px;
-  height:100vh;
-  background:rgba(7,20,27,.97);
-  border-left:1px solid rgba(105,181,172,.16);
-  z-index:100;
-  padding:28px 24px;
-  transition:right .3s ease;
-  box-shadow:-20px 0 60px rgba(0,0,0,.3);
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(20, 30, 32, 0.28);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: .2s;
+
+  z-index: 90;
 }
 
-.menu.open{
-  right:0;
+.menu-overlay.open {
+  opacity: 1;
+  visibility: visible;
 }
 
-.menuTop{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:42px;
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  width: 310px;
+  max-width: 88vw;
+  height: 100vh;
+
+  background: #FFFDF8;
+
+  border-left: 1px solid #E2E1DA;
+
+  padding: 25px;
+
+  transform: translateX(100%);
+  transition: transform .25s ease;
+
+  z-index: 100;
+
+  box-shadow: -15px 0 45px rgba(0,0,0,.08);
 }
 
-.menuTitle{
-  font-family:"Space Grotesk",sans-serif;
-  font-weight:700;
-  font-size:22px;
+.side-menu.open {
+  transform: translateX(0);
 }
 
-.closeMenu{
-  width:38px;
-  height:38px;
-  border-radius:10px;
-  border:1px solid #21363D;
-  background:transparent;
-  color:#B8C9C6;
-  cursor:pointer;
-  font-size:20px;
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 35px;
 }
 
-.menuLinks{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
+.menu-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 21px;
 }
 
-.menuLinks a,
-.menuLinks button{
-  display:block;
-  width:100%;
-  padding:14px 12px;
-  border-radius:9px;
-  text-align:left;
-  background:transparent;
-  border:0;
-  color:#A7B9B6;
-  text-decoration:none;
-  font-size:15px;
-  cursor:pointer;
+.menu-title span {
+  color: #2F8F83;
 }
 
-.menuLinks a:hover,
-.menuLinks button:hover{
-  background:#10262D;
-  color:#F1F7F5;
+.close-button {
+  width: 36px;
+  height: 36px;
+
+  border: 1px solid #DCDCD5;
+  border-radius: 7px;
+
+  background: white;
+  cursor: pointer;
+
+  font-size: 20px;
+  color: #172326;
 }
 
-.menuDivider{
-  height:1px;
-  background:#1A3037;
-  margin:18px 0;
+.menu-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.googleMenu{
-  color:#55CBB8 !important;
+.menu-links a,
+.menu-links button {
+  width: 100%;
+
+  padding: 13px 12px;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #475457;
+
+  text-align: left;
+  text-decoration: none;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.menu-links a:hover,
+.menu-links button:hover {
+  background: #F0F1EB;
+  color: #172326;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #E3E2DB;
+  margin: 15px 0;
+}
+
+.login-button {
+  color: #2F8F83 !important;
+  font-weight: 600;
 }
 
 /* =========================
    MAIN
 ========================= */
 
-main{
-  max-width:900px;
-  margin:auto;
-  padding:55px 24px 80px;
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 70px 24px 80px;
 }
 
 /* =========================
    HERO
 ========================= */
 
-.hero{
-  text-align:center;
-  max-width:760px;
-  margin:auto;
+.hero {
+  text-align: center;
 }
 
-.eyebrow{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  color:#55CBB8;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:11px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin-bottom:22px;
+.small-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+
+  letter-spacing: .12em;
+
+  color: #2F8F83;
+
+  margin-bottom: 20px;
 }
 
-.eyebrow::before{
-  content:"";
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#55CBB8;
-  box-shadow:0 0 12px #55CBB8;
+.hero h1 {
+  margin: 0;
+
+  font-family: "Space Grotesk", sans-serif;
+
+  font-size: clamp(42px, 7vw, 70px);
+
+  line-height: 1.02;
+
+  letter-spacing: -3px;
+
+  font-weight: 700;
+
+  color: #172326;
 }
 
-.hero h1{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:clamp(44px,8vw,76px);
-  line-height:.98;
-  letter-spacing:-.055em;
-  margin:0;
-  font-weight:700;
+.hero h1 span {
+  color: #2F8F83;
 }
 
-.hero h1 span{
-  color:#55CBB8;
-}
+.hero-description {
+  max-width: 590px;
 
-.heroDescription{
-  max-width:590px;
-  margin:25px auto 34px;
-  color:#8FA5A3;
-  line-height:1.7;
-  font-size:16px;
+  margin: 25px auto 35px;
+
+  color: #697577;
+
+  font-size: 15px;
+
+  line-height: 1.7;
 }
 
 /* =========================
    SEARCH
 ========================= */
 
-.searchBox{
-  max-width:700px;
-  margin:auto;
-  padding:7px;
-  display:flex;
-  gap:7px;
-  background:rgba(18,38,46,.8);
-  border:1px solid rgba(108,180,173,.2);
-  border-radius:15px;
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.25),
-    inset 0 1px rgba(255,255,255,.03);
+.search-form {
+  max-width: 700px;
+
+  margin: auto;
+
+  display: flex;
+  gap: 8px;
+
+  padding: 6px;
+
+  background: #FFFFFF;
+
+  border: 1px solid #DADBD5;
+
+  border-radius: 10px;
+
+  box-shadow: 0 8px 25px rgba(35, 48, 50, .06);
 }
 
-#query{
-  flex:1;
-  min-width:0;
-  border:0;
-  outline:0;
-  background:transparent;
-  color:#F1F7F5;
-  padding:15px 16px;
-  font-size:15px;
+.search-input {
+  flex: 1;
+
+  min-width: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #172326;
+
+  padding: 14px;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 15px;
 }
 
-#query::placeholder{
-  color:#617775;
+.search-input::placeholder {
+  color: #9A9F9F;
 }
 
-.settle{
-  border:0;
-  border-radius:10px;
-  padding:0 22px;
-  background:#55CBB8;
-  color:#06201D;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s;
+.search-button {
+  border: 0;
+
+  background: #2F8F83;
+
+  color: white;
+
+  border-radius: 7px;
+
+  padding: 0 21px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
 }
 
-.settle:hover{
-  background:#79D9CA;
-  transform:translateY(-1px);
+.search-button:hover {
+  background: #27786E;
 }
 
-.settle:disabled{
-  opacity:.5;
-  cursor:default;
+.search-button:disabled {
+  opacity: .55;
 }
 
 /* =========================
    EXAMPLES
 ========================= */
 
-.examples{
-  margin-top:17px;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:8px;
+.examples {
+  display: flex;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-top: 14px;
 }
 
-.example{
-  border:1px solid #1D343B;
-  background:rgba(12,29,36,.55);
-  color:#77908D;
-  border-radius:30px;
-  padding:8px 13px;
-  font-size:12px;
-  cursor:pointer;
+.example {
+  border: 1px solid #DDDDD7;
+
+  background: transparent;
+
+  color: #777F80;
+
+  border-radius: 20px;
+
+  padding: 7px 12px;
+
+  font-size: 12px;
+
+  cursor: pointer;
 }
 
-.example:hover{
-  color:#D9E9E6;
-  border-color:#37635F;
+.example:hover {
+  border-color: #2F8F83;
+  color: #2F8F83;
 }
 
 /* =========================
-   INTRO
+   EXPLANATION
 ========================= */
 
-.intro{
-  margin-top:90px;
-  padding:32px;
-  border:1px solid rgba(99,167,160,.13);
-  border-radius:18px;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(24,54,61,.42),
-      rgba(8,24,31,.4)
-    );
+.explanation-section {
+  margin-top: 100px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1.6fr;
+
+  gap: 35px;
+
+  padding: 35px 0;
+
+  border-top: 1px solid #DFDED7;
+  border-bottom: 1px solid #DFDED7;
 }
 
-.introLabel{
-  color:#55CBB8;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:10px;
-  letter-spacing:.14em;
-  margin-bottom:13px;
+.section-label {
+  font-family: "IBM Plex Mono", monospace;
+
+  font-size: 10px;
+
+  letter-spacing: .12em;
+
+  color: #2F8F83;
 }
 
-.intro h2{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:27px;
-  margin:0 0 12px;
-  letter-spacing:-.025em;
+.explanation-section h2 {
+  margin: 0;
+
+  font-family: "Space Grotesk", sans-serif;
+
+  font-size: 26px;
+
+  line-height: 1.2;
+
+  letter-spacing: -.7px;
 }
 
-.intro p{
-  color:#829A97;
-  line-height:1.7;
-  font-size:14px;
-  margin:0;
+.explanation-section p {
+  margin: 0;
+
+  color: #697577;
+
+  font-size: 14px;
+
+  line-height: 1.8;
 }
 
 /* =========================
    QUOTE
 ========================= */
 
-.quoteSection{
-  margin:85px auto 0;
-  max-width:650px;
-  text-align:center;
+.quote-section {
+  max-width: 650px;
+
+  margin: 90px auto 0;
+
+  text-align: center;
 }
 
-.quoteMark{
-  font-family:Georgia,serif;
-  font-size:55px;
-  color:#55CBB8;
-  line-height:.5;
-  opacity:.7;
+.quote-section .quote-mark {
+  font-family: Georgia, serif;
+
+  font-size: 48px;
+
+  color: #2F8F83;
+
+  line-height: .5;
 }
 
-.quote{
-  margin:25px 0 12px;
-  font-family:"Space Grotesk",sans-serif;
-  font-size:25px;
-  line-height:1.5;
-  letter-spacing:-.02em;
-  color:#DCE8E6;
+.quote {
+  margin: 20px 0;
+
+  font-family: "Space Grotesk", sans-serif;
+
+  font-size: 23px;
+
+  line-height: 1.55;
+
+  color: #263538;
 }
 
-.quoteAuthor{
-  color:#617876;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:11px;
+.quote-note {
+  font-family: "IBM Plex Mono", monospace;
+
+  color: #929998;
+
+  font-size: 10px;
 }
 
 /* =========================
-   RESULTS
+   LOADING / ERROR
 ========================= */
 
-.loading{
-  text-align:center;
-  color:#66817D;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:12px;
-  padding:30px;
+.loading {
+  display: none;
+
+  text-align: center;
+
+  margin: 30px 0;
+
+  color: #7A8586;
+
+  font-family: "IBM Plex Mono", monospace;
+
+  font-size: 12px;
 }
 
-.error{
-  text-align:center;
-  color:#E77D83;
-  margin-top:15px;
-  font-size:13px;
+.error {
+  display: none;
+
+  text-align: center;
+
+  color: #C04C54;
+
+  font-size: 13px;
+
+  margin-top: 15px;
 }
 
-.card{
-  display:none;
-  margin-top:35px;
-  padding:30px;
-  border-radius:16px;
-  border:1px solid rgba(99,167,160,.17);
-  background:rgba(12,29,36,.65);
-  backdrop-filter:blur(12px);
+/* =========================
+   RESULT CARD
+========================= */
+
+.result-card {
+  display: none;
+
+  margin-top: 40px;
+
+  padding: 30px;
+
+  background: #FFFFFF;
+
+  border: 1px solid #DCDDD7;
+
+  border-radius: 10px;
+
+  box-shadow: 0 10px 35px rgba(30,40,42,.06);
 }
 
-.stamp{
-  display:inline-block;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:10px;
-  padding:5px 9px;
-  border:1px solid;
-  border-radius:4px;
-  margin-bottom:18px;
+.status {
+  display: inline-block;
+
+  font-family: "IBM Plex Mono", monospace;
+
+  font-size: 10px;
+
+  letter-spacing: .08em;
+
+  padding: 5px 8px;
+
+  border: 1px solid;
+
+  border-radius: 4px;
+
+  margin-bottom: 18px;
 }
 
-.verdict{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:24px;
-  line-height:1.35;
-  font-weight:700;
-  margin-bottom:15px;
+.verdict {
+  font-family: "Space Grotesk", sans-serif;
+
+  font-size: 24px;
+
+  line-height: 1.4;
+
+  margin-bottom: 15px;
 }
 
-.explanation{
-  color:#A4B6B3;
-  font-size:14px;
-  line-height:1.7;
-  margin-bottom:22px;
+.result-explanation {
+  color: #647072;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+
+  margin-bottom: 25px;
 }
 
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:24px;
+/* =========================
+   ACTIONS
+========================= */
+
+.actions {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-bottom: 25px;
 }
 
-.actbtn{
-  border:1px solid #223A41;
-  background:transparent;
-  color:#78908D;
-  border-radius:8px;
-  padding:8px 12px;
-  cursor:pointer;
+.action {
+  border: 1px solid #DADBD5;
+
+  background: white;
+
+  color: #687274;
+
+  border-radius: 6px;
+
+  padding: 7px 11px;
+
+  font-size: 12px;
+
+  cursor: pointer;
 }
 
-.actbtn:hover,
-.actbtn.active{
-  border-color:#55CBB8;
-  color:#55CBB8;
+.action:hover,
+.action.active {
+  color: #2F8F83;
+
+  border-color: #2F8F83;
 }
 
-.label{
-  color:#506A67;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:10px;
-  letter-spacing:.12em;
-  margin-bottom:10px;
+/* =========================
+   SOURCES
+========================= */
+
+.result-label {
+  font-family: "IBM Plex Mono", monospace;
+
+  font-size: 10px;
+
+  letter-spacing: .1em;
+
+  color: #8A9293;
+
+  margin-bottom: 10px;
 }
 
-.sources{
-  display:flex;
-  flex-direction:column;
-  gap:7px;
-  margin-bottom:24px;
+.sources {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  margin-bottom: 25px;
 }
 
-.source{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 12px;
-  border:1px solid #1B3239;
-  border-radius:7px;
-  color:#D6E4E1;
-  text-decoration:none;
-  font-size:13px;
+.source {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 11px 12px;
+
+  border: 1px solid #E1E2DD;
+
+  border-radius: 6px;
+
+  color: #263538;
+
+  text-decoration: none;
+
+  font-size: 13px;
 }
 
-.source:hover{
-  border-color:#37635F;
+.source:hover {
+  border-color: #2F8F83;
 }
 
-.related{
-  display:flex;
-  flex-direction:column;
-  gap:7px;
+.related {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
 }
 
-.related button{
-  text-align:left;
-  border:1px solid #1B3239;
-  background:transparent;
-  color:#91A7A4;
-  border-radius:8px;
-  padding:11px 12px;
-  cursor:pointer;
+.related button {
+  border: 1px solid #E1E2DD;
+
+  background: transparent;
+
+  color: #687274;
+
+  text-align: left;
+
+  border-radius: 6px;
+
+  padding: 10px;
+
+  cursor: pointer;
 }
 
-.related button:hover{
-  color:#E1EFEC;
-  border-color:#37635F;
+.related button:hover {
+  border-color: #2F8F83;
+
+  color: #263538;
 }
 
 /* =========================
    AUTH MODAL
 ========================= */
 
-#authModal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:200;
-  background:rgba(3,12,17,.76);
-  align-items:center;
-  justify-content:center;
-  padding:20px;
+.auth-modal {
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 200;
+
+  background: rgba(25, 32, 33, .45);
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
 }
 
-.authBox{
-  width:100%;
-  max-width:350px;
-  padding:28px;
-  border-radius:16px;
-  border:1px solid #244148;
-  background:#0C2028;
-  box-shadow:0 30px 90px rgba(0,0,0,.5);
+.auth-box {
+  width: 100%;
+
+  max-width: 350px;
+
+  background: #FFFDF8;
+
+  border: 1px solid #DDDDD7;
+
+  border-radius: 10px;
+
+  padding: 28px;
+
+  box-shadow: 0 25px 70px rgba(0,0,0,.15);
 }
 
-.authBox h3{
-  font-family:"Space Grotesk",sans-serif;
-  margin:0 0 20px;
-  font-size:22px;
+.auth-box h3 {
+  margin: 0 0 20px;
+
+  font-family: "Space Grotesk", sans-serif;
+
+  font-size: 21px;
 }
 
-.googleBtn{
-  width:100%;
-  padding:12px;
-  border:0;
-  border-radius:8px;
-  background:#F1F7F5;
-  color:#07131A;
-  font-weight:700;
-  cursor:pointer;
+.google-button {
+  width: 100%;
+
+  padding: 12px;
+
+  border: 1px solid #D4D5D0;
+
+  background: white;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  color: #263538;
 }
 
-.divider{
-  text-align:center;
-  color:#526B68;
-  font-size:11px;
-  margin:18px 0;
+.divider {
+  text-align: center;
+
+  color: #999F9F;
+
+  font-size: 11px;
+
+  margin: 17px 0;
 }
 
-.authBox input{
-  width:100%;
-  padding:11px;
-  margin-bottom:9px;
-  background:#07171E;
-  border:1px solid #20383F;
-  border-radius:8px;
-  outline:0;
-  color:#F1F7F5;
+.auth-input {
+  width: 100%;
+
+  padding: 11px;
+
+  margin-bottom: 8px;
+
+  border: 1px solid #D8D9D3;
+
+  border-radius: 6px;
+
+  outline: none;
+
+  background: white;
+
+  color: #172326;
 }
 
-.authRow{
-  display:flex;
-  gap:8px;
+.auth-row {
+  display: flex;
+
+  gap: 7px;
 }
 
-.authRow button{
-  flex:1;
-  padding:11px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
+.auth-row button {
+  flex: 1;
+
+  padding: 11px;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  font-weight: 600;
 }
 
-.signup{
-  border:0;
-  background:#55CBB8;
-  color:#06201D;
+.signup {
+  border: 0;
+
+  background: #2F8F83;
+
+  color: white;
 }
 
-.signin{
-  border:1px solid #29444A;
-  background:transparent;
-  color:#D8E7E4;
+.signin {
+  border: 1px solid #D5D6D0;
+
+  background: white;
+
+  color: #263538;
 }
 
-#authError{
-  color:#E77D83;
-  font-size:12px;
-  margin-top:10px;
+.auth-error {
+  color: #C04C54;
+
+  font-size: 12px;
+
+  margin-top: 10px;
 }
 
-.closeAuth{
-  display:block;
-  margin:16px auto 0;
-  border:0;
-  background:none;
-  color:#607976;
-  cursor:pointer;
+.cancel-auth {
+  display: block;
+
+  margin: 15px auto 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #7C8586;
+
+  cursor: pointer;
 }
 
 /* =========================
    FOOTER
 ========================= */
 
-footer{
-  text-align:center;
-  margin-top:100px;
-  color:#405854;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:11px;
+footer {
+  text-align: center;
+
+  margin-top: 100px;
+
+  color: #929998;
+
+  font-family: "IBM Plex Mono", monospace;
+
+  font-size: 10px;
 }
 
-@media(max-width:650px){
+/* =========================
+   MOBILE
+========================= */
 
-  .header{
-    padding:18px;
+@media (max-width: 650px) {
+
+  .header {
+    padding: 0 18px;
   }
 
-  main{
-    padding:42px 18px 70px;
+  main {
+    padding: 50px 18px 60px;
   }
 
-  .hero h1{
-    font-size:47px;
+  .hero h1 {
+    font-size: 46px;
+
+    letter-spacing: -2px;
   }
 
-  .searchBox{
-    flex-direction:column;
-    padding:8px;
+  .search-form {
+    flex-direction: column;
+
+    padding: 7px;
   }
 
-  .settle{
-    height:46px;
+  .search-button {
+    height: 45px;
   }
 
-  .intro{
-    margin-top:65px;
-    padding:24px;
+  .explanation-section {
+    grid-template-columns: 1fr;
+
+    gap: 15px;
+
+    margin-top: 70px;
   }
 
-  .quote{
-    font-size:21px;
+  .quote-section {
+    margin-top: 70px;
   }
 
-  .card{
-    padding:22px;
+  .quote {
+    font-size: 20px;
+  }
+
+  .result-card {
+    padding: 22px;
   }
 }
 </style>
@@ -717,25 +897,18 @@ footer{
 
 <body>
 
-<div class="background">
-  <div class="glow one"></div>
-  <div class="glow two"></div>
-  <div class="glow three"></div>
-</div>
-
-
 <!-- =========================
      HEADER
 ========================= -->
 
 <header class="header">
 
-  <div class="brand">
+  <div class="logo">
     DEBUNK<span>.</span>
   </div>
 
   <button
-    class="menuButton"
+    class="menu-button"
     id="menuButton"
     aria-label="Open menu">
 
@@ -748,28 +921,40 @@ footer{
 </header>
 
 
+<!-- MENU OVERLAY -->
+
+<div
+  class="menu-overlay"
+  id="menuOverlay">
+</div>
+
+
 <!-- =========================
      SIDE MENU
 ========================= -->
 
-<aside class="menu" id="menu">
+<aside
+  class="side-menu"
+  id="sideMenu">
 
-  <div class="menuTop">
+  <div class="menu-header">
 
-    <div class="menuTitle">
-      DEBUNK<span style="color:#55CBB8">.</span>
+    <div class="menu-title">
+      DEBUNK<span>.</span>
     </div>
 
     <button
-      class="closeMenu"
+      class="close-button"
       id="closeMenu">
+
       ×
+
     </button>
 
   </div>
 
 
-  <div class="menuLinks">
+  <nav class="menu-links">
 
     <a href="index.html">
       Home
@@ -784,24 +969,28 @@ footer{
     </a>
 
     <a href="about.html">
-      About Debunk
+      About
     </a>
 
-    <div class="menuDivider"></div>
+    <div class="menu-divider"></div>
 
     <button
-      class="googleMenu"
+      class="login-button"
       id="signInBtn">
+
       Sign in with Google
+
     </button>
 
     <button
       id="logoutBtn"
       style="display:none;">
+
       Log out
+
     </button>
 
-  </div>
+  </nav>
 
 </aside>
 
@@ -812,49 +1001,58 @@ footer{
 
 <main>
 
+  <!-- HERO -->
+
   <section class="hero">
 
-    <div class="eyebrow">
-      TRUST THE SOURCE
+    <div class="small-label">
+      SOURCES OVER OPINIONS
     </div>
 
     <h1>
       Ask anything.<br>
-      <span>Know what's true.</span>
+      <span>Settle it.</span>
     </h1>
 
-    <p class="heroDescription">
-      Debunk settles everyday arguments using
-      trustworthy sources instead of random internet noise.
-      Ask a question and see what the evidence says.
+    <p class="hero-description">
+
+      Debunk finds trustworthy sources and
+      helps you separate facts from internet noise.
+      No vibes. No guessing. Just evidence.
+
     </p>
 
 
+    <!-- SEARCH -->
+
     <form
-      class="searchBox"
+      class="search-form"
       id="searchForm">
 
       <input
-        type="text"
+        class="search-input"
         id="query"
-        placeholder="What are you trying to settle?"
-        autocomplete="off">
+        type="text"
+        autocomplete="off"
+        placeholder="What are you trying to settle?">
 
       <button
-        class="settle"
+        class="search-button"
         id="goBtn"
         type="submit">
 
-        Settle it →
+        Settle it
 
       </button>
 
     </form>
 
 
+    <!-- EXAMPLES -->
+
     <div
       class="examples"
-      id="chips">
+      id="examples">
 
       <button
         class="example"
@@ -880,14 +1078,6 @@ footer{
 
       </button>
 
-      <button
-        class="example"
-        data-q="Tallest building in the world">
-
-        Tallest building in the world
-
-      </button>
-
     </div>
 
   </section>
@@ -897,22 +1087,32 @@ footer{
        EXPLANATION
   ========================= -->
 
-  <section class="intro">
+  <section class="explanation-section">
 
-    <div class="introLabel">
-      WHAT IS DEBUNK?
+    <div>
+
+      <div class="section-label">
+        WHY DEBUNK
+      </div>
+
+      <h2>
+        Because winning an argument isn't the same as being right.
+      </h2>
+
     </div>
 
-    <h2>
-      The internet has plenty of answers.
-      We care about the evidence.
-    </h2>
 
     <p>
-      Debunk searches for relevant information and
-      separates trustworthy sources from internet noise.
-      Instead of telling you what sounds right,
-      it shows you what reliable sources support.
+
+      The internet is full of answers.
+      Some are reliable. Some aren't.
+
+      <br><br>
+
+      Debunk looks for credible sources
+      and puts the evidence in front of you,
+      so you can decide what actually holds up.
+
     </p>
 
   </section>
@@ -922,13 +1122,18 @@ footer{
        QUOTE
   ========================= -->
 
-  <section class="quoteSection">
+  <section class="quote-section">
 
-    <div class="quoteMark">
+    <div class="quote-mark">
       “
     </div>
 
     <div class="quote">
+
+      A journalist asked an old man how he
+      lived so long.
+
+      <br><br>
 
       “I stopped arguing with people.”
 
@@ -942,31 +1147,31 @@ footer{
 
     </div>
 
-    <div class="quoteAuthor">
-      Sometimes you don't need to win the argument.
+    <div class="quote-note">
+      Some arguments aren't worth winning.
     </div>
 
   </section>
 
 
   <!-- =========================
-       LOADING / ERROR
+       LOADING
   ========================= -->
 
   <div
     class="loading"
-    id="loading"
-    style="display:none;">
+    id="loading">
 
     Checking the sources...
 
   </div>
 
 
+  <!-- ERROR -->
+
   <div
     class="error"
-    id="error"
-    style="display:none;">
+    id="error">
   </div>
 
 
@@ -975,12 +1180,12 @@ footer{
   ========================= -->
 
   <section
-    class="card"
-    id="card">
+    class="result-card"
+    id="resultCard">
 
     <div
-      class="stamp"
-      id="stamp">
+      class="status"
+      id="status">
     </div>
 
     <div
@@ -989,49 +1194,61 @@ footer{
     </div>
 
     <div
-      class="explanation"
-      id="explanation">
+      class="result-explanation"
+      id="resultExplanation">
     </div>
 
 
     <div class="actions">
 
       <button
-        class="actbtn"
-        id="copyBtn">
-        📋 Copy
+        class="action"
+        id="copyButton">
+
+        Copy
+
       </button>
 
       <button
-        class="actbtn"
-        id="shareBtn">
-        ↗ Share
+        class="action"
+        id="shareButton">
+
+        Share
+
       </button>
 
       <button
-        class="actbtn"
-        id="saveBtn">
-        🔖 Save
+        class="action"
+        id="saveButton">
+
+        Save
+
       </button>
 
       <button
-        class="actbtn"
-        id="likeBtn">
+        class="action"
+        id="likeButton">
+
         👍
+
       </button>
 
       <button
-        class="actbtn"
-        id="dislikeBtn">
+        class="action"
+        id="dislikeButton">
+
         👎
+
       </button>
 
     </div>
 
 
-    <div id="sourcesBlock">
+    <!-- SOURCES -->
 
-      <div class="label">
+    <div id="sourcesSection">
+
+      <div class="result-label">
         SOURCES
       </div>
 
@@ -1043,11 +1260,13 @@ footer{
     </div>
 
 
+    <!-- RELATED -->
+
     <div
-      id="relatedBlock"
+      id="relatedSection"
       style="display:none;">
 
-      <div class="label">
+      <div class="result-label">
         RELATED
       </div>
 
@@ -1072,58 +1291,77 @@ footer{
      AUTH MODAL
 ========================= -->
 
-<div id="authModal">
+<div
+  class="auth-modal"
+  id="authModal">
 
-  <div class="authBox">
+  <div class="auth-box">
 
     <h3>
       Sign in to Debunk
     </h3>
 
     <button
-      class="googleBtn"
-      id="googleAuthBtn">
+      class="google-button"
+      id="googleButton">
 
       Continue with Google
 
     </button>
 
+
     <div class="divider">
       OR USE EMAIL
     </div>
 
+
     <input
+      class="auth-input"
       id="authEmail"
       type="email"
       placeholder="Email">
 
+
     <input
+      class="auth-input"
       id="authPassword"
       type="password"
       placeholder="Password">
 
-    <div class="authRow">
+
+    <div class="auth-row">
 
       <button
         class="signup"
-        id="signupBtn">
+        id="signupButton">
+
         Sign up
+
       </button>
 
       <button
         class="signin"
-        id="signinBtn">
+        id="signinButton">
+
         Sign in
+
       </button>
 
     </div>
 
-    <div id="authError"></div>
+
+    <div
+      class="auth-error"
+      id="authError">
+    </div>
+
 
     <button
-      class="closeAuth"
-      id="closeAuth">
+      class="cancel-auth"
+      id="cancelAuth">
+
       Cancel
+
     </button>
 
   </div>
@@ -1133,9 +1371,9 @@ footer{
 
 <script>
 
-/* =========================
+/* =====================================================
    SUPABASE
-========================= */
+===================================================== */
 
 const SUPABASE_URL =
   "https://axjavfnqxdlqpjirvpmn.supabase.co";
@@ -1143,46 +1381,69 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_VZ5GKmIEmUQvDh7VsFvuBA_QTTUwu6o";
 
-const sb =
+const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
   );
 
 
-/* =========================
+/* =====================================================
    MENU
-========================= */
-
-const menu =
-  document.getElementById("menu");
+===================================================== */
 
 const menuButton =
   document.getElementById("menuButton");
 
+const sideMenu =
+  document.getElementById("sideMenu");
+
 const closeMenu =
   document.getElementById("closeMenu");
 
-
-menuButton.onclick =
-  function(){
-
-    menu.classList.add("open");
-
-  };
+const menuOverlay =
+  document.getElementById("menuOverlay");
 
 
-closeMenu.onclick =
-  function(){
+function openMenu() {
 
-    menu.classList.remove("open");
+  sideMenu.classList.add("open");
 
-  };
+  menuOverlay.classList.add("open");
+
+}
 
 
-/* =========================
+function closeSideMenu() {
+
+  sideMenu.classList.remove("open");
+
+  menuOverlay.classList.remove("open");
+
+}
+
+
+menuButton.addEventListener(
+  "click",
+  openMenu
+);
+
+
+closeMenu.addEventListener(
+  "click",
+  closeSideMenu
+);
+
+
+menuOverlay.addEventListener(
+  "click",
+  closeSideMenu
+);
+
+
+/* =====================================================
    AUTH
-========================= */
+===================================================== */
 
 const authModal =
   document.getElementById("authModal");
@@ -1190,168 +1451,101 @@ const authModal =
 const signInBtn =
   document.getElementById("signInBtn");
 
-const googleAuthBtn =
-  document.getElementById("googleAuthBtn");
+const cancelAuth =
+  document.getElementById("cancelAuth");
 
-const closeAuth =
-  document.getElementById("closeAuth");
+const googleButton =
+  document.getElementById("googleButton");
 
 const authError =
   document.getElementById("authError");
 
 
-signInBtn.onclick =
-  function(){
+signInBtn.addEventListener(
+  "click",
+  function() {
 
-    menu.classList.remove("open");
+    closeSideMenu();
 
-    authModal.style.display =
-      "flex";
+    authError.textContent = "";
 
-  };
-
-
-closeAuth.onclick =
-  function(){
-
-    authModal.style.display =
-      "none";
-
-  };
-
-
-authModal.onclick =
-  function(e){
-
-    if(e.target === authModal){
-
-      authModal.style.display =
-        "none";
-
-    }
-
-  };
-
-
-/* GOOGLE */
-
-async function googleLogin(){
-
-  authError.textContent = "";
-
-  try{
-
-    const { error } =
-      await sb.auth.signInWithOAuth({
-
-        provider:"google",
-
-        options:{
-          redirectTo:
-            window.location.origin
-        }
-
-      });
-
-    if(error){
-      throw error;
-    }
-
-  }catch(error){
-
-    console.error(error);
-
-    authError.textContent =
-      error.message ||
-      "Google sign-in failed.";
+    authModal.style.display = "flex";
 
   }
-
-}
-
-
-googleAuthBtn.onclick =
-  googleLogin;
+);
 
 
-/* =========================
-   EMAIL SIGN UP
-========================= */
+cancelAuth.addEventListener(
+  "click",
+  function() {
 
-document
-  .getElementById("signupBtn")
-  .onclick =
-  async function(){
+    authModal.style.display = "none";
 
-    const email =
-      document
-        .getElementById("authEmail")
-        .value
-        .trim();
-
-    const password =
-      document
-        .getElementById("authPassword")
-        .value;
+  }
+);
 
 
-    if(!email || !password){
+authModal.addEventListener(
+  "click",
+  function(e) {
 
-      authError.textContent =
-        "Enter your email and password.";
+    if (e.target === authModal) {
 
-      return;
+      authModal.style.display = "none";
 
     }
 
-
-    const { error } =
-      await sb.auth.signUp({
-
-        email,
-        password
-
-      });
+  }
+);
 
 
-    authError.textContent =
-      error
-        ? error.message
-        : "Check your email to confirm your account.";
+/* GOOGLE LOGIN */
 
-  };
+googleButton.addEventListener(
+  "click",
+  async function() {
 
+    authError.textContent = "";
 
-/* =========================
-   EMAIL SIGN IN
-========================= */
+    try {
 
-document
-  .getElementById("signinBtn")
-  .onclick =
-  async function(){
+      const result =
+        await supabaseClient.auth.signInWithOAuth({
 
-    const email =
-      document
-        .getElementById("authEmail")
-        .value
-        .trim();
+          provider: "google",
 
-    const password =
-      document
-        .getElementById("authPassword")
-        .value;
+          options: {
+
+            redirectTo:
+              window.location.origin
+
+          }
+
+        });
 
 
-    if(!email || !password){
+      if (result.error) {
+
+        throw result.error;
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
 
       authError.textContent =
-        "Enter your email and password.";
-
-      return;
+        error.message ||
+        "Google sign-in failed.";
 
     }
 
+  }
+);
 
-    const { error } =
-      await sb.auth.sig
+
+/* EMAIL SIGN UP */
+
+document
+  .getElementById("signupButton")
+  .addEvent
