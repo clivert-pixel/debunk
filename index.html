@@ -1737,7 +1737,669 @@ document
 /* START */
 
 updateAuthUI();
+/* =========================================================
+   DEBUNK — IMPROVED SEARCH ENGINE
+   Keeps the existing design and UI.
+   Uses /api/ask and supports:
+   - verdict
+   - confidence
+   - explanation
+   - multiple sources
+   - related questions
+   - images (when API provides them)
+========================================================= */
 
+runSearch = async function(query) {
+
+  query = String(query || "").trim();
+
+  if (!query) {
+    return;
+  }
+
+  const loading =
+    document.getElementById("loading");
+
+  const errorBox =
+    document.getElementById("error");
+
+  const resultCard =
+    document.getElementById("resultCard");
+
+  const status =
+    document.getElementById("status");
+
+  const verdict =
+    document.getElementById("verdict");
+
+  const explanation =
+    document.getElementById("resultExplanation");
+
+  const sourcesBox =
+    document.getElementById("sources");
+
+  const relatedBox =
+    document.getElementById("related");
+
+  const relatedSection =
+    document.getElementById("relatedSection");
+
+  const goButton =
+    document.getElementById("goButton");
+
+  /* RESET */
+
+  errorBox.style.display = "none";
+  errorBox.textContent = "";
+
+  resultCard.style.display = "none";
+
+  loading.style.display = "block";
+
+  if (goButton) {
+    goButton.disabled = true;
+    goButton.textContent = "Checking...";
+  }
+
+  /* CLEAR OLD RESULTS */
+
+  verdict.textContent = "";
+  explanation.textContent = "";
+  sourcesBox.innerHTML = "";
+  relatedBox.innerHTML = "";
+
+  relatedSection.style.display = "none";
+
+  /* REMOVE OLD IMAGES */
+
+  const oldImages =
+    document.getElementById("debunkImages");
+
+  if (oldImages) {
+    oldImages.remove();
+  }
+
+  try {
+
+    const response =
+      await fetch("/api/ask", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          query: query
+        })
+
+      });
+
+
+    /* RESPONSE CHECK */
+
+    let data = null;
+
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      throw new Error(
+        "The server returned an invalid response."
+      );
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data?.error ||
+        data?.message ||
+        "Something went wrong while checking the sources."
+      );
+
+    }
+
+
+    if (!data) {
+
+      throw new Error(
+        "No answer was returned."
+      );
+
+    }
+
+
+    /* =====================================================
+       VERDICT
+    ===================================================== */
+
+    currentData = data;
+
+    verdict.textContent =
+      data.verdict ||
+      "No verdict returned.";
+
+
+    /* =====================================================
+       CONFIDENCE / STATUS
+    ===================================================== */
+
+    const confidence =
+      String(
+        data.confidence ||
+        data.status ||
+        "RESULT"
+      ).toUpperCase();
+
+
+    status.textContent =
+      confidence;
+
+
+    /* STATUS STYLING */
+
+    status.style.color = "#2F8F83";
+    status.style.borderColor = "#2F8F83";
+
+
+    if (
+      confidence.includes("FALSE") ||
+      confidence.includes("MISLEADING") ||
+      confidence.includes("INCORRECT")
+    ) {
+
+      status.style.color = "#C04C54";
+      status.style.borderColor = "#C04C54";
+
+    }
+
+
+    if (
+      confidence.includes("PARTLY") ||
+      confidence.includes("MIXED") ||
+      confidence.includes("UNVERIFIED")
+    ) {
+
+      status.style.color = "#B07A22";
+      status.style.borderColor = "#B07A22";
+
+    }
+
+
+    /* =====================================================
+       EXPLANATION
+    ===================================================== */
+
+    explanation.textContent =
+      data.explanation ||
+      "No explanation was provided.";
+
+
+    /* =====================================================
+       SOURCES
+    ===================================================== */
+
+    const sources =
+      Array.isArray(data.sources)
+        ? data.sources
+        : [];
+
+
+    if (sources.length === 0) {
+
+      const empty =
+        document.createElement("div");
+
+      empty.textContent =
+        "No sources were returned.";
+
+      empty.style.color = "#8A9293";
+      empty.style.fontSize = "13px";
+
+      sourcesBox.appendChild(empty);
+
+    } else {
+
+      sources.forEach(function(source) {
+
+        if (!source) return;
+
+
+        /* SUPPORT DIFFERENT API FORMATS */
+
+        const title =
+          source.title ||
+          source.name ||
+          source.source ||
+          "Source";
+
+
+        const url =
+          source.url ||
+          source.link ||
+          source.href ||
+          "";
+
+
+        if (!url) return;
+
+
+        const sourceLink =
+          document.createElement("a");
+
+        sourceLink.className =
+          "source";
+
+        sourceLink.href =
+          url;
+
+        sourceLink.target =
+          "_blank";
+
+        sourceLink.rel =
+          "noopener noreferrer";
+
+
+        /* SOURCE TEXT */
+
+        const sourceTitle =
+          document.createElement("span");
+
+        sourceTitle.textContent =
+          title;
+
+
+        /* ARROW */
+
+        const arrow =
+          document.createElement("span");
+
+        arrow.textContent =
+          "↗";
+
+        arrow.style.marginLeft =
+          "12px";
+
+        arrow.style.opacity =
+          ".55";
+
+
+        sourceLink.appendChild(
+          sourceTitle
+        );
+
+        sourceLink.appendChild(
+          arrow
+        );
+
+
+        sourcesBox.appendChild(
+          sourceLink
+        );
+
+      });
+
+    }
+
+
+    /* =====================================================
+       IMAGES
+       Works if api/ask.js returns:
+       images: [...]
+    ===================================================== */
+
+    const images =
+      Array.isArray(data.images)
+        ? data.images
+        : [];
+
+
+    if (images.length > 0) {
+
+      const imageSection =
+        document.createElement("div");
+
+      imageSection.id =
+        "debunkImages";
+
+      imageSection.style.marginTop =
+        "25px";
+
+
+      const imageLabel =
+        document.createElement("div");
+
+      imageLabel.className =
+        "result-label";
+
+      imageLabel.textContent =
+        "IMAGES";
+
+
+      imageSection.appendChild(
+        imageLabel
+      );
+
+
+      const imageGrid =
+        document.createElement("div");
+
+      imageGrid.style.display =
+        "grid";
+
+      imageGrid.style.gridTemplateColumns =
+        "repeat(auto-fit, minmax(150px, 1fr))";
+
+      imageGrid.style.gap =
+        "10px";
+
+
+      images.forEach(function(image) {
+
+        const imageUrl =
+          typeof image === "string"
+            ? image
+            : (
+                image?.url ||
+                image?.image ||
+                image?.src ||
+                ""
+              );
+
+
+        if (!imageUrl) return;
+
+
+        const wrapper =
+          document.createElement("a");
+
+        wrapper.href =
+          imageUrl;
+
+        wrapper.target =
+          "_blank";
+
+        wrapper.rel =
+          "noopener noreferrer";
+
+
+        const img =
+          document.createElement("img");
+
+        img.src =
+          imageUrl;
+
+        img.alt =
+          image?.title ||
+          "Debunk source image";
+
+
+        img.loading =
+          "lazy";
+
+
+        img.style.width =
+          "100%";
+
+        img.style.height =
+          "160px";
+
+        img.style.objectFit =
+          "cover";
+
+        img.style.borderRadius =
+          "8px";
+
+        img.style.border =
+          "1px solid #E1E2DD";
+
+
+        img.onerror =
+          function() {
+
+            wrapper.remove();
+
+          };
+
+
+        wrapper.appendChild(img);
+
+        imageGrid.appendChild(wrapper);
+
+      });
+
+
+      imageSection.appendChild(
+        imageGrid
+      );
+
+
+      /*
+        Put images after the sources.
+      */
+
+      const sourcesSection =
+        document.getElementById(
+          "sourcesSection"
+        );
+
+
+      if (sourcesSection) {
+
+        sourcesSection.appendChild(
+          imageSection
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       RELATED QUESTIONS
+    ===================================================== */
+
+    const related =
+      Array.isArray(data.related)
+        ? data.related
+        : [];
+
+
+    if (related.length > 0) {
+
+      relatedSection.style.display =
+        "block";
+
+
+      related.forEach(function(question) {
+
+        const text =
+          typeof question === "string"
+            ? question
+            : (
+                question?.question ||
+                question?.title ||
+                ""
+              );
+
+
+        if (!text) return;
+
+
+        const button =
+          document.createElement("button");
+
+        button.type =
+          "button";
+
+        button.textContent =
+          text;
+
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            const queryInput =
+              document.getElementById(
+                "query"
+              );
+
+
+            if (queryInput) {
+              queryInput.value = text;
+            }
+
+
+            runSearch(text);
+
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+
+          }
+        );
+
+
+        relatedBox.appendChild(
+          button
+        );
+
+      });
+
+    }
+
+
+    /* =====================================================
+       SHOW RESULT
+    ===================================================== */
+
+    loading.style.display =
+      "none";
+
+    resultCard.style.display =
+      "block";
+
+
+    /* Scroll result into view on mobile */
+
+    setTimeout(function() {
+
+      resultCard.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }, 100);
+
+
+  } catch (err) {
+
+    console.error(
+      "Debunk search error:",
+      err
+    );
+
+
+    loading.style.display =
+      "none";
+
+
+    resultCard.style.display =
+      "none";
+
+
+    errorBox.textContent =
+      err.message ||
+      "Something went wrong. Please try again.";
+
+
+    errorBox.style.display =
+      "block";
+
+
+  } finally {
+
+    if (goButton) {
+
+      goButton.disabled =
+        false;
+
+      goButton.textContent =
+        "Settle it";
+
+    }
+
+  }
+
+};
+
+
+/* =========================================================
+   MAKE SURE EXAMPLE QUESTIONS USE THE NEW SEARCH
+========================================================= */
+
+document
+  .querySelectorAll(".example")
+  .forEach(function(button) {
+
+    button.onclick =
+      function() {
+
+        const question =
+          button.dataset.q;
+
+        const queryInput =
+          document.getElementById("query");
+
+        if (queryInput) {
+          queryInput.value = question;
+        }
+
+        runSearch(question);
+
+      };
+
+  });
+
+
+/* =========================================================
+   ENTER KEY / SEARCH FORM
+========================================================= */
+
+const debunkSearchForm =
+  document.getElementById("searchForm");
+
+if (debunkSearchForm) {
+
+  debunkSearchForm.onsubmit =
+    function(event) {
+
+      event.preventDefault();
+
+      const queryInput =
+        document.getElementById("query");
+
+      if (!queryInput) return;
+
+      runSearch(
+        queryInput.value
+      );
+
+    };
+
+}
+
+
+/* =========================================================
+   START AUTH UI
+========================================================= */
+
+if (typeof updateAuthUI === "function") {
+  updateAuthUI();
+}
 </script>
 
 </body>
