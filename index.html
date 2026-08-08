@@ -4,14 +4,24 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Debunk — settle it with sources, not vibes</title>
+
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icon-512.png">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     margin: 0;
     background: #0B0E14;
@@ -22,379 +32,1069 @@
     overflow-x: hidden;
   }
 
-  .bg-glow {
-    position: fixed; inset: 0; z-index: -1; overflow: hidden;
+  button,
+  input {
+    font-family: inherit;
   }
+
+  /* =========================
+     BACKGROUND
+  ========================= */
+
+  .bg-glow {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
   .bg-glow span {
-    position: absolute; border-radius: 50%; filter: blur(80px); opacity: .18;
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: .18;
     animation: float 18s ease-in-out infinite;
   }
-  .bg-glow span:nth-child(1) { width: 320px; height: 320px; background: #3FA796; top: -80px; left: -60px; animation-delay: 0s; }
-  .bg-glow span:nth-child(2) { width: 260px; height: 260px; background: #E5484D; top: 40%; right: -80px; animation-delay: 4s; }
-  .bg-glow span:nth-child(3) { width: 280px; height: 280px; background: #E8A33D; bottom: -100px; left: 30%; animation-delay: 8s; }
-  @keyframes float {
-    0%, 100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(30px,-30px) scale(1.15); }
+
+  .bg-glow span:nth-child(1) {
+    width: 320px;
+    height: 320px;
+    background: #3FA796;
+    top: -80px;
+    left: -60px;
   }
 
-  .wrap { width: 100%; max-width: 680px; margin: 0 auto; padding: 24px 20px 80px; position: relative; }
+  .bg-glow span:nth-child(2) {
+    width: 260px;
+    height: 260px;
+    background: #E5484D;
+    top: 40%;
+    right: -80px;
+    animation-delay: 4s;
+  }
+
+  .bg-glow span:nth-child(3) {
+    width: 280px;
+    height: 280px;
+    background: #E8A33D;
+    bottom: -100px;
+    left: 30%;
+    animation-delay: 8s;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0,0) scale(1);
+    }
+
+    50% {
+      transform: translate(30px,-30px) scale(1.15);
+    }
+  }
+
+  /* =========================
+     WELCOME SCREEN
+  ========================= */
+
+  #welcomeScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    transition: opacity .35s ease, transform .35s ease;
+  }
+
+  .welcome-inner {
+    width: 100%;
+    max-width: 620px;
+    text-align: center;
+  }
+
+  .welcome-logo {
+    display: inline-flex;
+    align-items: baseline;
+    margin-bottom: 42px;
+  }
+
+  .welcome-logo .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: clamp(32px, 9vw, 48px);
+    letter-spacing: -0.04em;
+  }
+
+  .welcome-logo .dot {
+    color: #E5484D;
+    font-size: clamp(32px, 9vw, 48px);
+    font-weight: 800;
+    animation: dotpulse 2.2s ease-in-out infinite;
+  }
+
+  .welcome-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: #3FA796;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .welcome-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: clamp(34px, 9vw, 58px);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    margin: 0 auto 20px;
+    max-width: 600px;
+  }
+
+  .welcome-title span {
+    color: #3FA796;
+  }
+
+  .welcome-description {
+    color: #8A93A6;
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 480px;
+    margin: 0 auto 34px;
+  }
+
+  .quote {
+    position: relative;
+    max-width: 510px;
+    margin: 0 auto 34px;
+    padding: 22px 24px;
+    border-left: 2px solid #3FA796;
+    background: rgba(17,21,29,.55);
+    text-align: left;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .quote-mark {
+    color: #3FA796;
+    font-family: Georgia, serif;
+    font-size: 34px;
+    line-height: .5;
+    margin-bottom: 10px;
+  }
+
+  .quote p {
+    margin: 0;
+    color: #D7D5CF;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .quote strong {
+    display: block;
+    margin-top: 12px;
+    color: #6B7280;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  .welcome-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 390px;
+    margin: 0 auto;
+  }
+
+  .welcome-google,
+  .welcome-guest {
+    width: 100%;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .15s, background .15s, border-color .15s;
+  }
+
+  .welcome-google {
+    border: none;
+    background: #F2F0EA;
+    color: #0B0E14;
+  }
+
+  .welcome-google:hover {
+    transform: translateY(-1px);
+  }
+
+  .welcome-guest {
+    border: 1px solid #262B36;
+    background: transparent;
+    color: #B8BEC9;
+  }
+
+  .welcome-guest:hover {
+    border-color: #3FA796;
+    color: #F2F0EA;
+  }
+
+  .welcome-note {
+    margin-top: 16px;
+    color: #4F5665;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+  }
+
+  /* =========================
+     MAIN APP
+  ========================= */
+
+  #app {
+    display: none;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+    position: relative;
+  }
 
   nav {
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
-    gap: 10px; padding: 8px 0 34px; font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px 0 34px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
   }
-  .logo { display: flex; align-items: baseline; gap: 2px; }
-  .logo span.name { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.02em; }
-  .logo span.dot { color: #E5484D; font-size: 24px; font-weight: 800; display: inline-block; animation: dotpulse 2.2s ease-in-out infinite; }
-  @keyframes dotpulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.4); } }
-  .navlinks { display: flex; gap: 16px; }
-  .navlinks a { color: #6B7280; text-decoration: none; }
-  .navlinks a:hover, .navlinks a.active { color: #F2F0EA; }
-  #authBar { display: flex; align-items: center; gap: 10px; }
-  #signInBtn { background: transparent; border: 1px solid #262B36; color: #B8BEC9; border-radius: 20px; padding: 6px 14px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
-  #userBadge { display: none; color: #F2F0EA; cursor: pointer; }
 
-  .hero { text-align: center; padding: 30px 0 40px; }
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+
+  .logo span.name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .logo span.dot {
+    color: #E5484D;
+    font-size: 24px;
+    font-weight: 800;
+    display: inline-block;
+    animation: dotpulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes dotpulse {
+    0%,100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: .5;
+      transform: scale(1.4);
+    }
+  }
+
+  .navlinks {
+    display: flex;
+    gap: 16px;
+  }
+
+  .navlinks a {
+    color: #6B7280;
+    text-decoration: none;
+  }
+
+  .navlinks a:hover,
+  .navlinks a.active {
+    color: #F2F0EA;
+  }
+
+  #authBar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #signInBtn {
+    background: transparent;
+    border: 1px solid #262B36;
+    color: #B8BEC9;
+    border-radius: 20px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+
+  #userBadge {
+    display: none;
+    color: #F2F0EA;
+    cursor: pointer;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 30px 0 40px;
+  }
+
   .hero h1 {
-    font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 34px; line-height: 1.2;
-    margin: 0 0 14px; letter-spacing: -0.01em;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
   }
-  .hero h1 .accent { color: #3FA796; }
-  .hero p { color: #8A93A6; font-size: 15px; max-width: 460px; margin: 0 auto 30px; line-height: 1.6; }
 
-  form#searchForm { display: flex; gap: 10px; margin-bottom: 16px; }
+  .hero h1 .accent {
+    color: #3FA796;
+  }
+
+  .hero p {
+    color: #8A93A6;
+    font-size: 15px;
+    max-width: 460px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+  }
+
+  form#searchForm {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
   input[type=text] {
-    flex: 1; background: #11151d; border: 1px solid #262B36; border-radius: 10px;
-    color: #F2F0EA; font-size: 16px; padding: 14px 16px; outline: none; font-family: 'Inter', sans-serif;
+    flex: 1;
+    background: #11151d;
+    border: 1px solid #262B36;
+    border-radius: 10px;
+    color: #F2F0EA;
+    font-size: 16px;
+    padding: 14px 16px;
+    outline: none;
+    font-family: 'Inter', sans-serif;
   }
-  input[type=text]:focus { border-color: #3FA796; }
-  button.go {
-    background: #3FA796; color: #0B0E14; border: none; border-radius: 10px; padding: 0 22px;
-    font-weight: 600; font-size: 14px; cursor: pointer; transition: background .15s;
-  }
-  button.go:hover { background: #E5484D; }
-  button.go:disabled { opacity: .6; cursor: default; }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 8px; }
-  .chip {
-    background: transparent; border: 1px solid #262B36; color: #6B7280; border-radius: 20px;
-    padding: 7px 14px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s;
+  input[type=text]:focus {
+    border-color: #3FA796;
   }
-  .chip:hover { border-color: #8A93A6; color: #F2F0EA; }
+
+  button.go {
+    background: #3FA796;
+    color: #0B0E14;
+    border: none;
+    border-radius: 10px;
+    padding: 0 22px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+
+  button.go:hover {
+    background: #E5484D;
+  }
+
+  button.go:disabled {
+    opacity: .6;
+    cursor: default;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .chip {
+    background: transparent;
+    border: 1px solid #262B36;
+    color: #6B7280;
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all .15s;
+  }
+
+  .chip:hover {
+    border-color: #8A93A6;
+    color: #F2F0EA;
+  }
 
   .loading {
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6B7280; padding: 24px 0; text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: #6B7280;
+    padding: 24px 0;
+    text-align: center;
   }
-  .loading::after { content: ''; animation: dots 1.4s steps(4,end) infinite; }
-  @keyframes dots { 0% { content:''; } 25% { content:'.'; } 50% { content:'..'; } 75% { content:'...'; } 100% { content:''; } }
-  .error { color: #E5484D; font-size: 14px; margin-top: 10px; text-align: center; }
+
+  .loading::after {
+    content: '';
+    animation: dots 1.4s steps(4,end) infinite;
+  }
+
+  @keyframes dots {
+    0% { content:''; }
+    25% { content:'.'; }
+    50% { content:'..'; }
+    75% { content:'...'; }
+    100% { content:''; }
+  }
+
+  .error {
+    color: #E5484D;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+  }
 
   .card {
-    border: 1px dashed #333A48; border-radius: 12px; padding: 30px 26px; position: relative; margin-top: 18px; display: none;
-    background: rgba(17,21,29,.5); backdrop-filter: blur(6px);
+    border: 1px dashed #333A48;
+    border-radius: 12px;
+    padding: 30px 26px;
+    position: relative;
+    margin-top: 18px;
+    display: none;
+    background: rgba(17,21,29,.5);
+    backdrop-filter: blur(6px);
   }
+
   .stamp {
-    position: absolute; top: -14px; right: 20px; transform: rotate(-6deg);
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
-    padding: 4px 10px; border-radius: 3px; background: #0B0E14; border: 1.5px solid;
+    position: absolute;
+    top: -14px;
+    right: 20px;
+    transform: rotate(-6deg);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: #0B0E14;
+    border: 1.5px solid;
   }
-  .verdict { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.35; margin-bottom: 14px; }
-  .explanation { font-size: 14.5px; line-height: 1.6; color: #B8BEC9; margin-bottom: 22px; }
 
-  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .verdict {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+
+  .explanation {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #B8BEC9;
+    margin-bottom: 22px;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
   .actbtn {
-    background: transparent; border: 1px solid #262B36; color: #8A93A6; border-radius: 8px;
-    padding: 7px 12px; font-size: 12.5px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
-    display: flex; align-items: center; gap: 6px;
+    background: transparent;
+    border: 1px solid #262B36;
+    color: #8A93A6;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 12.5px;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  .actbtn:hover { border-color: #8A93A6; color: #F2F0EA; }
-  .actbtn.active { border-color: #3FA796; color: #3FA796; }
 
-  .sources-label, .related-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6272; letter-spacing: 0.1em; margin-bottom: 10px; }
-  .sources { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
+  .actbtn:hover {
+    border-color: #8A93A6;
+    color: #F2F0EA;
+  }
+
+  .actbtn.active {
+    border-color: #3FA796;
+    color: #3FA796;
+  }
+
+  .sources-label,
+  .related-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #5B6272;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .sources {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
   .source {
-    display: flex; justify-content: space-between; align-items: center; border: 1px solid #1E232D; border-radius: 5px;
-    padding: 9px 12px; color: #F2F0EA; text-decoration: none; font-size: 13.5px; font-family: 'IBM Plex Mono', monospace;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #1E232D;
+    border-radius: 5px;
+    padding: 9px 12px;
+    color: #F2F0EA;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'IBM Plex Mono', monospace;
   }
-  .source .arrow { color: #4A5163; font-size: 12px; }
 
-  .related { display: flex; flex-direction: column; gap: 8px; }
+  .source .arrow {
+    color: #4A5163;
+    font-size: 12px;
+  }
+
+  .related {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   .related button {
-    text-align: left; background: transparent; border: 1px solid #1E232D; border-radius: 8px; color: #B8BEC9;
-    padding: 10px 12px; font-size: 13.5px; cursor: pointer; font-family: 'Inter', sans-serif;
+    text-align: left;
+    background: transparent;
+    border: 1px solid #1E232D;
+    border-radius: 8px;
+    color: #B8BEC9;
+    padding: 10px 12px;
+    font-size: 13.5px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
   }
-  .related button:hover { border-color: #3FA796; color: #F2F0EA; }
 
-  footer { text-align: center; color: #3A4150; font-size: 12px; font-family: 'IBM Plex Mono', monospace; margin-top: 60px; }
+  .related button:hover {
+    border-color: #3FA796;
+    color: #F2F0EA;
+  }
 
-  #authModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; align-items:center; justify-content:center; }
-  #authModal .box { background:#11151d; border:1px solid #262B36; border-radius:10px; padding:28px 24px; width:88%; max-width:340px; }
-  #authModal h3 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; margin:0 0 18px; }
-  #authModal button.google { width:100%; padding:11px; border-radius:6px; border:1px solid #333; background:#fff; color:#111; font-weight:600; margin-bottom:12px; cursor:pointer; }
-  #authModal .divider { text-align:center; color:#5B6272; font-size:12px; margin:14px 0; }
-  #authModal input { width:100%; padding:10px; margin-bottom:8px; background:#0B0E14; border:1px solid #262B36; border-radius:6px; color:#F2F0EA; }
-  #authModal .row { display:flex; gap:4%; margin-top:6px; }
-  #authModal .row button { flex:1; padding:10px; border-radius:6px; cursor:pointer; font-weight:600; }
-  #authModal .row .signup { border:none; background:#3FA796; color:#0B0E14; }
-  #authModal .row .signin { border:1px solid #333; background:transparent; color:#F2F0EA; }
-  #authError { color:#E5484D; font-size:12px; margin-top:10px; }
-  #authModal .guest { display:block; margin:16px auto 0; background:none; border:none; color:#6B7280; font-size:13px; cursor:pointer; }
+  footer {
+    text-align: center;
+    color: #3A4150;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 60px;
+  }
+
+  /* =========================
+     AUTH MODAL
+  ========================= */
+
+  #authModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #authModal .box {
+    background: #11151d;
+    border: 1px solid #262B36;
+    border-radius: 10px;
+    padding: 28px 24px;
+    width: 88%;
+    max-width: 340px;
+  }
+
+  #authModal h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0 0 18px;
+  }
+
+  #authModal button.google {
+    width: 100%;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #fff;
+    color: #111;
+    font-weight: 600;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+
+  #authModal .divider {
+    text-align: center;
+    color: #5B6272;
+    font-size: 12px;
+    margin: 14px 0;
+  }
+
+  #authModal input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #0B0E14;
+    border: 1px solid #262B36;
+    border-radius: 6px;
+    color: #F2F0EA;
+  }
+
+  #authModal .row {
+    display: flex;
+    gap: 4%;
+    margin-top: 6px;
+  }
+
+  #authModal .row button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  #authModal .row .signup {
+    border: none;
+    background: #3FA796;
+    color: #0B0E14;
+  }
+
+  #authModal .row .signin {
+    border: 1px solid #333;
+    background: transparent;
+    color: #F2F0EA;
+  }
+
+  #authError {
+    color: #E5484D;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+
+  #authModal .guest {
+    display: block;
+    margin: 16px auto 0;
+    background: none;
+    border: none;
+    color: #6B7280;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  /* =========================
+     MOBILE
+  ========================= */
+
+  @media (max-width: 600px) {
+    .navlinks {
+      order: 3;
+      width: 100%;
+      justify-content: center;
+      gap: 13px;
+    }
+
+    nav {
+      padding-bottom: 20px;
+    }
+
+    .hero {
+      padding-top: 25px;
+    }
+
+    form#searchForm {
+      flex-direction: column;
+    }
+
+    button.go {
+      height: 48px;
+    }
+
+    .welcome-logo {
+      margin-bottom: 30px;
+    }
+
+    .welcome-description {
+      font-size: 14px;
+    }
+
+    .quote {
+      padding: 18px 18px;
+    }
+  }
 </style>
 </head>
+
 <body>
 
-<div class="bg-glow"><span></span><span></span><span></span></div>
-
-<div class="wrap">
-  <nav>
-    <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
-    <div class="navlinks">
-      <a href="index.html" class="active">Home</a>
-      <a href="trending.html">Trending</a>
-      <a href="history.html">History</a>
-      <a href="about.html">About</a>
-    </div>
-    <div id="authBar">
-      <button id="signInBtn" onclick="openAuthModal()">Sign in</button>
-      <span id="userBadge"></span>
-    </div>
-  </nav>
-
-  <div class="hero">
-    <h1>Ask anything.<br>Get answers backed by <span class="accent">real sources</span>.</h1>
-    <p>No random blogs, no forum guesses. Debunk pulls from the most trusted source for whatever you're asking — Forbes for wealth, ESPN for sports, WHO for health — so you get an answer you can actually stand on.</p>
-
-    <form id="searchForm">
-      <input type="text" id="query" placeholder="Who is the richest man alive?" autocomplete="off" />
-      <button type="submit" class="go" id="goBtn">Settle it</button>
-    </form>
-
-    <div class="chips" id="chips">
-      <button class="chip" data-q="Who is the richest man alive?">Who is the richest man alive?</button>
-      <button class="chip" data-q="Fastest 100m sprint time ever">Fastest 100m sprint time ever</button>
-      <button class="chip" data-q="Has Messi won a World Cup?">Has Messi won a World Cup?</button>
-      <button class="chip" data-q="Tallest building in the world">Tallest building in the world</button>
-    </div>
-  </div>
-
-  <div class="loading" id="loading" style="display:none;">Thinking</div>
-  <div class="error" id="error" style="display:none;"></div>
-
-  <div class="card" id="card">
-    <div class="stamp" id="stamp"></div>
-    <div class="verdict" id="verdict"></div>
-    <div class="explanation" id="explanation"></div>
-
-    <div class="actions">
-      <button class="actbtn" id="copyBtn">📋 Copy</button>
-      <button class="actbtn" id="shareBtn">↗ Share</button>
-      <button class="actbtn" id="saveBtn">🔖 Save</button>
-      <button class="actbtn" id="likeBtn">👍</button>
-      <button class="actbtn" id="dislikeBtn">👎</button>
-    </div>
-
-    <div id="sourcesBlock">
-      <div class="sources-label">SOURCES</div>
-      <div class="sources" id="sources"></div>
-    </div>
-
-    <div id="relatedBlock" style="display:none;">
-      <div class="related-label">RELATED</div>
-      <div class="related" id="related"></div>
-    </div>
-  </div>
-
-  <footer>Debunk — built to settle arguments, not start them.</footer>
+<div class="bg-glow">
+  <span></span>
+  <span></span>
+  <span></span>
 </div>
+
+<!-- =========================
+     WELCOME / PREVIEW PAGE
+========================= -->
+
+<section id="welcomeScreen">
+  <div class="welcome-inner">
+
+    <div class="welcome-logo">
+      <span class="name">DEBUNK</span>
+      <span class="dot">.</span>
+    </div>
+
+    <div class="welcome-tag">Settle it with sources</div>
+
+    <h1 class="welcome-title">
+      Stop arguing.<br>
+      <span>Find out.</span>
+    </h1>
+
+    <p class="welcome-description">
+      Debunk helps you settle everyday arguments with answers backed
+      by trustworthy sources instead of random internet noise.
+    </p>
+
+    <div class="quote">
+      <div class="quote-mark">“</div>
+      <p>
+        An old man was asked how he lived so long.
+        “I stopped arguing with people.”
+        The journalist said, “That can't be the only reason.”
+        The old man smiled. “You're right.”
+      </p>
+      <strong>— The point isn't to win the argument.</strong>
+    </div>
+
+    <div class="welcome-actions">
+
+      <button class="welcome-google" onclick="welcomeGoogle()">
+        Continue with Google
+      </button>
+
+      <button class="welcome-guest" onclick="continueAsGuest()">
+        Continue as Guest
+      </button>
+
+    </div>
+
+    <div class="welcome-note">
+      No account required to use Debunk.
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =========================
+     MAIN APP
+========================= -->
+
+<div id="app">
+
+  <div class="wrap">
+
+    <nav>
+
+      <div class="logo">
+        <span class="name">DEBUNK</span>
+        <span class="dot">.</span>
+      </div>
+
+      <div class="navlinks">
+        <a href="index.html" class="active">Home</a>
+        <a href="trending.html">Trending</a>
+        <a href="history.html">History</a>
+        <a href="about.html">About</a>
+      </div>
+
+      <div id="authBar">
+        <button id="signInBtn" onclick="openAuthModal()">
+          Sign in
+        </button>
+
+        <span id="userBadge"></span>
+      </div>
+
+    </nav>
+
+
+    <div class="hero">
+
+      <h1>
+        Ask anything.<br>
+        Get answers backed by
+        <span class="accent">real sources</span>.
+      </h1>
+
+      <p>
+        No random blogs, no forum guesses.
+        Debunk pulls from trusted sources so you get an answer
+        you can actually stand on.
+      </p>
+
+      <form id="searchForm">
+
+        <input
+          type="text"
+          id="query"
+          placeholder="Who is the richest man alive?"
+          autocomplete="off"
+        />
+
+        <button type="submit" class="go" id="goBtn">
+          Settle it
+        </button>
+
+      </form>
+
+      <div class="chips" id="chips">
+
+        <button class="chip"
+          data-q="Who is the richest man alive?">
+          Who is the richest man alive?
+        </button>
+
+        <button class="chip"
+          data-q="Fastest 100m sprint time ever">
+          Fastest 100m sprint time ever
+        </button>
+
+        <button class="chip"
+          data-q="Has Messi won a World Cup?">
+          Has Messi won a World Cup?
+        </button>
+
+        <button class="chip"
+          data-q="Tallest building in the world">
+          Tallest building in the world
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="loading" id="loading" style="display:none;">
+      Thinking
+    </div>
+
+    <div class="error" id="error" style="display:none;"></div>
+
+
+    <div class="card" id="card">
+
+      <div class="stamp" id="stamp"></div>
+
+      <div class="verdict" id="verdict"></div>
+
+      <div class="explanation" id="explanation"></div>
+
+      <div class="actions">
+
+        <button class="actbtn" id="copyBtn">
+          📋 Copy
+        </button>
+
+        <button class="actbtn" id="shareBtn">
+          ↗ Share
+        </button>
+
+        <button class="actbtn" id="saveBtn">
+          🔖 Save
+        </button>
+
+        <button class="actbtn" id="likeBtn">
+          👍
+        </button>
+
+        <button class="actbtn" id="dislikeBtn">
+          👎
+        </button>
+
+      </div>
+
+
+      <div id="sourcesBlock">
+
+        <div class="sources-label">
+          SOURCES
+        </div>
+
+        <div class="sources" id="sources"></div>
+
+      </div>
+
+
+      <div id="relatedBlock" style="display:none;">
+
+        <div class="related-label">
+          RELATED
+        </div>
+
+        <div class="related" id="related"></div>
+
+      </div>
+
+    </div>
+
+
+    <footer>
+      Debunk — built to settle arguments, not start them.
+    </footer>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     AUTH MODAL
+========================= -->
 
 <div id="authModal">
+
   <div class="box">
-    <h3>Sign in to Debunk</h3>
-    <button class="google" onclick="signInWithGoogle()">Continue with Google</button>
-    <div class="divider">or use email</div>
-    <input id="authEmail" type="email" placeholder="Email">
-    <input id="authPassword" type="password" placeholder="Password">
-    <div class="row">
-      <button class="signup" onclick="signUpEmail()">Sign up</button>
-      <button class="signin" onclick="signInEmail()">Sign in</button>
+
+    <h3>
+      Sign in to Debunk
+    </h3>
+
+    <button class="google" onclick="signInWithGoogle()">
+      Continue with Google
+    </button>
+
+    <div class="divider">
+      or use email
     </div>
+
+    <input
+      id="authEmail"
+      type="email"
+      placeholder="Email"
+    />
+
+    <input
+      id="authPassword"
+      type="password"
+      placeholder="Password"
+    />
+
+    <div class="row">
+
+      <button class="signup" onclick="signUpEmail()">
+        Sign up
+      </button>
+
+      <button class="signin" onclick="signInEmail()">
+        Sign in
+      </button>
+
+    </div>
+
     <div id="authError"></div>
-    <button class="guest" onclick="closeAuthModal()">Continue as guest</button>
+
+    <button class="guest" onclick="closeAuthModal()">
+      Continue as guest
+    </button>
+
   </div>
+
 </div>
 
+
 <script>
+
+  /* =========================
+     STATUS
+  ========================= */
+
   const STATUS_STYLES = {
-    Verified: { color: "#3FA796", label: "VERIFIED" },
-    Disputed: { color: "#E8A33D", label: "DISPUTED" },
-    Unclear:  { color: "#8A93A6", label: "NO CLEAN SOURCE" },
+    Verified: {
+      color: "#3FA796",
+      label: "VERIFIED"
+    },
+
+    Disputed: {
+      color: "#E8A33D",
+      label: "DISPUTED"
+    },
+
+    Unclear: {
+      color: "#8A93A6",
+      label: "NO CLEAN SOURCE"
+    }
   };
 
-  const form = document.getElementById('searchForm');
-  const input = document.getElementById('query');
-  const goBtn = document.getElementById('goBtn');
-  const chips = document.getElementById('chips');
-  const loading = document.getElementById('loading');
-  const errorEl = document.getElementById('error');
-  const card = document.getElementById('card');
+
+  /* =========================
+     ELEMENTS
+  ========================= */
+
+  const welcomeScreen =
+    document.getElementById('welcomeScreen');
+
+  const app =
+    document.getElementById('app');
+
+  const form =
+    document.getElementById('searchForm');
+
+  const input =
+    document.getElementById('query');
+
+  const goBtn =
+    document.getElementById('goBtn');
+
+  const chips =
+    document.getElementById('chips');
+
+  const loading =
+    document.getElementById('loading');
+
+  const errorEl =
+    document.getElementById('error');
+
+  const card =
+    document.getElementById('card');
+
   let currentData = null;
 
-  async function runSearch(q) {
-    if (!q || !q.trim()) return;
-    goBtn.disabled = true;
-    loading.style.display = 'block';
-    errorEl.style.display = 'none';
-    card.style.display = 'none';
 
-    try {
-      const res = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: q }),
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      currentData = data;
+  /* =========================
+     WELCOME SCREEN
+  ========================= */
 
-      const status = STATUS_STYLES[data.confidence] || STATUS_STYLES.Unclear;
-      const stamp = document.getElementById('stamp');
-      stamp.textContent = status.label;
-      stamp.style.color = status.color;
-      stamp.style.borderColor = status.color;
+  function showApp() {
 
-      document.getElementById('verdict').textContent = data.verdict || '';
-      document.getElementById('explanation').textContent = data.explanation || '';
+    welcomeScreen.style.opacity = '0';
+    welcomeScreen.style.transform = 'scale(.98)';
 
-      const sourcesEl = document.getElementById('sources');
-      sourcesEl.innerHTML = '';
-      const sourcesBlock = document.getElementById('sourcesBlock');
-      const sources = data.sources || [];
-      sourcesBlock.style.display = sources.length ? 'block' : 'none';
-      sources.forEach(s => {
-        const a = document.createElement('a');
-        a.href = s.url || '#';
-        a.target = '_blank';
-        a.rel = 'noreferrer';
-        a.className = 'source';
-        a.innerHTML = `<span>${s.name}</span><span class="arrow">&#8599;</span>`;
-        sourcesEl.appendChild(a);
-      });
+    setTimeout(() => {
 
-      const relatedEl = document.getElementById('related');
-      const relatedBlock = document.getElementById('relatedBlock');
-      relatedEl.innerHTML = '';
-      const related = data.related || [];
-      relatedBlock.style.display = related.length ? 'block' : 'none';
-      related.forEach(r => {
-        const b = document.createElement('button');
-        b.textContent = r;
-        b.onclick = () => { input.value = r; runSearch(r); window.scrollTo({top:0, behavior:'smooth'}); };
-        relatedEl.appendChild(b);
-      });
-
-      resetActionButtons();
-      card.style.display = 'block';
-    } catch (e) {
-      errorEl.textContent = "Couldn't reach the sources. Try again in a moment.";
-      errorEl.style.display = 'block';
-    } finally {
-      loading.style.display = 'none';
-      goBtn.disabled = false;
-    }
-  }
-
-  function resetActionButtons(){
-    document.getElementById('likeBtn').classList.remove('active');
-    document.getElementById('dislikeBtn').classList.remove('active');
-    document.getElementById('saveBtn').classList.remove('active');
-    document.getElementById('saveBtn').textContent = '🔖 Save';
-  }
-
-  document.getElementById('copyBtn').onclick = () => {
-    if (!currentData) return;
-    const text = `${currentData.verdict}\n\n${currentData.explanation}`;
-    navigator.clipboard.writeText(text);
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✓ Copied';
-    setTimeout(() => btn.textContent = '📋 Copy', 1500);
-  };
-
-  document.getElementById('shareBtn').onclick = async () => {
-    if (!currentData) return;
-    const shareData = { title: 'Debunk', text: currentData.verdict, url: location.href };
-    if (navigator.share) { try { await navigator.share(shareData); } catch(e){} }
-    else { navigator.clipboard.writeText(currentData.verdict + ' — ' + location.href); }
-  };
-
-  document.getElementById('saveBtn').onclick = () => {
-    if (!currentData) return;
-    const saved = JSON.parse(localStorage.getItem('debunk_saved') || '[]');
-    saved.unshift({ query: input.value, ...currentData, savedAt: Date.now() });
-    localStorage.setItem('debunk_saved', JSON.stringify(saved.slice(0, 50)));
-    const btn = document.getElementById('saveBtn');
-    btn.classList.add('active');
-    btn.textContent = '✓ Saved';
-  };
-
-  document.getElementById('likeBtn').onclick = (e) => {
-    e.target.classList.add('active');
-    document.getElementById('dislikeBtn').classList.remove('active');
-  };
-  document.getElementById('dislikeBtn').onclick = (e) => {
-    e.target.classList.add('active');
-    document.getElementById('likeBtn').classList.remove('active');
-  };
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    runSearch(input.value);
-  });
-
-  chips.addEventListener('click', (e) => {
-    const btn = e.target.closest('.chip');
-    if (!btn) return;
-    const q = btn.dataset.q;
-    input.value = q;
-    runSearch(q);
-  });
-
-  const params = new URLSearchParams(location.search);
-  const presetQ = params.get('q');
-  if (presetQ) { input.value = presetQ; runSearch(presetQ); }
-
-  const sb = supabase.createClient('‎https://axjavfnqxdlqpjirvpmn.supabase.co/rest/v1/', 'sb_publishable_VZ5GKmIEmUQvDh7VsFvuBA_QTTUwu6o');
-
-  function openAuthModal(){ document.getElementById('authModal').style.display='flex'; }
-  function closeAuthModal(){ document.getElementById('authModal').style.display='none'; }
-
-  async function signInWithGoogle(){
-    await sb.auth.signInWithOAuth({ provider: 'google' });
-  }
-  async function signUpEmail(){
-    const email = document.getElementById('authEmail').value;
-    const password = document.getElementById('authPassword').value;
-    const { error } = await sb.auth.signUp({ email, password });
-    document.getElementById('authError').textContent = error ? error.message : 'Check your email to confirm.';
-  }
-  async function signInEmail(){
-    const email = document.getElementById('authEmail').value;
-    const password = document.getElementById('authPassword').value;
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) { document.getElementById('authError').textContent = error.message; return; }
-    closeAuthModal();
-    checkUser();
-  }
-  async function checkUser(){
-    const { data: { user } } = await sb.auth.getUser();
-    if (user) {
-      document.getElementById('signInBtn').style.display='none';
-      const badge = document.getElementById('userBadge');
-      badge.style.display='inline';
-      badge.textContent = user.email.split('@')[0] + ' | logout';
-      badge.onclick = async () => { await sb.auth.signOut(); location.reload(); };
-    }
-  }
-  checkUser();
-</script>
-</body>
-                          </html>
+      welcomeScreen.style.display = 'none';
+ 
