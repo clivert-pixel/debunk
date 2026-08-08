@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Debunk — Settle it with sources</title>
-
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" href="/icon-512.png">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-<style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Debunk — Settle it with sources</title><link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-512.png"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><style>
 * {
   box-sizing: border-box;
 }
@@ -25,21 +14,27 @@ html {
 
 body {
   margin: 0;
-  background: #F7F6F1;
+  background: #F8F8F4;
   color: #172326;
-  font-family: "Inter", sans-serif;
+  font-family: Inter, sans-serif;
 }
 
-/* =========================
-   HEADER
-========================= */
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* HEADER */
 
 .header {
-  height: 74px;
+  height: 76px;
   max-width: 1180px;
   margin: auto;
   padding: 0 24px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -47,30 +42,28 @@ body {
 
 .logo {
   font-family: "Space Grotesk", sans-serif;
-  font-size: 25px;
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: -1px;
+  letter-spacing: -1.2px;
 }
 
 .logo span {
   color: #2F8F83;
 }
 
-.menu-button {
-  width: 42px;
-  height: 42px;
+/* MENU BUTTON */
 
+.menu-button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid #D8D9D3;
+  border-radius: 8px;
+  background: #FFFFFF;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 5px;
-
-  border: 1px solid #D9D9D2;
-  border-radius: 8px;
-
-  background: #FFFFFF;
-  cursor: pointer;
 }
 
 .menu-button:hover {
@@ -78,27 +71,21 @@ body {
 }
 
 .menu-button span {
-  display: block;
-  width: 18px;
+  width: 19px;
   height: 2px;
   background: #172326;
+  border-radius: 2px;
 }
 
-/* =========================
-   SIDE MENU
-========================= */
+/* SIDE MENU */
 
 .menu-overlay {
   position: fixed;
   inset: 0;
-
-  background: rgba(20, 30, 32, 0.28);
-
+  background: rgba(20,30,32,.28);
   opacity: 0;
   visibility: hidden;
-
-  transition: .2s;
-
+  transition: .2s ease;
   z-index: 90;
 }
 
@@ -111,23 +98,16 @@ body {
   position: fixed;
   top: 0;
   right: 0;
-
-  width: 310px;
+  width: 320px;
   max-width: 88vw;
   height: 100vh;
-
   background: #FFFDF8;
-
-  border-left: 1px solid #E2E1DA;
-
-  padding: 25px;
-
+  border-left: 1px solid #DFE0DA;
+  padding: 24px;
   transform: translateX(100%);
   transition: transform .25s ease;
-
   z-index: 100;
-
-  box-shadow: -15px 0 45px rgba(0,0,0,.08);
+  box-shadow: -20px 0 50px rgba(0,0,0,.08);
 }
 
 .side-menu.open {
@@ -136,16 +116,15 @@ body {
 
 .menu-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
+  justify-content: space-between;
   margin-bottom: 35px;
 }
 
 .menu-title {
   font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
   font-size: 21px;
+  font-weight: 700;
 }
 
 .menu-title span {
@@ -155,15 +134,10 @@ body {
 .close-button {
   width: 36px;
   height: 36px;
-
-  border: 1px solid #DCDCD5;
+  border: 1px solid #D8D9D3;
   border-radius: 7px;
-
-  background: white;
-  cursor: pointer;
-
-  font-size: 20px;
-  color: #172326;
+  background: #FFFFFF;
+  font-size: 21px;
 }
 
 .menu-links {
@@ -175,33 +149,25 @@ body {
 .menu-links a,
 .menu-links button {
   width: 100%;
-
   padding: 13px 12px;
-
   border: 0;
   border-radius: 7px;
-
   background: transparent;
-
-  color: #475457;
-
+  color: #4E595B;
   text-align: left;
   text-decoration: none;
-
   font-size: 14px;
-
-  cursor: pointer;
 }
 
 .menu-links a:hover,
 .menu-links button:hover {
-  background: #F0F1EB;
+  background: #EEF1EC;
   color: #172326;
 }
 
 .menu-divider {
   height: 1px;
-  background: #E3E2DB;
+  background: #E1E2DC;
   margin: 15px 0;
 }
 
@@ -210,9 +176,11 @@ body {
   font-weight: 600;
 }
 
-/* =========================
-   MAIN
-========================= */
+.guest-menu {
+  color: #687274 !important;
+}
+
+/* MAIN */
 
 main {
   max-width: 900px;
@@ -220,9 +188,7 @@ main {
   padding: 70px 24px 80px;
 }
 
-/* =========================
-   HERO
-========================= */
+/* HERO */
 
 .hero {
   text-align: center;
@@ -231,28 +197,18 @@ main {
 .small-label {
   font-family: "IBM Plex Mono", monospace;
   font-size: 11px;
-
   letter-spacing: .12em;
-
   color: #2F8F83;
-
   margin-bottom: 20px;
 }
 
 .hero h1 {
   margin: 0;
-
   font-family: "Space Grotesk", sans-serif;
-
-  font-size: clamp(42px, 7vw, 70px);
-
+  font-size: clamp(44px, 7vw, 72px);
   line-height: 1.02;
-
   letter-spacing: -3px;
-
   font-weight: 700;
-
-  color: #172326;
 }
 
 .hero h1 span {
@@ -261,55 +217,34 @@ main {
 
 .hero-description {
   max-width: 590px;
-
   margin: 25px auto 35px;
-
   color: #697577;
-
   font-size: 15px;
-
   line-height: 1.7;
 }
 
-/* =========================
-   SEARCH
-========================= */
+/* SEARCH */
 
 .search-form {
   max-width: 700px;
-
   margin: auto;
-
   display: flex;
   gap: 8px;
-
   padding: 6px;
-
   background: #FFFFFF;
-
-  border: 1px solid #DADBD5;
-
+  border: 1px solid #D8DAD4;
   border-radius: 10px;
-
-  box-shadow: 0 8px 25px rgba(35, 48, 50, .06);
+  box-shadow: 0 8px 28px rgba(35,48,50,.06);
 }
 
 .search-input {
   flex: 1;
-
   min-width: 0;
-
   border: 0;
   outline: 0;
-
   background: transparent;
-
   color: #172326;
-
   padding: 14px;
-
-  font-family: "Inter", sans-serif;
-
   font-size: 15px;
 }
 
@@ -319,20 +254,12 @@ main {
 
 .search-button {
   border: 0;
-
   background: #2F8F83;
-
   color: white;
-
   border-radius: 7px;
-
-  padding: 0 21px;
-
+  padding: 0 22px;
   font-size: 14px;
-
   font-weight: 600;
-
-  cursor: pointer;
 }
 
 .search-button:hover {
@@ -341,38 +268,26 @@ main {
 
 .search-button:disabled {
   opacity: .55;
+  cursor: wait;
 }
 
-/* =========================
-   EXAMPLES
-========================= */
+/* EXAMPLES */
 
 .examples {
   display: flex;
-
   justify-content: center;
-
   flex-wrap: wrap;
-
   gap: 7px;
-
   margin-top: 14px;
 }
 
 .example {
-  border: 1px solid #DDDDD7;
-
+  border: 1px solid #DDDED8;
   background: transparent;
-
   color: #777F80;
-
   border-radius: 20px;
-
   padding: 7px 12px;
-
   font-size: 12px;
-
-  cursor: pointer;
 }
 
 .example:hover {
@@ -380,267 +295,174 @@ main {
   color: #2F8F83;
 }
 
-/* =========================
-   EXPLANATION
-========================= */
+/* EXPLANATION */
 
 .explanation-section {
   margin-top: 100px;
-
   display: grid;
-
   grid-template-columns: 1fr 1.6fr;
-
   gap: 35px;
-
   padding: 35px 0;
-
-  border-top: 1px solid #DFDED7;
-  border-bottom: 1px solid #DFDED7;
+  border-top: 1px solid #DFE0DA;
+  border-bottom: 1px solid #DFE0DA;
 }
 
 .section-label {
   font-family: "IBM Plex Mono", monospace;
-
   font-size: 10px;
-
   letter-spacing: .12em;
-
   color: #2F8F83;
 }
 
 .explanation-section h2 {
-  margin: 0;
-
+  margin: 8px 0 0;
   font-family: "Space Grotesk", sans-serif;
-
-  font-size: 26px;
-
+  font-size: 27px;
   line-height: 1.2;
-
   letter-spacing: -.7px;
 }
 
 .explanation-section p {
   margin: 0;
-
   color: #697577;
-
   font-size: 14px;
-
   line-height: 1.8;
 }
 
-/* =========================
-   QUOTE
-========================= */
+/* QUOTE */
 
 .quote-section {
   max-width: 650px;
-
   margin: 90px auto 0;
-
   text-align: center;
 }
 
-.quote-section .quote-mark {
+.quote-mark {
   font-family: Georgia, serif;
-
-  font-size: 48px;
-
+  font-size: 50px;
   color: #2F8F83;
-
-  line-height: .5;
 }
 
 .quote {
-  margin: 20px 0;
-
+  margin: 15px 0;
   font-family: "Space Grotesk", sans-serif;
-
   font-size: 23px;
-
-  line-height: 1.55;
-
+  line-height: 1.5;
   color: #263538;
 }
 
 .quote-note {
   font-family: "IBM Plex Mono", monospace;
-
   color: #929998;
-
   font-size: 10px;
 }
 
-/* =========================
-   LOADING / ERROR
-========================= */
+/* LOADING */
 
 .loading {
   display: none;
-
   text-align: center;
-
   margin: 30px 0;
-
-  color: #7A8586;
-
+  color: #697577;
   font-family: "IBM Plex Mono", monospace;
-
   font-size: 12px;
 }
 
 .error {
   display: none;
-
   text-align: center;
-
   color: #C04C54;
-
   font-size: 13px;
-
   margin-top: 15px;
 }
 
-/* =========================
-   RESULT CARD
-========================= */
+/* RESULT */
 
 .result-card {
   display: none;
-
   margin-top: 40px;
-
   padding: 30px;
-
   background: #FFFFFF;
-
   border: 1px solid #DCDDD7;
-
   border-radius: 10px;
-
   box-shadow: 0 10px 35px rgba(30,40,42,.06);
 }
 
 .status {
   display: inline-block;
-
   font-family: "IBM Plex Mono", monospace;
-
   font-size: 10px;
-
   letter-spacing: .08em;
-
   padding: 5px 8px;
-
   border: 1px solid;
-
   border-radius: 4px;
-
   margin-bottom: 18px;
 }
 
 .verdict {
   font-family: "Space Grotesk", sans-serif;
-
   font-size: 24px;
-
   line-height: 1.4;
-
   margin-bottom: 15px;
 }
 
 .result-explanation {
   color: #647072;
-
   font-size: 14px;
-
   line-height: 1.7;
-
   margin-bottom: 25px;
 }
 
-/* =========================
-   ACTIONS
-========================= */
+/* ACTIONS */
 
 .actions {
   display: flex;
-
   flex-wrap: wrap;
-
   gap: 7px;
-
   margin-bottom: 25px;
 }
 
 .action {
   border: 1px solid #DADBD5;
-
   background: white;
-
   color: #687274;
-
   border-radius: 6px;
-
   padding: 7px 11px;
-
   font-size: 12px;
-
-  cursor: pointer;
 }
 
 .action:hover,
 .action.active {
   color: #2F8F83;
-
   border-color: #2F8F83;
 }
 
-/* =========================
-   SOURCES
-========================= */
+/* SOURCES */
 
 .result-label {
   font-family: "IBM Plex Mono", monospace;
-
   font-size: 10px;
-
   letter-spacing: .1em;
-
   color: #8A9293;
-
   margin-bottom: 10px;
 }
 
 .sources {
   display: flex;
-
   flex-direction: column;
-
   gap: 7px;
-
   margin-bottom: 25px;
 }
 
 .source {
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
-
   padding: 11px 12px;
-
   border: 1px solid #E1E2DD;
-
   border-radius: 6px;
-
   color: #263538;
-
   text-decoration: none;
-
   font-size: 13px;
 }
 
@@ -650,201 +472,139 @@ main {
 
 .related {
   display: flex;
-
   flex-direction: column;
-
   gap: 7px;
 }
 
 .related button {
   border: 1px solid #E1E2DD;
-
   background: transparent;
-
   color: #687274;
-
   text-align: left;
-
   border-radius: 6px;
-
   padding: 10px;
-
-  cursor: pointer;
 }
 
 .related button:hover {
   border-color: #2F8F83;
-
   color: #263538;
 }
 
-/* =========================
-   AUTH MODAL
-========================= */
+/* AUTH */
 
 .auth-modal {
   display: none;
-
   position: fixed;
-
   inset: 0;
-
   z-index: 200;
-
-  background: rgba(25, 32, 33, .45);
-
+  background: rgba(25,32,33,.45);
   align-items: center;
-
   justify-content: center;
-
   padding: 20px;
 }
 
 .auth-box {
   width: 100%;
-
-  max-width: 350px;
-
+  max-width: 360px;
   background: #FFFDF8;
-
-  border: 1px solid #DDDDD7;
-
-  border-radius: 10px;
-
+  border: 1px solid #DDDED8;
+  border-radius: 12px;
   padding: 28px;
-
   box-shadow: 0 25px 70px rgba(0,0,0,.15);
 }
 
 .auth-box h3 {
   margin: 0 0 20px;
-
   font-family: "Space Grotesk", sans-serif;
-
   font-size: 21px;
 }
 
 .google-button {
   width: 100%;
-
   padding: 12px;
-
   border: 1px solid #D4D5D0;
-
   background: white;
-
   border-radius: 7px;
-
-  cursor: pointer;
-
   font-weight: 600;
-
   color: #263538;
+}
+
+.google-button:hover {
+  border-color: #2F8F83;
 }
 
 .divider {
   text-align: center;
-
   color: #999F9F;
-
   font-size: 11px;
-
   margin: 17px 0;
 }
 
 .auth-input {
   width: 100%;
-
   padding: 11px;
-
   margin-bottom: 8px;
-
   border: 1px solid #D8D9D3;
-
   border-radius: 6px;
-
   outline: none;
-
   background: white;
-
   color: #172326;
+}
+
+.auth-input:focus {
+  border-color: #2F8F83;
 }
 
 .auth-row {
   display: flex;
-
   gap: 7px;
 }
 
 .auth-row button {
   flex: 1;
-
   padding: 11px;
-
   border-radius: 6px;
-
-  cursor: pointer;
-
   font-weight: 600;
 }
 
 .signup {
   border: 0;
-
   background: #2F8F83;
-
   color: white;
 }
 
 .signin {
   border: 1px solid #D5D6D0;
-
   background: white;
-
   color: #263538;
 }
 
 .auth-error {
   color: #C04C54;
-
   font-size: 12px;
-
   margin-top: 10px;
+  line-height: 1.5;
 }
 
 .cancel-auth {
   display: block;
-
   margin: 15px auto 0;
-
   border: 0;
-
   background: transparent;
-
   color: #7C8586;
-
-  cursor: pointer;
 }
 
-/* =========================
-   FOOTER
-========================= */
+/* FOOTER */
 
 footer {
   text-align: center;
-
   margin-top: 100px;
-
   color: #929998;
-
   font-family: "IBM Plex Mono", monospace;
-
   font-size: 10px;
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media (max-width: 650px) {
 
@@ -857,14 +617,12 @@ footer {
   }
 
   .hero h1 {
-    font-size: 46px;
-
+    font-size: 47px;
     letter-spacing: -2px;
   }
 
   .search-form {
     flex-direction: column;
-
     padding: 7px;
   }
 
@@ -874,9 +632,7 @@ footer {
 
   .explanation-section {
     grid-template-columns: 1fr;
-
     gap: 15px;
-
     margin-top: 70px;
   }
 
@@ -892,485 +648,155 @@ footer {
     padding: 22px;
   }
 }
-</style>
-</head>
-
-<body>
-
-<!-- =========================
-     HEADER
-========================= -->
-
-<header class="header">
-
-  <div class="logo">
-    DEBUNK<span>.</span>
-  </div>
-
-  <button
-    class="menu-button"
-    id="menuButton"
-    aria-label="Open menu">
-
+</style></head><body><header class="header">
+  <div class="logo">DEBUNK<span>.</span></div>  <button class="menu-button" id="menuButton" aria-label="Open menu">
     <span></span>
     <span></span>
     <span></span>
-
   </button>
+</header><div class="menu-overlay" id="menuOverlay"></div><aside class="side-menu" id="sideMenu">  <div class="menu-header">
+    <div class="menu-title">DEBUNK<span>.</span></div><button class="close-button" id="closeMenu">×</button>
 
-</header>
+  </div>  <nav class="menu-links"><a href="index.html">Home</a>
+<a href="trending.html">Trending</a>
+<a href="history.html">History</a>
+<a href="about.html">About</a>
 
+<div class="menu-divider"></div>
 
-<!-- MENU OVERLAY -->
+<button class="login-button" id="openLogin">
+  Sign in
+</button>
 
-<div
-  class="menu-overlay"
-  id="menuOverlay">
-</div>
+<button class="guest-menu" id="guestButton">
+  Continue as guest
+</button>
 
-
-<!-- =========================
-     SIDE MENU
-========================= -->
-
-<aside
-  class="side-menu"
-  id="sideMenu">
-
-  <div class="menu-header">
-
-    <div class="menu-title">
-      DEBUNK<span>.</span>
-    </div>
-
-    <button
-      class="close-button"
-      id="closeMenu">
-
-      ×
-
-    </button>
-
-  </div>
-
-
-  <nav class="menu-links">
-
-    <a href="index.html">
-      Home
-    </a>
-
-    <a href="trending.html">
-      Trending
-    </a>
-
-    <a href="history.html">
-      History
-    </a>
-
-    <a href="about.html">
-      About
-    </a>
-
-    <div class="menu-divider"></div>
-
-    <button
-      class="login-button"
-      id="signInBtn">
-
-      Sign in with Google
-
-    </button>
-
-    <button
-      id="logoutBtn"
-      style="display:none;">
-
-      Log out
-
-    </button>
+<button id="logoutButton" style="display:none;">
+  Log out
+</button>
 
   </nav>
+</aside><main><section class="hero">  <div class="small-label">
+    SOURCES OVER OPINIONS
+  </div>  <h1>
+    Ask anything.<br>
+    <span>Settle it.</span>
+  </h1>  <p class="hero-description">
+    Debunk finds trustworthy sources and helps you separate
+    facts from internet noise. No vibes. No guessing.
+    Just evidence.
+  </p>  <form class="search-form" id="searchForm"><input
+  class="search-input"
+  id="query"
+  type="text"
+  autocomplete="off"
+  placeholder="What are you trying to settle?"
+>
+
+<button
+  class="search-button"
+  id="goButton"
+  type="submit">
+  Settle it
+</button>
+
+  </form>  <div class="examples"><button class="example" data-q="Who is the richest man alive?">
+  Who is the richest man alive?
+</button>
+
+<button class="example" data-q="Fastest 100m sprint time ever">
+  Fastest 100m sprint time ever
+</button>
+
+<button class="example" data-q="Has Messi won a World Cup?">
+  Has Messi won a World Cup?
+</button>
+
+  </div></section><section class="explanation-section">  <div>
+    <div class="section-label">WHY DEBUNK</div><h2>
+  Because winning an argument isn't the same as being right.
+</h2>
+
+  </div>  <p>
+    The internet is full of answers. Some are reliable.
+    Some aren't.
+    <br><br>
+    Debunk looks for credible sources and puts the evidence
+    in front of you, so you can decide what actually holds up.
+  </p></section><section class="quote-section">  <div class="quote-mark">“</div>  <div class="quote">
+    A journalist asked an old man how he lived so long.
+    <br><br>
+    “I stopped arguing with people.”
+    <br>
+    “That's impossible.”
+    <br>
+    “You're right.”
+  </div>  <div class="quote-note">
+    Some arguments aren't worth winning.
+  </div></section><div class="loading" id="loading">
+  Checking the sources...
+</div><div class="error" id="error"></div><section class="result-card" id="resultCard">  <div class="status" id="status"></div>  <div class="verdict" id="verdict"></div>  <div class="result-explanation" id="resultExplanation"></div>  <div class="actions"><button class="action" id="copyButton">Copy</button>
+
+<button class="action" id="shareButton">Share</button>
+
+<button class="action" id="saveButton">Save</button>
+
+<button class="action" id="likeButton">👍</button>
+
+<button class="action" id="dislikeButton">👎</button>
+
+  </div>  <div id="sourcesSection"><div class="result-label">SOURCES</div>
+
+<div class="sources" id="sources"></div>
+
+  </div>  <div id="relatedSection" style="display:none;"><div class="result-label">RELATED</div>
+
+<div class="related" id="related"></div>
+
+  </div></section><footer>
+  DEBUNK — built to settle arguments, not start them.
+</footer></main><!-- AUTH MODAL --><div class="auth-modal" id="authModal">  <div class="auth-box"><h3>Sign in to Debunk</h3>
+
+<button class="google-button" id="googleButton">
+  Continue with Google
+</button>
+
+<div class="divider">OR USE EMAIL</div>
+
+<input
+  class="auth-input"
+  id="authEmail"
+  type="email"
+  placeholder="Email"
+>
+
+<input
+  class="auth-input"
+  id="authPassword"
+  type="password"
+  placeholder="Password"
+>
+
+<div class="auth-row">
 
-</aside>
+  <button class="signup" id="signupButton">
+    Sign up
+  </button>
 
-
-<!-- =========================
-     MAIN
-========================= -->
-
-<main>
-
-  <!-- HERO -->
-
-  <section class="hero">
-
-    <div class="small-label">
-      SOURCES OVER OPINIONS
-    </div>
-
-    <h1>
-      Ask anything.<br>
-      <span>Settle it.</span>
-    </h1>
-
-    <p class="hero-description">
-
-      Debunk finds trustworthy sources and
-      helps you separate facts from internet noise.
-      No vibes. No guessing. Just evidence.
-
-    </p>
-
-
-    <!-- SEARCH -->
-
-    <form
-      class="search-form"
-      id="searchForm">
-
-      <input
-        class="search-input"
-        id="query"
-        type="text"
-        autocomplete="off"
-        placeholder="What are you trying to settle?">
-
-      <button
-        class="search-button"
-        id="goBtn"
-        type="submit">
-
-        Settle it
-
-      </button>
-
-    </form>
-
-
-    <!-- EXAMPLES -->
-
-    <div
-      class="examples"
-      id="examples">
-
-      <button
-        class="example"
-        data-q="Who is the richest man alive?">
-
-        Who is the richest man alive?
-
-      </button>
-
-      <button
-        class="example"
-        data-q="Fastest 100m sprint time ever">
-
-        Fastest 100m sprint time ever
-
-      </button>
-
-      <button
-        class="example"
-        data-q="Has Messi won a World Cup?">
-
-        Has Messi won a World Cup?
-
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       EXPLANATION
-  ========================= -->
-
-  <section class="explanation-section">
-
-    <div>
-
-      <div class="section-label">
-        WHY DEBUNK
-      </div>
-
-      <h2>
-        Because winning an argument isn't the same as being right.
-      </h2>
-
-    </div>
-
-
-    <p>
-
-      The internet is full of answers.
-      Some are reliable. Some aren't.
-
-      <br><br>
-
-      Debunk looks for credible sources
-      and puts the evidence in front of you,
-      so you can decide what actually holds up.
-
-    </p>
-
-  </section>
-
-
-  <!-- =========================
-       QUOTE
-  ========================= -->
-
-  <section class="quote-section">
-
-    <div class="quote-mark">
-      “
-    </div>
-
-    <div class="quote">
-
-      A journalist asked an old man how he
-      lived so long.
-
-      <br><br>
-
-      “I stopped arguing with people.”
-
-      <br>
-
-      “That's impossible.”
-
-      <br>
-
-      “You're right.”
-
-    </div>
-
-    <div class="quote-note">
-      Some arguments aren't worth winning.
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       LOADING
-  ========================= -->
-
-  <div
-    class="loading"
-    id="loading">
-
-    Checking the sources...
-
-  </div>
-
-
-  <!-- ERROR -->
-
-  <div
-    class="error"
-    id="error">
-  </div>
-
-
-  <!-- =========================
-       RESULT
-  ========================= -->
-
-  <section
-    class="result-card"
-    id="resultCard">
-
-    <div
-      class="status"
-      id="status">
-    </div>
-
-    <div
-      class="verdict"
-      id="verdict">
-    </div>
-
-    <div
-      class="result-explanation"
-      id="resultExplanation">
-    </div>
-
-
-    <div class="actions">
-
-      <button
-        class="action"
-        id="copyButton">
-
-        Copy
-
-      </button>
-
-      <button
-        class="action"
-        id="shareButton">
-
-        Share
-
-      </button>
-
-      <button
-        class="action"
-        id="saveButton">
-
-        Save
-
-      </button>
-
-      <button
-        class="action"
-        id="likeButton">
-
-        👍
-
-      </button>
-
-      <button
-        class="action"
-        id="dislikeButton">
-
-        👎
-
-      </button>
-
-    </div>
-
-
-    <!-- SOURCES -->
-
-    <div id="sourcesSection">
-
-      <div class="result-label">
-        SOURCES
-      </div>
-
-      <div
-        class="sources"
-        id="sources">
-      </div>
-
-    </div>
-
-
-    <!-- RELATED -->
-
-    <div
-      id="relatedSection"
-      style="display:none;">
-
-      <div class="result-label">
-        RELATED
-      </div>
-
-      <div
-        class="related"
-        id="related">
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <footer>
-    DEBUNK — built to settle arguments, not start them.
-  </footer>
-
-</main>
-
-
-<!-- =========================
-     AUTH MODAL
-========================= -->
-
-<div
-  class="auth-modal"
-  id="authModal">
-
-  <div class="auth-box">
-
-    <h3>
-      Sign in to Debunk
-    </h3>
-
-    <button
-      class="google-button"
-      id="googleButton">
-
-      Continue with Google
-
-    </button>
-
-
-    <div class="divider">
-      OR USE EMAIL
-    </div>
-
-
-    <input
-      class="auth-input"
-      id="authEmail"
-      type="email"
-      placeholder="Email">
-
-
-    <input
-      class="auth-input"
-      id="authPassword"
-      type="password"
-      placeholder="Password">
-
-
-    <div class="auth-row">
-
-      <button
-        class="signup"
-        id="signupButton">
-
-        Sign up
-
-      </button>
-
-      <button
-        class="signin"
-        id="signinButton">
-
-        Sign in
-
-      </button>
-
-    </div>
-
-
-    <div
-      class="auth-error"
-      id="authError">
-    </div>
-
-
-    <button
-      class="cancel-auth"
-      id="cancelAuth">
-
-      Cancel
-
-    </button>
-
-  </div>
+  <button class="signin" id="signinButton">
+    Sign in
+  </button>
 
 </div>
 
+<div class="auth-error" id="authError"></div>
 
-<script>
+<button class="cancel-auth" id="cancelAuth">
+  Cancel
+</button>
 
+  </div></div><script>
 /* =====================================================
    SUPABASE
 ===================================================== */
@@ -1395,157 +821,801 @@ const supabaseClient =
 const menuButton =
   document.getElementById("menuButton");
 
+const closeMenuButton =
+  document.getElementById("closeMenu");
+
 const sideMenu =
   document.getElementById("sideMenu");
-
-const closeMenu =
-  document.getElementById("closeMenu");
 
 const menuOverlay =
   document.getElementById("menuOverlay");
 
-
 function openMenu() {
-
   sideMenu.classList.add("open");
-
   menuOverlay.classList.add("open");
-
 }
 
-
-function closeSideMenu() {
-
+function closeMenu() {
   sideMenu.classList.remove("open");
-
   menuOverlay.classList.remove("open");
-
 }
 
+menuButton.addEventListener("click", openMenu);
 
-menuButton.addEventListener(
-  "click",
-  openMenu
-);
+closeMenuButton.addEventListener("click", closeMenu);
 
-
-closeMenu.addEventListener(
-  "click",
-  closeSideMenu
-);
-
-
-menuOverlay.addEventListener(
-  "click",
-  closeSideMenu
-);
+menuOverlay.addEventListener("click", closeMenu);
 
 
 /* =====================================================
-   AUTH
+   AUTH ELEMENTS
 ===================================================== */
 
 const authModal =
   document.getElementById("authModal");
 
-const signInBtn =
-  document.getElementById("signInBtn");
+const openLogin =
+  document.getElementById("openLogin");
 
-const cancelAuth =
-  document.getElementById("cancelAuth");
+const guestButton =
+  document.getElementById("guestButton");
+
+const logoutButton =
+  document.getElementById("logoutButton");
 
 const googleButton =
   document.getElementById("googleButton");
+
+const cancelAuth =
+  document.getElementById("cancelAuth");
 
 const authError =
   document.getElementById("authError");
 
 
-signInBtn.addEventListener(
-  "click",
-  function() {
+/* =====================================================
+   SIGN IN MODAL
+===================================================== */
 
-    closeSideMenu();
+openLogin.addEventListener("click", function() {
 
-    authError.textContent = "";
+  closeMenu();
 
-    authModal.style.display = "flex";
+  authError.textContent = "";
 
-  }
-);
+  authModal.style.display = "flex";
+
+});
 
 
-cancelAuth.addEventListener(
-  "click",
-  function() {
+/* =====================================================
+   GUEST
+   THIS DOES NOT USE SUPABASE.
+===================================================== */
 
+guestButton.addEventListener("click", function() {
+
+  closeMenu();
+
+  authModal.style.display = "none";
+
+  // Remember that this visitor chose guest mode.
+  localStorage.setItem("debunk_guest", "true");
+
+});
+
+
+/* =====================================================
+   CANCEL AUTH
+===================================================== */
+
+cancelAuth.addEventListener("click", function() {
+
+  authModal.style.display = "none";
+
+});
+
+
+authModal.addEventListener("click", function(event) {
+
+  if (event.target === authModal) {
     authModal.style.display = "none";
-
   }
-);
+
+});
 
 
-authModal.addEventListener(
-  "click",
-  function(e) {
+/* =====================================================
+   GOOGLE LOGIN
+===================================================== */
 
-    if (e.target === authModal) {
+googleButton.addEventListener("click", async function() {
 
-      authModal.style.display = "none";
+  authError.textContent = "Opening Google...";
 
+  try {
+
+    const { error } =
+      await supabaseClient.auth.signInWithOAuth({
+
+        provider: "google",
+
+        options: {
+          redirectTo: window.location.origin
+        }
+
+      });
+
+    if (error) {
+      throw error;
     }
 
+  } catch (error) {
+
+    console.error("Google login error:", error);
+
+    authError.textContent =
+      error.message || "Google sign-in failed.";
+
   }
-);
+
+});
 
 
-/* GOOGLE LOGIN */
+/* =====================================================
+   EMAIL SIGN UP
+===================================================== */
 
-googleButton.addEventListener(
-  "click",
-  async function() {
+document
+  .getElementById("signupButton")
+  .addEventListener("click", async function() {
+
+    const email =
+      document.getElementById("authEmail").value.trim();
+
+    const password =
+      document.getElementById("authPassword").value;
 
     authError.textContent = "";
+
+    if (!email || !password) {
+
+      authError.textContent =
+        "Enter an email and password.";
+
+      return;
+    }
+
+    if (password.length < 6) {
+
+      authError.textContent =
+        "Password must be at least 6 characters.";
+
+      return;
+    }
 
     try {
 
-      const result =
-        await supabaseClient.auth.signInWithOAuth({
-
-          provider: "google",
-
-          options: {
-
-            redirectTo:
-              window.location.origin
-
-          }
-
+      const { error } =
+        await supabaseClient.auth.signUp({
+          email: email,
+          password: password
         });
 
-
-      if (result.error) {
-
-        throw result.error;
-
+      if (error) {
+        throw error;
       }
+
+      authError.textContent =
+        "Account created. Check your email to confirm it.";
 
     } catch (error) {
 
       console.error(error);
 
       authError.textContent =
-        error.message ||
-        "Google sign-in failed.";
+        error.message || "Sign up failed.";
 
     }
+
+});
+
+
+/* =====================================================
+   EMAIL SIGN IN
+===================================================== */
+
+document
+  .getElementById("signinButton")
+  .addEventListener("click", async function() {
+
+    const email =
+      document.getElementById("authEmail").value.trim();
+
+    const password =
+      document.getElementById("authPassword").value;
+
+    authError.textContent = "";
+
+    if (!email || !password) {
+
+      authError.textContent =
+        "Enter your email and password.";
+
+      return;
+    }
+
+    try {
+
+      const { error } =
+        await supabaseClient.auth.signInWithPassword({
+
+          email: email,
+          password: password
+
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      authModal.style.display = "none";
+
+      updateAuthUI();
+
+    } catch (error) {
+
+      console.error(error);
+
+      authError.textContent =
+        error.message || "Sign in failed.";
+
+    }
+
+});
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+async function updateAuthUI() {
+
+  try {
+
+    const { data } =
+      await supabaseClient.auth.getUser();
+
+    if (data && data.user) {
+
+      openLogin.style.display = "none";
+      guestButton.style.display = "none";
+      logoutButton.style.display = "block";
+
+    } else {
+
+      openLogin.style.display = "block";
+      guestButton.style.display = "block";
+      logoutButton.style.display = "none";
+
+    }
+
+  } catch (error) {
+
+    console.log("Auth check skipped:", error);
+
+  }
+
+}
+
+
+/* =====================================================
+   LOG OUT
+===================================================== */
+
+logoutButton.addEventListener("click", async function() {
+
+  await supabaseClient.auth.signOut();
+
+  localStorage.removeItem("debunk_guest");
+
+  closeMenu();
+
+  updateAuthUI();
+
+});
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+const searchForm =
+  document.getElementById("searchForm");
+
+const queryInput =
+  document.getElementById("query");
+
+const goButton =
+  document.getElementById("goButton");
+
+const loading =
+  document.getElementById("loading");
+
+const errorElement =
+  document.getElementById("error");
+
+const resultCard =
+  document.getElementById("resultCard");
+
+let currentData = null;
+
+
+async function runSearch(question) {
+
+  question = question.trim();
+
+  if (!question) {
+    return;
+  }
+
+  goButton.disabled = true;
+
+  loading.style.display = "block";
+
+  errorElement.style.display = "none";
+
+  resultCard.style.display = "none";
+
+  try {
+
+    const response =
+      await fetch("/api/ask", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          query: question
+        })
+
+      });
+
+
+    let data;
+
+    try {
+
+      data = await response.json();
+
+    } catch {
+
+      throw new Error(
+        "The server returned an invalid response."
+      );
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "The request failed."
+      );
+
+    }
+
+
+    if (data.error) {
+
+      throw new Error(data.error);
+
+    }
+
+
+    currentData = data;
+
+
+    /* STATUS */
+
+    const status =
+      document.getElementById("status");
+
+    const confidence =
+      data.confidence || "Unclear";
+
+
+    status.textContent =
+      confidence.toUpperCase();
+
+
+    if (confidence === "Verified") {
+
+      status.style.color = "#2F8F83";
+      status.style.borderColor = "#2F8F83";
+
+    } else if (confidence === "Disputed") {
+
+      status.style.color = "#B47A18";
+      status.style.borderColor = "#B47A18";
+
+    } else {
+
+      status.style.color = "#7A8586";
+      status.style.borderColor = "#7A8586";
+
+    }
+
+
+    /* ANSWER */
+
+    document.getElementById("verdict").textContent =
+      data.verdict || "No answer returned.";
+
+
+    document.getElementById("resultExplanation").textContent =
+      data.explanation || "";
+
+
+    /* SOURCES */
+
+    const sources =
+      document.getElementById("sources");
+
+    sources.innerHTML = "";
+
+
+    const sourceList =
+      Array.isArray(data.sources)
+        ? data.sources
+        : [];
+
+
+    document.getElementById("sourcesSection").style.display =
+      sourceList.length ? "block" : "none";
+
+
+    sourceList.forEach(function(source) {
+
+      const link =
+        document.createElement("a");
+
+      link.className = "source";
+
+      link.href =
+        source.url || "#";
+
+      link.target = "_blank";
+
+      link.rel = "noopener noreferrer";
+
+
+      const name =
+        document.createElement("span");
+
+      name.textContent =
+        source.name || "Source";
+
+
+      const arrow =
+        document.createElement("span");
+
+      arrow.textContent = "↗";
+
+
+      link.appendChild(name);
+
+      link.appendChild(arrow);
+
+      sources.appendChild(link);
+
+    });
+
+
+    /* RELATED */
+
+    const relatedSection =
+      document.getElementById("relatedSection");
+
+    const related =
+      document.getElementById("related");
+
+    related.innerHTML = "";
+
+
+    const relatedList =
+      Array.isArray(data.related)
+        ? data.related
+        : [];
+
+
+    if (relatedList.length) {
+
+      relatedSection.style.display = "block";
+
+
+      relatedList.forEach(function(question) {
+
+        const button =
+          document.createElement("button");
+
+        button.textContent =
+          question;
+
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            queryInput.value = question;
+
+            runSearch(question);
+
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+
+          }
+        );
+
+
+        related.appendChild(button);
+
+      });
+
+    } else {
+
+      relatedSection.style.display = "none";
+
+    }
+
+
+    resultCard.style.display = "block";
+
+
+    resultCard.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+
+  } catch (error) {
+
+    console.error("SEARCH ERROR:", error);
+
+    errorElement.textContent =
+      "Couldn't reach the sources. " +
+      (error.message || "Please try again.");
+
+
+    errorElement.style.display = "block";
+
+
+  } finally {
+
+    loading.style.display = "none";
+
+    goButton.disabled = false;
+
+  }
+
+}
+
+
+/* SEARCH FORM */
+
+searchForm.addEventListener(
+  "submit",
+  function(event) {
+
+    event.preventDefault();
+
+    runSearch(queryInput.value);
 
   }
 );
 
 
-/* EMAIL SIGN UP */
+/* EXAMPLE BUTTONS */
 
 document
-  .getElementById("signupButton")
-  .addEvent
+  .querySelectorAll(".example")
+  .forEach(function(button) {
+
+    button.addEventListener(
+      "click",
+      function() {
+
+        const question =
+          button.dataset.q;
+
+        queryInput.value =
+          question;
+
+        runSearch(question);
+
+      }
+    );
+
+  });
+
+
+/* =====================================================
+   RESULT ACTIONS
+===================================================== */
+
+document
+  .getElementById("copyButton")
+  .addEventListener("click", async function() {
+
+    if (!currentData) return;
+
+    const text =
+      currentData.verdict +
+      "\n\n" +
+      currentData.explanation;
+
+
+    try {
+
+      await navigator.clipboard.writeText(text);
+
+      this.textContent = "Copied ✓";
+
+      setTimeout(() => {
+        this.textContent = "Copy";
+      }, 1500);
+
+    } catch {
+
+      this.textContent = "Copy failed";
+
+    }
+
+});
+
+
+document
+  .getElementById("shareButton")
+  .addEventListener("click", async function() {
+
+    if (!currentData) return;
+
+    const shareData = {
+
+      title: "Debunk",
+
+      text: currentData.verdict,
+
+      url: window.location.href
+
+    };
+
+
+    if (navigator.share) {
+
+      try {
+
+        await navigator.share(shareData);
+
+      } catch {}
+
+    } else {
+
+      try {
+
+        await navigator.clipboard.writeText(
+          currentData.verdict +
+          " — " +
+          window.location.href
+        );
+
+        this.textContent = "Copied ✓";
+
+        setTimeout(() => {
+          this.textContent = "Share";
+        }, 1500);
+
+      } catch {}
+
+    }
+
+});
+
+
+document
+  .getElementById("saveButton")
+  .addEventListener("click", function() {
+
+    if (!currentData) return;
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem("debunk_saved") || "[]"
+      );
+
+
+    saved.unshift({
+
+      query: queryInput.value,
+
+      ...currentData,
+
+      savedAt: Date.now()
+
+    });
+
+
+    localStorage.setItem(
+      "debunk_saved",
+      JSON.stringify(saved.slice(0, 50))
+    );
+
+
+    this.textContent = "Saved ✓";
+
+    this.classList.add("active");
+
+});
+
+
+document
+  .getElementById("likeButton")
+  .addEventListener("click", function() {
+
+    this.classList.add("active");
+
+    document
+      .getElementById("dislikeButton")
+      .classList.remove("active");
+
+});
+
+
+document
+  .getElementById("dislikeButton")
+  .addEventListener("click", function() {
+
+    this.classList.add("active");
+
+    document
+      .getElementById("likeButton")
+      .classList.remove("active");
+
+});
+
+
+/* =====================================================
+   URL QUERY SUPPORT
+===================================================== */
+
+const urlParams =
+  new URLSearchParams(window.location.search);
+
+const presetQuery =
+  urlParams.get("q");
+
+
+if (presetQuery) {
+
+  queryInput.value =
+    presetQuery;
+
+  runSearch(presetQuery);
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+updateAuthUI();
+
+</script></body>
+</html>
