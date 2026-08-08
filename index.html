@@ -1,589 +1,1472 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Debunk — Settle the Argument</title>
-  <link rel="stylesheet" href="style.css">
-</head><body>  <header class="topbar">
-    <div class="logo">DEBUNK<span>.</span></div>
-    <div class="tagline">Facts. Sources. No nonsense.</div>
-  </header>  <main><section class="hero" id="home">
-  <div class="badge">✦ AI-POWERED FACT CHECKING</div>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <h1>Got an argument?</h1>
+<title>Debunk — Settle it with sources</title>
 
-  <p class="hero-text">
-    Ask Debunk. We'll search the web, compare multiple sources,
-    and give you the evidence.
-  </p>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-512.png">
 
-  <form id="searchForm" class="search-box">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <input
-      id="queryInput"
-      type="text"
-      placeholder="Ask something you're arguing about..."
-      autocomplete="off"
-      required
-    >
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <button type="submit" id="searchButton">
-      <span>Debunk</span>
-      <span class="arrow">→</span>
-    </button>
+<style>
+* {
+  box-sizing: border-box;
+}
 
-  </form>
+html {
+  scroll-behavior: smooth;
+}
 
-  <div class="examples">
-    <span>Try:</span>
+body {
+  margin: 0;
+  background: #F8F8F4;
+  color: #172326;
+  font-family: Inter, sans-serif;
+}
 
-    <button class="example" data-q="Is the Great Wall of China visible from space?">
-      Great Wall from space?
-    </button>
+button,
+input {
+  font: inherit;
+}
 
-    <button class="example" data-q="Does drinking cold water make you sick?">
-      Does cold water make you sick?
-    </button>
+button {
+  cursor: pointer;
+}
 
-    <button class="example" data-q="Who was the first person to walk on the Moon?">
-      First person on the Moon?
-    </button>
+/* HEADER */
+
+.header {
+  height: 76px;
+  max-width: 1180px;
+  margin: auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -1.2px;
+}
+
+.logo span {
+  color: #2F8F83;
+}
+
+/* MENU BUTTON */
+
+.menu-button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid #D8D9D3;
+  border-radius: 8px;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.menu-button:hover {
+  border-color: #2F8F83;
+}
+
+.menu-button span {
+  width: 19px;
+  height: 2px;
+  background: #172326;
+  border-radius: 2px;
+}
+
+/* SIDE MENU */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,30,32,.28);
+  opacity: 0;
+  visibility: hidden;
+  transition: .2s ease;
+  z-index: 90;
+}
+
+.menu-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  max-width: 88vw;
+  height: 100vh;
+  background: #FFFDF8;
+  border-left: 1px solid #DFE0DA;
+  padding: 24px;
+  transform: translateX(100%);
+  transition: transform .25s ease;
+  z-index: 100;
+  box-shadow: -20px 0 50px rgba(0,0,0,.08);
+}
+
+.side-menu.open {
+  transform: translateX(0);
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 35px;
+}
+
+.menu-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.menu-title span {
+  color: #2F8F83;
+}
+
+.close-button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #D8D9D3;
+  border-radius: 7px;
+  background: #FFFFFF;
+  font-size: 21px;
+}
+
+.menu-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-links a,
+.menu-links button {
+  width: 100%;
+  padding: 13px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #4E595B;
+  text-align: left;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.menu-links a:hover,
+.menu-links button:hover {
+  background: #EEF1EC;
+  color: #172326;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #E1E2DC;
+  margin: 15px 0;
+}
+
+.login-button {
+  color: #2F8F83 !important;
+  font-weight: 600;
+}
+
+.guest-menu {
+  color: #687274 !important;
+}
+
+/* MAIN */
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 70px 24px 80px;
+}
+
+/* HERO */
+
+.hero {
+  text-align: center;
+}
+
+.small-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: #2F8F83;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(44px, 7vw, 72px);
+  line-height: 1.02;
+  letter-spacing: -3px;
+  font-weight: 700;
+}
+
+.hero h1 span {
+  color: #2F8F83;
+}
+
+.hero-description {
+  max-width: 590px;
+  margin: 25px auto 35px;
+  color: #697577;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* SEARCH */
+
+.search-form {
+  max-width: 700px;
+  margin: auto;
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: #FFFFFF;
+  border: 1px solid #D8DAD4;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(35,48,50,.06);
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #172326;
+  padding: 14px;
+  font-size: 15px;
+}
+
+.search-input::placeholder {
+  color: #9A9F9F;
+}
+
+.search-button {
+  border: 0;
+  background: #2F8F83;
+  color: white;
+  border-radius: 7px;
+  padding: 0 22px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.search-button:hover {
+  background: #27786E;
+}
+
+.search-button:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+/* EXAMPLES */
+
+.examples {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.example {
+  border: 1px solid #DDDED8;
+  background: transparent;
+  color: #777F80;
+  border-radius: 20px;
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+.example:hover {
+  border-color: #2F8F83;
+  color: #2F8F83;
+}
+
+/* LOADING */
+
+.loading {
+  display: none;
+  text-align: center;
+  margin: 30px 0;
+  color: #697577;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+}
+
+.error {
+  display: none;
+  text-align: center;
+  color: #C04C54;
+  font-size: 13px;
+  margin-top: 15px;
+}
+
+/* RESULT */
+
+.result-card {
+  display: none;
+  margin-top: 40px;
+  padding: 30px;
+  background: #FFFFFF;
+  border: 1px solid #DCDDD7;
+  border-radius: 10px;
+  box-shadow: 0 10px 35px rgba(30,40,42,.06);
+}
+
+.status {
+  display: inline-block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  padding: 5px 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  margin-bottom: 18px;
+}
+
+.verdict {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 24px;
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+.result-explanation {
+  color: #647072;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+/* ACTIONS */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 25px;
+}
+
+.action {
+  border: 1px solid #DADBD5;
+  background: white;
+  color: #687274;
+  border-radius: 6px;
+  padding: 7px 11px;
+  font-size: 12px;
+}
+
+.action:hover,
+.action.active {
+  color: #2F8F83;
+  border-color: #2F8F83;
+}
+
+/* SOURCES */
+
+.result-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: #8A9293;
+  margin-bottom: 10px;
+}
+
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 25px;
+}
+
+.source {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 12px;
+  border: 1px solid #E1E2DD;
+  border-radius: 6px;
+  color: #263538;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.source:hover {
+  border-color: #2F8F83;
+}
+
+.related {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.related button {
+  border: 1px solid #E1E2DD;
+  background: transparent;
+  color: #687274;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.related button:hover {
+  border-color: #2F8F83;
+  color: #263538;
+}
+
+/* EXPLANATION */
+
+.explanation-section {
+  margin-top: 100px;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 35px;
+  padding: 35px 0;
+  border-top: 1px solid #DFE0DA;
+  border-bottom: 1px solid #DFE0DA;
+}
+
+.section-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: #2F8F83;
+}
+
+.explanation-section h2 {
+  margin: 8px 0 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 27px;
+  line-height: 1.2;
+  letter-spacing: -.7px;
+}
+
+.explanation-section p {
+  margin: 0;
+  color: #697577;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* QUOTE */
+
+.quote-section {
+  max-width: 650px;
+  margin: 90px auto 0;
+  text-align: center;
+}
+
+.quote-mark {
+  font-family: Georgia, serif;
+  font-size: 50px;
+  color: #2F8F83;
+}
+
+.quote {
+  margin: 15px 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 23px;
+  line-height: 1.5;
+  color: #263538;
+}
+
+.quote-note {
+  font-family: "IBM Plex Mono", monospace;
+  color: #929998;
+  font-size: 10px;
+}
+
+/* AUTH */
+
+.auth-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(25,32,33,.45);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 360px;
+  background: #FFFDF8;
+  border: 1px solid #DDDED8;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 25px 70px rgba(0,0,0,.15);
+}
+
+.auth-box h3 {
+  margin: 0 0 20px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 21px;
+}
+
+.google-button {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #D4D5D0;
+  background: white;
+  border-radius: 7px;
+  font-weight: 600;
+  color: #263538;
+}
+
+.google-button:hover {
+  border-color: #2F8F83;
+}
+
+.divider {
+  text-align: center;
+  color: #999F9F;
+  font-size: 11px;
+  margin: 17px 0;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 11px;
+  margin-bottom: 8px;
+  border: 1px solid #D8D9D3;
+  border-radius: 6px;
+  outline: none;
+  background: white;
+  color: #172326;
+}
+
+.auth-input:focus {
+  border-color: #2F8F83;
+}
+
+.auth-row {
+  display: flex;
+  gap: 7px;
+}
+
+.auth-row button {
+  flex: 1;
+  padding: 11px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.signup {
+  border: 0;
+  background: #2F8F83;
+  color: white;
+}
+
+.signin {
+  border: 1px solid #D5D6D0;
+  background: white;
+  color: #263538;
+}
+
+.auth-error {
+  color: #C04C54;
+  font-size: 12px;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.cancel-auth {
+  display: block;
+  margin: 15px auto 0;
+  border: 0;
+  background: transparent;
+  color: #7C8586;
+}
+
+/* FOOTER */
+
+footer {
+  text-align: center;
+  margin-top: 100px;
+  color: #929998;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+  .header {
+    padding: 0 18px;
+  }
+
+  main {
+    padding: 50px 18px 60px;
+  }
+
+  .hero h1 {
+    font-size: 47px;
+    letter-spacing: -2px;
+  }
+
+  .search-form {
+    flex-direction: column;
+    padding: 7px;
+  }
+
+  .search-button {
+    height: 45px;
+  }
+
+  .explanation-section {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 70px;
+  }
+
+  .quote-section {
+    margin-top: 70px;
+  }
+
+  .quote {
+    font-size: 20px;
+  }
+
+  .result-card {
+    padding: 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">DEBUNK<span>.</span></div>
+
+  <button class="menu-button" id="menuButton" aria-label="Open menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<aside class="side-menu" id="sideMenu">
+
+  <div class="menu-header">
+    <div class="menu-title">DEBUNK<span>.</span></div>
+    <button class="close-button" id="closeMenu">×</button>
   </div>
-</section>
 
+  <nav class="menu-links">
 
-<section id="loading" class="loading hidden">
+    <a href="index.html">Home</a>
+    <a href="trending.html">Trending</a>
+    <a href="history.html">History</a>
+    <a href="about.html">About</a>
 
-  <div class="loader"></div>
+    <div class="menu-divider"></div>
 
-  <h2>Investigating...</h2>
-
-  <p id="loadingText">
-    Searching multiple sources for evidence.
-  </p>
-
-</section>
-
-
-<section id="errorBox" class="error-box hidden">
-
-  <div class="error-icon">!</div>
-
-  <div>
-    <strong>Something went wrong</strong>
-    <p id="errorText"></p>
-  </div>
-
-</section>
-
-
-<section id="results" class="results hidden">
-
-  <div class="result-header">
-
-    <div>
-      <div class="small-label">YOUR QUESTION</div>
-      <h2 id="questionText"></h2>
-    </div>
-
-    <button id="newSearchButton" class="secondary-button">
-      New search
+    <button class="login-button" id="openLogin">
+      Sign in
     </button>
 
-  </div>
+    <button class="guest-menu" id="guestButton">
+      Continue as guest
+    </button>
 
+    <button id="logoutButton" style="display:none;">
+      Log out
+    </button>
 
-  <article class="verdict-card">
+  </nav>
 
-    <div class="verdict-label">VERDICT</div>
+</aside>
 
-    <div id="verdict" class="verdict">
-      —
+<main>
+
+  <!-- HERO / SEARCH -->
+
+  <section class="hero">
+
+    <div class="small-label">
+      SOURCES OVER OPINIONS
     </div>
 
-    <p id="confidence" class="confidence"></p>
+    <h1>
+      Ask anything.<br>
+      <span>Settle it.</span>
+    </h1>
 
-    <div class="explanation">
-      <h3>Why?</h3>
-      <p id="explanation"></p>
+    <p class="hero-description">
+      Debunk finds trustworthy sources and helps you separate
+      facts from internet noise. No vibes. No guessing.
+      Just evidence.
+    </p>
+
+    <form class="search-form" id="searchForm">
+
+      <input
+        class="search-input"
+        id="query"
+        type="text"
+        autocomplete="off"
+        placeholder="What are you trying to settle?"
+      >
+
+      <button
+        class="search-button"
+        id="goButton"
+        type="submit">
+        Settle it
+      </button>
+
+    </form>
+
+    <div class="examples">
+
+      <button class="example" data-q="Who is the richest man alive?">
+        Who is the richest man alive?
+      </button>
+
+      <button class="example" data-q="Fastest 100m sprint time ever">
+        Fastest 100m sprint time ever
+      </button>
+
+      <button class="example" data-q="Has Messi won a World Cup?">
+        Has Messi won a World Cup?
+      </button>
+
     </div>
-
-  </article>
-
-
-  <section id="imageSection" class="image-section hidden">
-
-    <div class="section-heading">
-      <h2>Visual evidence</h2>
-    </div>
-
-    <div id="imageGrid" class="image-grid"></div>
 
   </section>
 
 
-  <section class="sources-section">
+  <!-- RESULT NOW APPEARS DIRECTLY UNDER SEARCH -->
 
-    <div class="section-heading">
-      <div>
-        <span class="small-label">RESEARCH</span>
-        <h2>Sources</h2>
+  <div class="loading" id="loading">
+    Checking the sources...
+  </div>
+
+  <div class="error" id="error"></div>
+
+  <section class="result-card" id="resultCard">
+
+    <div class="status" id="status"></div>
+
+    <div class="verdict" id="verdict"></div>
+
+    <div class="result-explanation" id="resultExplanation"></div>
+
+    <div class="actions">
+
+      <button class="action" id="copyButton">
+        Copy
+      </button>
+
+      <button class="action" id="shareButton">
+        Share
+      </button>
+
+      <button class="action" id="saveButton">
+        Save
+      </button>
+
+      <button class="action" id="likeButton">
+        👍
+      </button>
+
+      <button class="action" id="dislikeButton">
+        👎
+      </button>
+
+    </div>
+
+    <div id="sourcesSection">
+
+      <div class="result-label">
+        SOURCES
       </div>
 
-      <span id="sourceCount" class="source-count"></span>
+      <div class="sources" id="sources"></div>
+
     </div>
 
-    <div id="sources" class="sources"></div>
+    <div id="relatedSection" style="display:none;">
+
+      <div class="result-label">
+        RELATED
+      </div>
+
+      <div class="related" id="related"></div>
+
+    </div>
 
   </section>
 
 
-  <div class="actions">
+  <!-- WHY DEBUNK -->
 
-    <button id="copyButton">Copy</button>
+  <section class="explanation-section">
 
-    <button id="shareButton">Share</button>
+    <div>
 
-    <button id="saveButton">Save</button>
+      <div class="section-label">
+        WHY DEBUNK
+      </div>
 
-    <button id="likeButton" class="reaction">👍</button>
+      <h2>
+        Because winning an argument isn't the same as being right.
+      </h2>
 
-    <button id="dislikeButton" class="reaction">👎</button>
+    </div>
+
+    <p>
+      The internet is full of answers. Some are reliable.
+      Some aren't.
+
+      <br><br>
+
+      Debunk looks for credible sources and puts the evidence
+      in front of you, so you can decide what actually holds up.
+    </p>
+
+  </section>
+
+
+  <!-- QUOTE -->
+
+  <section class="quote-section">
+
+    <div class="quote-mark">
+      “
+    </div>
+
+    <div class="quote">
+
+      A journalist asked an old man how he lived so long.
+
+      <br><br>
+
+      “I stopped arguing with people.”
+
+      <br>
+
+      “That's impossible.”
+
+      <br>
+
+      “You're right.”
+
+    </div>
+
+    <div class="quote-note">
+      Some arguments aren't worth winning.
+    </div>
+
+  </section>
+
+
+  <footer>
+    DEBUNK — built to settle arguments, not start them.
+  </footer>
+
+</main>
+
+
+<!-- AUTH MODAL -->
+
+<div class="auth-modal" id="authModal">
+
+  <div class="auth-box">
+
+    <h3>
+      Sign in to Debunk
+    </h3>
+
+    <button class="google-button" id="googleButton">
+      Continue with Google
+    </button>
+
+    <div class="divider">
+      OR USE EMAIL
+    </div>
+
+    <input
+      class="auth-input"
+      id="authEmail"
+      type="email"
+      placeholder="Email"
+    >
+
+    <input
+      class="auth-input"
+      id="authPassword"
+      type="password"
+      placeholder="Password"
+    >
+
+    <div class="auth-row">
+
+      <button class="signup" id="signupButton">
+        Sign up
+      </button>
+
+      <button class="signin" id="signinButton">
+        Sign in
+      </button>
+
+    </div>
+
+    <div class="auth-error" id="authError"></div>
+
+    <button class="cancel-auth" id="cancelAuth">
+      Cancel
+    </button>
 
   </div>
 
-</section>
+</div>
 
-  </main>  <footer>
-    <p>Debunk searches the web and compares available evidence.</p>
-  </footer>  <script>
 
-    let currentData = null;
+<script>
 
-    const searchForm =
-      document.getElementById("searchForm");
+/* SUPABASE */
 
-    const queryInput =
-      document.getElementById("queryInput");
+const SUPABASE_URL =
+  "https://axjavfnqxdlqpjirvpmn.supabase.co";
 
-    const searchButton =
-      document.getElementById("searchButton");
+const SUPABASE_KEY =
+  "sb_publishable_VZ5GKmIEmUQvDh7VsFvuBA_QTTUwu6o";
 
-    const loading =
-      document.getElementById("loading");
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
-    const loadingText =
-      document.getElementById("loadingText");
 
-    const results =
-      document.getElementById("results");
+/* MENU */
 
-    const errorBox =
-      document.getElementById("errorBox");
+const menuButton =
+  document.getElementById("menuButton");
 
-    const errorText =
-      document.getElementById("errorText");
+const closeMenuButton =
+  document.getElementById("closeMenu");
 
+const sideMenu =
+  document.getElementById("sideMenu");
 
-    function escapeHTML(value) {
+const menuOverlay =
+  document.getElementById("menuOverlay");
 
-      const div = document.createElement("div");
+function openMenu() {
+  sideMenu.classList.add("open");
+  menuOverlay.classList.add("open");
+}
 
-      div.textContent = value || "";
+function closeMenu() {
+  sideMenu.classList.remove("open");
+  menuOverlay.classList.remove("open");
+}
 
-      return div.innerHTML;
+menuButton.addEventListener("click", openMenu);
 
-    }
+closeMenuButton.addEventListener("click", closeMenu);
 
+menuOverlay.addEventListener("click", closeMenu);
 
-    function showLoading() {
 
-      loading.classList.remove("hidden");
+/* AUTH */
 
-      results.classList.add("hidden");
+const authModal =
+  document.getElementById("authModal");
 
-      errorBox.classList.add("hidden");
+const openLogin =
+  document.getElementById("openLogin");
 
-      searchButton.disabled = true;
+const guestButton =
+  document.getElementById("guestButton");
 
-      searchButton.innerHTML =
-        `<span>Searching...</span>`;
+const logoutButton =
+  document.getElementById("logoutButton");
 
-    }
+const googleButton =
+  document.getElementById("googleButton");
 
+const cancelAuth =
+  document.getElementById("cancelAuth");
 
-    function hideLoading() {
+const authError =
+  document.getElementById("authError");
 
-      loading.classList.add("hidden");
 
-      searchButton.disabled = false;
+/* OPEN LOGIN */
 
-      searchButton.innerHTML =
-        `<span>Debunk</span><span class="arrow">→</span>`;
+openLogin.addEventListener("click", function() {
 
-    }
+  closeMenu();
 
+  authError.textContent = "";
 
-    function showError(message) {
+  authModal.style.display = "flex";
 
-      hideLoading();
+});
 
-      errorText.textContent =
-        message || "Something went wrong.";
 
-      errorBox.classList.remove("hidden");
+/* GUEST */
 
-    }
+guestButton.addEventListener("click", function() {
 
+  closeMenu();
 
-    function renderSources(sources) {
+  authModal.style.display = "none";
 
-      const container =
-        document.getElementById("sources");
+  localStorage.setItem("debunk_guest", "true");
 
-      container.innerHTML = "";
+});
 
-      if (!Array.isArray(sources) || sources.length === 0) {
 
-        container.innerHTML =
-          `<p class="no-sources">No sources were returned.</p>`;
+/* CANCEL */
 
-        return;
+cancelAuth.addEventListener("click", function() {
 
-      }
+  authModal.style.display = "none";
 
-      document.getElementById("sourceCount").textContent =
-        `${sources.length} sources`;
+});
 
 
-      sources.forEach((source, index) => {
+authModal.addEventListener("click", function(event) {
 
-        const card =
-          document.createElement("article");
+  if (event.target === authModal) {
+    authModal.style.display = "none";
+  }
 
-        card.className = "source-card";
+});
 
-        const domain =
-          source.domain ||
-          (() => {
 
-            try {
+/* GOOGLE LOGIN */
 
-              return new URL(source.url).hostname
-                .replace("www.", "");
+googleButton.addEventListener("click", async function() {
 
-            } catch {
+  authError.textContent = "Opening Google...";
 
-              return "Web source";
+  try {
 
-            }
+    const { error } =
+      await supabaseClient.auth.signInWithOAuth({
 
-          })();
+        provider: "google",
 
-
-        card.innerHTML = `
-
-          <div class="source-number">
-            ${index + 1}
-          </div>
-
-          <div class="source-content">
-
-            <a
-              class="source-title"
-              href="${escapeHTML(source.url)}"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ${escapeHTML(source.title || "Untitled source")}
-            </a>
-
-            <div class="source-domain">
-              ${escapeHTML(domain)}
-            </div>
-
-            <p>
-              ${escapeHTML(source.snippet || source.content || "")}
-            </p>
-
-          </div>
-
-          <div class="source-arrow">
-            ↗
-          </div>
-
-        `;
-
-        container.appendChild(card);
+        options: {
+          redirectTo: window.location.origin
+        }
 
       });
 
+    if (error) {
+      throw error;
     }
 
+  } catch (error) {
 
-    function renderImages(images) {
+    console.error("Google login error:", error);
 
-      const section =
-        document.getElementById("imageSection");
+    authError.textContent =
+      error.message || "Google sign-in failed.";
 
-      const grid =
-        document.getElementById("imageGrid");
+  }
 
-      grid.innerHTML = "";
+});
 
-      if (!Array.isArray(images) || images.length === 0) {
 
-        section.classList.add("hidden");
+/* EMAIL SIGN UP */
 
-        return;
+document
+  .getElementById("signupButton")
+  .addEventListener("click", async function() {
 
+    const email =
+      document.getElementById("authEmail").value.trim();
+
+    const password =
+      document.getElementById("authPassword").value;
+
+    authError.textContent = "";
+
+    if (!email || !password) {
+
+      authError.textContent =
+        "Enter an email and password.";
+
+      return;
+    }
+
+    if (password.length < 6) {
+
+      authError.textContent =
+        "Password must be at least 6 characters.";
+
+      return;
+    }
+
+    try {
+
+      const { error } =
+        await supabaseClient.auth.signUp({
+          email: email,
+          password: password
+        });
+
+      if (error) {
+        throw error;
       }
 
-      images
-        .filter(image => image && image.url)
-        .slice(0, 6)
-        .forEach(image => {
+      authError.textContent =
+        "Account created. Check your email to confirm it.";
 
-          const wrapper =
-            document.createElement("a");
+    } catch (error) {
 
-          wrapper.href = image.url;
+      console.error(error);
 
-          wrapper.target = "_blank";
+      authError.textContent =
+        error.message || "Sign up failed.";
 
-          wrapper.rel = "noopener noreferrer";
+    }
 
-          wrapper.className = "image-card";
+});
 
 
-          const img =
-            document.createElement("img");
+/* EMAIL SIGN IN */
 
-          img.src = image.url;
+document
+  .getElementById("signinButton")
+  .addEventListener("click", async function() {
 
-          img.alt =
-            image.description ||
-            "Search result image";
+    const email =
+      document.getElementById("authEmail").value.trim();
 
-          img.loading = "lazy";
+    const password =
+      document.getElementById("authPassword").value;
 
+    authError.textContent = "";
 
-          img.onerror = function() {
+    if (!email || !password) {
 
-            wrapper.remove();
+      authError.textContent =
+        "Enter an email and password.";
 
-          };
+      return;
+    }
 
+    try {
 
-          wrapper.appendChild(img);
+      const { error } =
+        await supabaseClient.auth.signInWithPassword({
 
-          grid.appendChild(wrapper);
+          email: email,
+          password: password
 
         });
 
-
-      if (grid.children.length > 0) {
-
-        section.classList.remove("hidden");
-
-      } else {
-
-        section.classList.add("hidden");
-
+      if (error) {
+        throw error;
       }
+
+      authModal.style.display = "none";
+
+      updateAuthUI();
+
+    } catch (error) {
+
+      console.error(error);
+
+      authError.textContent =
+        error.message || "Sign in failed.";
 
     }
 
-
-    function renderResult(data, question) {
-
-      currentData = data;
-
-      document.getElementById("questionText")
-        .textContent = question;
+});
 
 
-      document.getElementById("verdict")
-        .textContent =
-          data.verdict || "Unable to determine";
+/* AUTH STATE */
 
+async function updateAuthUI() {
 
-      document.getElementById("confidence")
-        .textContent =
-          data.confidence
-            ? `Confidence: ${data.confidence}`
-            : "";
+  try {
 
+    const { data } =
+      await supabaseClient.auth.getUser();
 
-      document.getElementById("explanation")
-        .textContent =
-          data.explanation ||
-          "No explanation was returned.";
+    if (data && data.user) {
 
+      openLogin.style.display = "none";
+      guestButton.style.display = "none";
+      logoutButton.style.display = "block";
 
-      renderSources(data.sources || []);
+    } else {
 
-      renderImages(data.images || []);
-
-
-      results.classList.remove("hidden");
-
-      results.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+      openLogin.style.display = "block";
+      guestButton.style.display = "block";
+      logoutButton.style.display = "none";
 
     }
 
+  } catch (error) {
 
-    async function runSearch(question) {
+    console.error("Auth state error:", error);
 
-      question =
-        String(question || "").trim();
+  }
 
-
-      if (!question) return;
-
-
-      showLoading();
+}
 
 
-      const loadingMessages = [
+/* LOGOUT */
 
-        "Searching the web...",
+logoutButton.addEventListener("click", async function() {
 
-        "Checking multiple sources...",
+  try {
 
-        "Comparing the evidence...",
+    await supabaseClient.auth.signOut();
 
-        "Asking Debunk to analyze the evidence..."
+    localStorage.removeItem("debunk_guest");
 
-      ];
+    updateAuthUI();
 
+    closeMenu();
 
-      let messageIndex = 0;
+  } catch (error) {
 
+    console.error(error);
 
-      const loadingInterval =
-        setInterval(() => {
+  }
 
-          messageIndex =
-            (messageIndex + 1) %
-            loadingMessages.length;
-
-          loadingText.textContent =
-            loadingMessages[messageIndex];
-
-        }, 1800);
+});
 
 
-      try {
+/* SEARCH */
 
-        const response =
-          await fetch("/api/search", {
+const searchForm =
+  document.getElementById("searchForm");
 
-            method: "POST",
+const queryInput =
+  document.getElementById("query");
 
-            headers: {
-              "Content-Type": "application/json"
-            },
+const goButton =
+  document.getElementById("goButton");
 
-            body: JSON.stringify({
-              question
-            })
+const loading =
+  document.getElementById("loading");
 
-          });
+const errorBox =
+  document.getElementById("error");
 
+const resultCard =
+  document.getElementById("resultCard");
 
-        const data =
-          await response.json();
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            data.error ||
-            "The server returned an error."
-          );
-
-        }
+let currentData = null;
 
 
-        if (!data.verdict) {
+async function runSearch(query) {
 
-          throw new Error(
-            "The AI returned an incomplete answer."
-          );
+  query = query.trim();
 
-        }
+  if (!query) return;
 
+  goButton.disabled = true;
 
-        renderResult(data, question);
+  loading.style.display = "block";
 
+  errorBox.style.display = "none";
 
-      } catch (error) {
+  resultCard.style.display = "none";
 
-        console.error(error);
+  try {
 
-        showError(
-          error.message ||
-          "Unable to complete the search."
-        );
+    const response =
+      await fetch("/api/ask", {
 
-      } finally {
+        method: "POST",
 
-        clearInterval(loadingInterval);
+        headers: {
+          "Content-Type": "application/json"
+        },
 
-        hideLoading();
-
-      }
-
-    }
-
-
-    searchForm.addEventListener(
-      "submit",
-      function(event) {
-
-        event.preventDefault();
-
-        runSearch(queryInput.value);
-
-      }
-    );
-
-
-    document
-      .querySelectorAll(".example")
-      .forEach(button => {
-
-        button.addEventListener(
-          "click",
-          function() {
-
-            const question =
-              this.dataset.q;
-
-            queryInput.value =
-              question;
-
-            runSearch(question);
-
-          }
-        );
+        body: JSON.stringify({
+          query: query
+        })
 
       });
 
 
+    const data =
+      await response.json();
+
+
+    if (!response.ok || data.error) {
+
+      throw new Error(
+        data.error || "Search failed."
+      );
+
+    }
+
+
+    currentData = data;
+
+
+    /* STATUS */
+
+    const statusStyles = {
+
+      Verified: {
+        color: "#2F8F83",
+        label: "VERIFIED"
+      },
+
+      Disputed: {
+        color: "#C78A22",
+        label: "DISPUTED"
+      },
+
+      Unclear: {
+        color: "#7B8587",
+        label: "NO CLEAN SOURCE"
+      }
+
+    };
+
+
+    const status =
+      statusStyles[data.confidence]
+      || statusStyles.Unclear;
+
+
+    const statusEl =
+      document.getElementById("status");
+
+
+    statusEl.textContent =
+      status.label;
+
+    statusEl.style.color =
+      status.color;
+
+    statusEl.style.borderColor =
+      status.color;
+
+
+    /* ANSWER */
+
+    document.getElementById("verdict").textContent =
+      data.verdict || "";
+
+
     document
-      .getElementById("newSearchButton")
-      .addEventListener(
+      .getElementById("resultExplanation")
+      .textContent =
+      data.explanation || "";
+
+
+    /* SOURCES */
+
+    const sources =
+      data.sources || [];
+
+    const sourcesSection =
+      document.getElementById("sourcesSection");
+
+    const sourcesEl =
+      document.getElementById("sources");
+
+    sourcesEl.innerHTML = "";
+
+    sourcesSection.style.display =
+      sources.length ? "block" : "none";
+
+
+    sources.forEach(source => {
+
+      const link =
+        document.createElement("a");
+
+      link.className = "source";
+
+      link.href =
+        source.url || "#";
+
+      link.target = "_blank";
+
+      link.rel = "noopener noreferrer";
+
+      link.innerHTML = `
+        <span>${source.name || "Source"}</span>
+        <span>↗</span>
+      `;
+
+      sourcesEl.appendChild(link);
+
+    });
+
+
+    /* RELATED */
+
+    const related =
+      data.related || [];
+
+    const relatedSection =
+      document.getElementById("relatedSection");
+
+    const relatedEl =
+      document.getElementById("related");
+
+    relatedEl.innerHTML = "";
+
+    relatedSection.style.display =
+      related.length ? "block" : "none";
+
+
+    related.forEach(question => {
+
+      const button =
+        document.createElement("button");
+
+      button.textContent =
+        question;
+
+      button.addEventListener(
         "click",
         function() {
 
-          results.classList.add("hidden");
+          queryInput.value =
+            question;
 
-          queryInput.focus();
+          runSearch(question);
 
           window.scrollTo({
             top: 0,
@@ -593,190 +1476,229 @@
         }
       );
 
+      relatedEl.appendChild(button);
 
-    document
-      .getElementById("copyButton")
-      .addEventListener(
-        "click",
-        async function() {
-
-          if (!currentData) return;
-
-          const sourceText =
-            (currentData.sources || [])
-              .map(
-                (source, index) =>
-                  `${index + 1}. ${source.title}\n${source.url}`
-              )
-              .join("\n");
-
-          const text =
-            `${currentData.verdict}\n\n` +
-            `${currentData.explanation}\n\n` +
-            `Sources:\n${sourceText}`;
+    });
 
 
-          try {
+    resultCard.style.display = "block";
 
-            await navigator.clipboard.writeText(text);
+    resultCard.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
 
-            this.textContent =
-              "Copied ✓";
 
-            setTimeout(() => {
+  } catch (error) {
 
-              this.textContent =
-                "Copy";
+    console.error(error);
 
-            }, 1500);
+    errorBox.textContent =
+      "Couldn't reach the sources. Try again in a moment.";
 
-          } catch (error) {
+    errorBox.style.display =
+      "block";
 
-            console.error(error);
+  } finally {
 
-          }
+    loading.style.display =
+      "none";
 
-        }
+    goButton.disabled =
+      false;
+
+  }
+
+}
+
+
+/* SEARCH SUBMIT */
+
+searchForm.addEventListener(
+  "submit",
+  function(event) {
+
+    event.preventDefault();
+
+    runSearch(queryInput.value);
+
+  }
+);
+
+
+/* EXAMPLE QUESTIONS */
+
+document
+  .querySelectorAll(".example")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      function() {
+
+        const question =
+          button.dataset.q;
+
+        queryInput.value =
+          question;
+
+        runSearch(question);
+
+      }
+    );
+
+  });
+
+
+/* ACTION BUTTONS */
+
+
+/* COPY */
+
+document
+  .getElementById("copyButton")
+  .addEventListener("click", async function() {
+
+    if (!currentData) return;
+
+    const text =
+      currentData.verdict +
+      "\n\n" +
+      currentData.explanation;
+
+    try {
+
+      await navigator.clipboard.writeText(text);
+
+      this.textContent = "Copied ✓";
+
+      setTimeout(() => {
+        this.textContent = "Copy";
+      }, 1500);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+});
+
+
+/* SHARE */
+
+document
+  .getElementById("shareButton")
+  .addEventListener("click", async function() {
+
+    if (!currentData) return;
+
+    const text =
+      currentData.verdict;
+
+    if (navigator.share) {
+
+      try {
+
+        await navigator.share({
+          title: "Debunk",
+          text: text,
+          url: window.location.href
+        });
+
+      } catch (error) {}
+
+    } else {
+
+      try {
+
+        await navigator.clipboard.writeText(
+          text + "\n\n" + window.location.href
+        );
+
+        this.textContent = "Copied ✓";
+
+        setTimeout(() => {
+          this.textContent = "Share";
+        }, 1500);
+
+      } catch (error) {}
+
+    }
+
+});
+
+
+/* SAVE */
+
+document
+  .getElementById("saveButton")
+  .addEventListener("click", function() {
+
+    if (!currentData) return;
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem("debunk_saved") || "[]"
       );
 
+    saved.unshift({
 
-    document
-      .getElementById("shareButton")
-      .addEventListener(
-        "click",
-        async function() {
+      query: queryInput.value,
 
-          if (!currentData) return;
+      ...currentData,
 
-          const text =
-            `${currentData.verdict}\n\n` +
-            `${currentData.explanation}`;
+      savedAt: Date.now()
 
+    });
 
-          if (navigator.share) {
+    localStorage.setItem(
+      "debunk_saved",
+      JSON.stringify(saved.slice(0, 50))
+    );
 
-            try {
+    this.textContent = "Saved ✓";
 
-              await navigator.share({
+    this.classList.add("active");
 
-                title: "Debunk",
-
-                text,
-
-                url: window.location.href
-
-              });
-
-            } catch (error) {}
-
-          } else {
-
-            try {
-
-              await navigator.clipboard.writeText(
-                text + "\n\n" +
-                window.location.href
-              );
-
-              this.textContent =
-                "Copied ✓";
-
-              setTimeout(() => {
-
-                this.textContent =
-                  "Share";
-
-              }, 1500);
-
-            } catch (error) {}
-
-          }
-
-        }
-      );
+});
 
 
-    document
-      .getElementById("saveButton")
-      .addEventListener(
-        "click",
-        function() {
+/* LIKE */
 
-          if (!currentData) return;
+document
+  .getElementById("likeButton")
+  .addEventListener("click", function() {
 
-
-          const saved =
-            JSON.parse(
-              localStorage.getItem(
-                "debunk_saved"
-              ) || "[]"
-            );
-
-
-          saved.unshift({
-
-            query:
-              document
-                .getElementById("questionText")
-                .textContent,
-
-            ...currentData,
-
-            savedAt:
-              Date.now()
-
-          });
-
-
-          localStorage.setItem(
-            "debunk_saved",
-            JSON.stringify(
-              saved.slice(0, 50)
-            )
-          );
-
-
-          this.textContent =
-            "Saved ✓";
-
-          this.classList.add(
-            "active"
-          );
-
-        }
-      );
-
-
-    document
-      .getElementById("likeButton")
-      .addEventListener(
-        "click",
-        function() {
-
-          this.classList.add("active");
-
-          document
-            .getElementById("dislikeButton")
-            .classList.remove("active");
-
-        }
-      );
-
+    this.classList.add("active");
 
     document
       .getElementById("dislikeButton")
-      .addEventListener(
-        "click",
-        function() {
+      .classList.remove("active");
 
-          this.classList.add("active");
+});
 
-          document
-            .getElementById("likeButton")
-            .classList.remove("active");
 
-        }
-      );
+/* DISLIKE */
 
-  </script></body>
+document
+  .getElementById("dislikeButton")
+  .addEventListener("click", function() {
+
+    this.classList.add("active");
+
+    document
+      .getElementById("likeButton")
+      .classList.remove("active");
+
+});
+
+
+/* START */
+
+updateAuthUI();
+
+</script>
+
+</body>
 </html>
