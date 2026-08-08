@@ -4,58 +4,94 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Debunk — settle it with sources, not vibes</title>
- <link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icon-512.png">
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     margin: 0;
     background: #0B0E14;
     color: #F2F0EA;
     font-family: 'Inter', system-ui, sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 48px 20px;
     min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
   }
-  .wrap { width: 100%; max-width: 620px; }
-  .logo { display: flex; align-items: baseline; gap: 2px; margin-bottom: 6px; }
-  .logo span.name {
-    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 30px; letter-spacing: -0.02em;
+
+  .bg-glow {
+    position: fixed; inset: 0; z-index: -1; overflow: hidden;
   }
-  .logo span.dot { color: #E5484D; font-size: 30px; font-weight: 700; }
-  .tagline {
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6B7280; margin-bottom: 36px; letter-spacing: 0.02em;
+  .bg-glow span {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: .18;
+    animation: float 18s ease-in-out infinite;
   }
-  form { display: flex; gap: 10px; margin-bottom: 18px; }
+  .bg-glow span:nth-child(1) { width: 320px; height: 320px; background: #3FA796; top: -80px; left: -60px; animation-delay: 0s; }
+  .bg-glow span:nth-child(2) { width: 260px; height: 260px; background: #E5484D; top: 40%; right: -80px; animation-delay: 4s; }
+  .bg-glow span:nth-child(3) { width: 280px; height: 280px; background: #E8A33D; bottom: -100px; left: 30%; animation-delay: 8s; }
+  @keyframes float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(30px,-30px) scale(1.15); }
+  }
+
+  .wrap { width: 100%; max-width: 680px; margin: 0 auto; padding: 24px 20px 80px; position: relative; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    gap: 10px; padding: 8px 0 34px; font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  }
+  .logo { display: flex; align-items: baseline; gap: 2px; }
+  .logo span.name { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -0.02em; }
+  .logo span.dot { color: #E5484D; font-size: 24px; font-weight: 800; display: inline-block; animation: dotpulse 2.2s ease-in-out infinite; }
+  @keyframes dotpulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.4); } }
+  .navlinks { display: flex; gap: 16px; }
+  .navlinks a { color: #6B7280; text-decoration: none; }
+  .navlinks a:hover, .navlinks a.active { color: #F2F0EA; }
+  #authBar { display: flex; align-items: center; gap: 10px; }
+  #signInBtn { background: transparent; border: 1px solid #262B36; color: #B8BEC9; border-radius: 20px; padding: 6px 14px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+  #userBadge { display: none; color: #F2F0EA; cursor: pointer; }
+
+  .hero { text-align: center; padding: 30px 0 40px; }
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 34px; line-height: 1.2;
+    margin: 0 0 14px; letter-spacing: -0.01em;
+  }
+  .hero h1 .accent { color: #3FA796; }
+  .hero p { color: #8A93A6; font-size: 15px; max-width: 460px; margin: 0 auto 30px; line-height: 1.6; }
+
+  form#searchForm { display: flex; gap: 10px; margin-bottom: 16px; }
   input[type=text] {
-    flex: 1; background: transparent; border: none; border-bottom: 2px solid #262B36;
-    color: #F2F0EA; font-size: 18px; padding: 10px 2px; outline: none; font-family: 'Inter', sans-serif;
+    flex: 1; background: #11151d; border: 1px solid #262B36; border-radius: 10px;
+    color: #F2F0EA; font-size: 16px; padding: 14px 16px; outline: none; font-family: 'Inter', sans-serif;
   }
-  input[type=text]:focus { border-bottom-color: #F2F0EA; }
+  input[type=text]:focus { border-color: #3FA796; }
   button.go {
-    background: #3FA796; color: #0B0E14; border: none; border-radius: 4px; padding: 0 22px;
+    background: #3FA796; color: #0B0E14; border: none; border-radius: 10px; padding: 0 22px;
     font-weight: 600; font-size: 14px; cursor: pointer; transition: background .15s;
   }
   button.go:hover { background: #E5484D; }
   button.go:disabled { opacity: .6; cursor: default; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 8px; }
   .chip {
     background: transparent; border: 1px solid #262B36; color: #6B7280; border-radius: 20px;
     padding: 7px 14px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s;
   }
   .chip:hover { border-color: #8A93A6; color: #F2F0EA; }
+
   .loading {
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6B7280; padding: 20px 0;
-    animation: pulse 1.4s ease-in-out infinite;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6B7280; padding: 24px 0; text-align: center;
   }
-  @keyframes pulse { 0%,100% { opacity: .3 } 50% { opacity: 1 } }
-  .error { color: #E5484D; font-size: 14px; margin-top: 10px; }
+  .loading::after { content: ''; animation: dots 1.4s steps(4,end) infinite; }
+  @keyframes dots { 0% { content:''; } 25% { content:'.'; } 50% { content:'..'; } 75% { content:'...'; } 100% { content:''; } }
+  .error { color: #E5484D; font-size: 14px; margin-top: 10px; text-align: center; }
+
   .card {
-    border: 1px dashed #333A48; border-radius: 8px; padding: 28px 26px; position: relative; margin-top: 8px; display: none;
+    border: 1px dashed #333A48; border-radius: 12px; padding: 30px 26px; position: relative; margin-top: 18px; display: none;
+    background: rgba(17,21,29,.5); backdrop-filter: blur(6px);
   }
   .stamp {
     position: absolute; top: -14px; right: 20px; transform: rotate(-6deg);
@@ -64,62 +100,126 @@
   }
   .verdict { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.35; margin-bottom: 14px; }
   .explanation { font-size: 14.5px; line-height: 1.6; color: #B8BEC9; margin-bottom: 22px; }
-  .sources-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6272; letter-spacing: 0.1em; margin-bottom: 10px; }
-  .sources { display: flex; flex-direction: column; gap: 8px; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .actbtn {
+    background: transparent; border: 1px solid #262B36; color: #8A93A6; border-radius: 8px;
+    padding: 7px 12px; font-size: 12.5px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .actbtn:hover { border-color: #8A93A6; color: #F2F0EA; }
+  .actbtn.active { border-color: #3FA796; color: #3FA796; }
+
+  .sources-label, .related-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6272; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .sources { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
   .source {
     display: flex; justify-content: space-between; align-items: center; border: 1px solid #1E232D; border-radius: 5px;
     padding: 9px 12px; color: #F2F0EA; text-decoration: none; font-size: 13.5px; font-family: 'IBM Plex Mono', monospace;
   }
   .source .arrow { color: #4A5163; font-size: 12px; }
+
+  .related { display: flex; flex-direction: column; gap: 8px; }
+  .related button {
+    text-align: left; background: transparent; border: 1px solid #1E232D; border-radius: 8px; color: #B8BEC9;
+    padding: 10px 12px; font-size: 13.5px; cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+  .related button:hover { border-color: #3FA796; color: #F2F0EA; }
+
+  footer { text-align: center; color: #3A4150; font-size: 12px; font-family: 'IBM Plex Mono', monospace; margin-top: 60px; }
+
+  #authModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; align-items:center; justify-content:center; }
+  #authModal .box { background:#11151d; border:1px solid #262B36; border-radius:10px; padding:28px 24px; width:88%; max-width:340px; }
+  #authModal h3 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; margin:0 0 18px; }
+  #authModal button.google { width:100%; padding:11px; border-radius:6px; border:1px solid #333; background:#fff; color:#111; font-weight:600; margin-bottom:12px; cursor:pointer; }
+  #authModal .divider { text-align:center; color:#5B6272; font-size:12px; margin:14px 0; }
+  #authModal input { width:100%; padding:10px; margin-bottom:8px; background:#0B0E14; border:1px solid #262B36; border-radius:6px; color:#F2F0EA; }
+  #authModal .row { display:flex; gap:4%; margin-top:6px; }
+  #authModal .row button { flex:1; padding:10px; border-radius:6px; cursor:pointer; font-weight:600; }
+  #authModal .row .signup { border:none; background:#3FA796; color:#0B0E14; }
+  #authModal .row .signin { border:1px solid #333; background:transparent; color:#F2F0EA; }
+  #authError { color:#E5484D; font-size:12px; margin-top:10px; }
+  #authModal .guest { display:block; margin:16px auto 0; background:none; border:none; color:#6B7280; font-size:13px; cursor:pointer; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
-  <div class="tagline">settle it with sources, not vibes.</div>
-<div id="authBar" style="position:absolute; top:48px; right:20px; font-family:'IBM Plex Mono',monospace; font-size:13px;">
-  <button id="signInBtn" onclick="openAuthModal()" style="background:transparent; border:1px solid #262B36; color:#B8BEC9; border-radius:20px; padding:6px 14px; cursor:pointer;">Sign in</button>
-  <span id="userBadge" style="display:none; color:#F2F0EA;"></span>
-</div>
 
-<div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; align-items:center; justify-content:center;">
-  <div style="background:#11151d; border:1px solid #262B36; border-radius:10px; padding:28px 24px; width:88%; max-width:340px;">
-    <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; margin-bottom:18px;">Sign in to Debunk</div>
-    <button onclick="signInWithGoogle()" style="width:100%; padding:11px; border-radius:6px; border:1px solid #333; background:#fff; color:#111; font-weight:600; margin-bottom:12px; cursor:pointer;">Continue with Google</button>
-    <div style="text-align:center; color:#5B6272; font-size:12px; margin:14px 0;">or use email</div>
-    <input id="authEmail" type="email" placeholder="Email" style="width:100%; padding:10px; margin-bottom:8px; background:#0B0E14; border:1px solid #262B36; border-radius:6px; color:#F2F0EA;">
-    <input id="authPassword" type="password" placeholder="Password" style="width:100%; padding:10px; margin-bottom:14px; background:#0B0E14; border:1px solid #262B36; border-radius:6px; color:#F2F0EA;">
-    <button onclick="signUpEmail()" style="width:48%; padding:10px; border-radius:6px; border:none; background:#3FA796; color:#0B0E14; font-weight:600; margin-right:4%; cursor:pointer;">Sign up</button>
-    <button onclick="signInEmail()" style="width:48%; padding:10px; border-radius:6px; border:1px solid #333; background:transparent; color:#F2F0EA; cursor:pointer;">Sign in</button>
-    <div id="authError" style="color:#E5484D; font-size:12px; margin-top:10px;"></div>
-    <div style="text-align:center; margin-top:16px;">
-      <button onclick="closeAuthModal()" style="background:none; border:none; color:#6B7280; font-size:13px; cursor:pointer;">Continue as guest</button>
+<div class="bg-glow"><span></span><span></span><span></span></div>
+
+<div class="wrap">
+  <nav>
+    <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
+    <div class="navlinks">
+      <a href="index.html" class="active">Home</a>
+      <a href="trending.html">Trending</a>
+      <a href="history.html">History</a>
+      <a href="about.html">About</a>
+    </div>
+    <div id="authBar">
+      <button id="signInBtn" onclick="openAuthModal()">Sign in</button>
+      <span id="userBadge"></span>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1>Ask anything.<br>Get answers backed by <span class="accent">real sources</span>.</h1>
+    <p>No random blogs, no forum guesses. Debunk pulls from the most trusted source for whatever you're asking — Forbes for wealth, ESPN for sports, WHO for health — so you get an answer you can actually stand on.</p>
+
+    <form id="searchForm">
+      <input type="text" id="query" placeholder="Who is the richest man alive?" autocomplete="off" />
+      <button type="submit" class="go" id="goBtn">Settle it</button>
+    </form>
+
+    <div class="chips" id="chips">
+      <button class="chip" data-q="Who is the richest man alive?">Who is the richest man alive?</button>
+      <button class="chip" data-q="Fastest 100m sprint time ever">Fastest 100m sprint time ever</button>
+      <button class="chip" data-q="Has Messi won a World Cup?">Has Messi won a World Cup?</button>
+      <button class="chip" data-q="Tallest building in the world">Tallest building in the world</button>
     </div>
   </div>
-</div>
-  <form id="searchForm">
-    <input type="text" id="query" placeholder="Who is the richest man alive?" autocomplete="off" />
-    <button type="submit" class="go" id="goBtn">Settle it</button>
-  </form>
 
-  <div class="chips" id="chips">
-    <button class="chip" data-q="Who is the richest man alive?">Who is the richest man alive?</button>
-    <button class="chip" data-q="Fastest 100m sprint time ever">Fastest 100m sprint time ever</button>
-    <button class="chip" data-q="Has Messi won a World Cup?">Has Messi won a World Cup?</button>
-    <button class="chip" data-q="Tallest building in the world">Tallest building in the world</button>
-  </div>
-
-  <div class="loading" id="loading" style="display:none;">cross-checking authoritative sources...</div>
+  <div class="loading" id="loading" style="display:none;">Thinking</div>
   <div class="error" id="error" style="display:none;"></div>
 
   <div class="card" id="card">
     <div class="stamp" id="stamp"></div>
     <div class="verdict" id="verdict"></div>
     <div class="explanation" id="explanation"></div>
+
+    <div class="actions">
+      <button class="actbtn" id="copyBtn">📋 Copy</button>
+      <button class="actbtn" id="shareBtn">↗ Share</button>
+      <button class="actbtn" id="saveBtn">🔖 Save</button>
+      <button class="actbtn" id="likeBtn">👍</button>
+      <button class="actbtn" id="dislikeBtn">👎</button>
+    </div>
+
     <div id="sourcesBlock">
       <div class="sources-label">SOURCES</div>
       <div class="sources" id="sources"></div>
     </div>
+
+    <div id="relatedBlock" style="display:none;">
+      <div class="related-label">RELATED</div>
+      <div class="related" id="related"></div>
+    </div>
+  </div>
+
+  <footer>Debunk — built to settle arguments, not start them.</footer>
+</div>
+
+<div id="authModal">
+  <div class="box">
+    <h3>Sign in to Debunk</h3>
+    <button class="google" onclick="signInWithGoogle()">Continue with Google</button>
+    <div class="divider">or use email</div>
+    <input id="authEmail" type="email" placeholder="Email">
+    <input id="authPassword" type="password" placeholder="Password">
+    <div class="row">
+      <button class="signup" onclick="signUpEmail()">Sign up</button>
+      <button class="signin" onclick="signInEmail()">Sign in</button>
+    </div>
+    <div id="authError"></div>
+    <button class="guest" onclick="closeAuthModal()">Continue as guest</button>
   </div>
 </div>
 
@@ -137,6 +237,7 @@
   const loading = document.getElementById('loading');
   const errorEl = document.getElementById('error');
   const card = document.getElementById('card');
+  let currentData = null;
 
   async function runSearch(q) {
     if (!q || !q.trim()) return;
@@ -144,7 +245,6 @@
     loading.style.display = 'block';
     errorEl.style.display = 'none';
     card.style.display = 'none';
-    chips.style.display = 'none';
 
     try {
       const res = await fetch('/api/ask', {
@@ -153,8 +253,8 @@
         body: JSON.stringify({ query: q }),
       });
       const data = await res.json();
-
       if (data.error) throw new Error(data.error);
+      currentData = data;
 
       const status = STATUS_STYLES[data.confidence] || STATUS_STYLES.Unclear;
       const stamp = document.getElementById('stamp');
@@ -180,6 +280,19 @@
         sourcesEl.appendChild(a);
       });
 
+      const relatedEl = document.getElementById('related');
+      const relatedBlock = document.getElementById('relatedBlock');
+      relatedEl.innerHTML = '';
+      const related = data.related || [];
+      relatedBlock.style.display = related.length ? 'block' : 'none';
+      related.forEach(r => {
+        const b = document.createElement('button');
+        b.textContent = r;
+        b.onclick = () => { input.value = r; runSearch(r); window.scrollTo({top:0, behavior:'smooth'}); };
+        relatedEl.appendChild(b);
+      });
+
+      resetActionButtons();
       card.style.display = 'block';
     } catch (e) {
       errorEl.textContent = "Couldn't reach the sources. Try again in a moment.";
@@ -189,6 +302,48 @@
       goBtn.disabled = false;
     }
   }
+
+  function resetActionButtons(){
+    document.getElementById('likeBtn').classList.remove('active');
+    document.getElementById('dislikeBtn').classList.remove('active');
+    document.getElementById('saveBtn').classList.remove('active');
+    document.getElementById('saveBtn').textContent = '🔖 Save';
+  }
+
+  document.getElementById('copyBtn').onclick = () => {
+    if (!currentData) return;
+    const text = `${currentData.verdict}\n\n${currentData.explanation}`;
+    navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = '📋 Copy', 1500);
+  };
+
+  document.getElementById('shareBtn').onclick = async () => {
+    if (!currentData) return;
+    const shareData = { title: 'Debunk', text: currentData.verdict, url: location.href };
+    if (navigator.share) { try { await navigator.share(shareData); } catch(e){} }
+    else { navigator.clipboard.writeText(currentData.verdict + ' — ' + location.href); }
+  };
+
+  document.getElementById('saveBtn').onclick = () => {
+    if (!currentData) return;
+    const saved = JSON.parse(localStorage.getItem('debunk_saved') || '[]');
+    saved.unshift({ query: input.value, ...currentData, savedAt: Date.now() });
+    localStorage.setItem('debunk_saved', JSON.stringify(saved.slice(0, 50)));
+    const btn = document.getElementById('saveBtn');
+    btn.classList.add('active');
+    btn.textContent = '✓ Saved';
+  };
+
+  document.getElementById('likeBtn').onclick = (e) => {
+    e.target.classList.add('active');
+    document.getElementById('dislikeBtn').classList.remove('active');
+  };
+  document.getElementById('dislikeBtn').onclick = (e) => {
+    e.target.classList.add('active');
+    document.getElementById('likeBtn').classList.remove('active');
+  };
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -202,7 +357,12 @@
     input.value = q;
     runSearch(q);
   });
-  const sb = supabase.createClient('https://axjavfnqxdlqpjirvpmn.supabase.co', 'sb_publishable_VZ5GKmIEmUQvDh7VsFvuBA_QTTUwu6o');
+
+  const params = new URLSearchParams(location.search);
+  const presetQ = params.get('q');
+  if (presetQ) { input.value = presetQ; runSearch(presetQ); }
+
+  const sb = supabase.createClient('YOUR_SUPABASE_URL', 'YOUR_SUPABASE_ANON_KEY');
 
   function openAuthModal(){ document.getElementById('authModal').style.display='flex'; }
   function closeAuthModal(){ document.getElementById('authModal').style.display='none'; }
@@ -231,11 +391,10 @@
       const badge = document.getElementById('userBadge');
       badge.style.display='inline';
       badge.textContent = user.email.split('@')[0] + ' | logout';
-      badge.style.cursor='pointer';
       badge.onclick = async () => { await sb.auth.signOut(); location.reload(); };
     }
   }
   checkUser();
 </script>
 </body>
-  </html>
+                          </html>
