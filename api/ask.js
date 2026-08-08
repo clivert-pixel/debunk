@@ -11,6 +11,10 @@ Using ONLY the authoritative results:
 - If the authoritative sources agree, mark it "Verified".
 - If they conflict, or the fact changes over time (e.g. "currently richest"), mark it "Disputed" and briefly say why.
 - If none of the results are from authoritative sources, mark it "Unclear" and say so honestly rather than guessing.
+- Also suggest 3 short related follow-up questions someone might naturally ask next, based on the topic.
+
+Respond with ONLY valid JSON, no markdown code fences, no extra text before or after, in exactly this shape:
+{"verdict": "one direct sentence answering the question", "confidence": "Verified", "explanation": "2-3 short plain sentences of context", "sources": [{"name": "Source Name", "url": "https://..."}], "related": ["related question 1", "related question 2", "related question 3"]}`;
 
 Respond with ONLY valid JSON, no markdown code fences, no extra text before or after, in exactly this shape:
 {"verdict": "one direct sentence answering the question", "confidence": "Verified", "explanation": "2-3 short plain sentences of context", "sources": [{"name": "Source Name", "url": "https://..."}]}`;
