@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trending — Debunk</title>
+<link rel="icon" href="/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#0B0E14; color:#F2F0EA; font-family:'Inter',sans-serif; }
+  .wrap { max-width:640px; margin:0 auto; padding:24px 20px 80px; }
+  nav { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:8px 0 34px; font-family:'IBM Plex Mono',monospace; font-size:13px; }
+  .logo span.name { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:24px; }
+  .logo span.dot { color:#E5484D; font-size:24px; font-weight:800; }
+  .navlinks { display:flex; gap:16px; }
+  .navlinks a { color:#6B7280; text-decoration:none; }
+  .navlinks a:hover, .navlinks a.active { color:#F2F0EA; }
+  h1 { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:26px; margin-bottom:8px; }
+  p.sub { color:#6B7280; font-size:13.5px; margin-bottom:28px; font-family:'IBM Plex Mono',monospace; }
+  .list { display:flex; flex-direction:column; gap:10px; }
+  .item {
+    display:flex; align-items:center; justify-content:space-between; text-decoration:none;
+    border:1px solid #1E232D; border-radius:10px; padding:16px 18px; color:#F2F0EA;
+  }
+  .item:hover { border-color:#3FA796; }
+  .item .rank { font-family:'IBM Plex Mono',monospace; color:#5B6272; margin-right:12px; font-size:13px; }
+  .item .arrow { color:#4A5163; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
+    <div class="navlinks">
+      <a href="index.html">Home</a>
+      <a href="trending.html" class="active">Trending</a>
+      <a href="history.html">History</a>
+      <a href="about.html">About</a>
+    </div>
+  </nav>
+
+  <h1>Trending debates</h1>
+  <p class="sub">A running list of popular questions people are settling. Tap one to see the verdict.</p>
+
+  <div class="list" id="list"></div>
+</div>
+
+<script>
+  const TRENDING = [
+    "Who is the richest man alive?",
+    "Fastest 100m sprint time ever",
+    "Has Messi won a World Cup?",
+    "Tallest building in the world",
+    "Is coffee bad for you?",
+    "Who has the most Grammy awards?",
+    "What is the biggest company in the world by market cap?",
+    "Did Ronaldo score more goals than Messi?",
+  ];
+  const list = document.getElementById('list');
+  TRENDING.forEach((q, i) => {
+    const a = document.createElement('a');
+    a.className = 'item';
+    a.href = 'index.html?q=' + encodeURIComponent(q);
+    a.innerHTML = `<span><span class="rank">#${i+1}</span>${q}</span><span class="arrow">&#8594;</span>`;
+    list.appendChild(a);
+  });
+</script>
+</body>
+</html>
