@@ -1359,8 +1359,21 @@ async function loadTrends() {
 
   try {
 
-    const response = await fetch("/api/trends");
+    const controller = new AbortController();
 
+const timeout = setTimeout(
+  () => controller.abort(),
+  10000
+);
+
+const response = await fetch(
+  "/api/trends",
+  {
+    signal: controller.signal
+  }
+);
+
+clearTimeout(timeout);
     if (!response.ok) {
       throw new Error("Trend API failed");
     }
