@@ -777,11 +777,10 @@ main {
 
 
 /* =========================================================
-   RESULT
+   RESULT — INVESTIGATION REPORT
    ========================================================= */
 
 .result-card {
-
   display: none;
 
   max-width: 920px;
@@ -790,57 +789,113 @@ main {
 
   padding: 30px;
 
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255,255,255,.10);
 
   border-radius: 22px;
 
-  background: rgba(13,18,32,.86);
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(85,230,209,.055),
+      transparent 35%
+    ),
+    rgba(13,18,32,.88);
 
   box-shadow:
     0 30px 100px rgba(0,0,0,.28),
     inset 0 1px rgba(255,255,255,.035);
 
   backdrop-filter: blur(20px);
+
+  animation: resultAppear .55s ease both;
 }
 
-.result-top {
+@keyframes resultAppear {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
 
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* TOP */
+
+.result-top {
   display: flex;
 
   justify-content: space-between;
 
+  align-items: flex-start;
+
   gap: 20px;
+
+  padding-bottom: 23px;
+
+  border-bottom: 1px solid var(--line);
 }
 
-.status {
 
-  display: inline-block;
+/* CLAIM */
 
-  padding: 6px 9px;
+.result-top::before {
+  content: "DEBUNK // INVESTIGATION COMPLETE";
 
-  border: 1px solid;
+  position: absolute;
 
-  border-radius: 6px;
+  margin-top: -4px;
+
+  color: var(--cyan);
 
   font-family: "IBM Plex Mono";
 
-  font-size: 9px;
+  font-size: 8px;
 
-  letter-spacing: .08em;
+  letter-spacing: .13em;
 }
 
-.confidence {
+.result-top > div:first-child {
+  padding-top: 24px;
+}
 
-  color: #68738a;
+.result-top > div:first-child::before {
+  content: "CLAIM CHECKED";
+
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #59647b;
 
   font-family: "IBM Plex Mono";
 
-  font-size: 9px;
+  font-size: 8px;
+
+  letter-spacing: .12em;
 }
+
+
+/* VERDICT */
 
 .verdict {
+  margin: 25px 0 18px;
 
-  margin: 17px 0;
+  padding: 23px;
+
+  border: 1px solid rgba(85,230,209,.15);
+
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(85,230,209,.055),
+      rgba(102,136,255,.025)
+    );
 
   color: var(--white);
 
@@ -848,44 +903,113 @@ main {
 
   font-size: 31px;
 
+  font-weight: 700;
+
   line-height: 1.25;
+
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.025);
 }
 
-.result-explanation {
+.verdict::before {
+  content: "◉  VERDICT";
 
-  color: #8b94a8;
+  display: block;
+
+  margin-bottom: 13px;
+
+  color: var(--cyan);
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 8px;
+
+  font-weight: 500;
+
+  letter-spacing: .13em;
+}
+
+
+/* EXPLANATION */
+
+.result-explanation {
+  position: relative;
+
+  margin: 0 0 28px;
+
+  padding: 23px 0 28px;
+
+  border-bottom: 1px solid var(--line);
+
+  color: #9aa4b8;
 
   font-size: 14px;
 
-  line-height: 1.8;
-
-  margin-bottom: 25px;
+  line-height: 1.85;
 }
 
+.result-explanation::before {
+  content: "01  /  WHY";
+
+  display: block;
+
+  margin-bottom: 14px;
+
+  color: var(--cyan);
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 8px;
+
+  letter-spacing: .13em;
+}
+
+
+/* EVIDENCE */
+
 .evidence-box {
+  position: relative;
 
-  padding: 18px;
+  padding: 25px 0;
 
-  border: 1px solid rgba(85,230,209,.12);
+  border: 0;
 
-  border-radius: 13px;
+  border-bottom: 1px solid var(--line);
 
-  background: rgba(85,230,209,.025);
+  border-radius: 0;
 
-  margin-bottom: 25px;
+  background: transparent;
+
+  margin-bottom: 28px;
+}
+
+.evidence-box::before {
+  content: "02  /  EVIDENCE";
+
+  display: block;
+
+  margin-bottom: 18px;
+
+  color: var(--cyan);
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 8px;
+
+  letter-spacing: .13em;
 }
 
 .evidence-head {
-
   display: flex;
 
   justify-content: space-between;
+
+  align-items: center;
 
   margin-bottom: 10px;
 }
 
 .evidence-title {
-
   color: var(--white);
 
   font-family: "Space Grotesk";
@@ -896,7 +1020,6 @@ main {
 }
 
 .evidence-count {
-
   color: #69738a;
 
   font-family: "IBM Plex Mono";
@@ -905,48 +1028,11 @@ main {
 }
 
 .evidence-text {
-
   color: #7e899f;
 
   font-size: 12px;
 
   line-height: 1.7;
-}
-
-.actions {
-
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 7px;
-
-  margin-bottom: 28px;
-}
-
-.action {
-
-  border: 1px solid var(--line);
-
-  border-radius: 8px;
-
-  background: rgba(255,255,255,.035);
-
-  color: #7e899e;
-
-  padding: 8px 12px;
-
-  font-size: 11px;
-
-  transition: .2s;
-}
-
-.action:hover,
-.action.active {
-
-  color: var(--cyan);
-
-  border-color: rgba(85,230,209,.4);
 }
 
 
