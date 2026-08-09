@@ -1340,427 +1340,160 @@ FACTS SHOULD SURVIVE THE SEARCH.
 
 </footer>
 
-
 <script>
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const grid =
-  document.getElementById(
-    "trendingGrid"
-  );
-
-const loading =
-  document.getElementById(
-    "loading"
-  );
-
-const errorBox =
-  document.getElementById(
-    "error"
-  );
-
-const updated =
-  document.getElementById(
-    "updated"
-  );
-
-
-let allTrends = [];
-
-
-/* =====================================================
-   LOAD TRENDS
-===================================================== */
+const list = document.querySelector(".trending-list");
 
 async function loadTrends() {
 
-  loading.style.display = "block";
-
-  errorBox.style.display = "none";
-
-  grid.innerHTML = "";
+  list.innerHTML = `
+    <div class="card">
+      <div class="rank">•••</div>
+      <div>
+        <h2>Loading trends...</h2>
+        <p>Getting the latest Google searches.</p>
+      </div>
+      <div class="meta">LIVE</div>
+    </div>
+  `;
 
   try {
 
-    const response =
-      await fetch("/api/trends");
+    const response = await fetch("/api/trends");
 
     if (!response.ok) {
-
-      throw new Error(
-        "Trend request failed"
-      );
-
+      throw new Error("Trend API failed");
     }
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
-    if (
-      !data ||
-      !Array.isArray(data.trends)
-    ) {
+    /*
+      The API returns:
 
-      throw new Error(
-        "Invalid trend data"
-      );
+      trends: [
+        "actual Google trend",
+        "another trend"
+      ]
+    */
 
-    }
+    const trends = Array.isArray(data.trends)
+      ? data.trends
+      : [];
 
-    allTrends =
-      data.trends;
+    if (!trends.length) {
 
-    renderTrends(
-      allTrends
-    );
-
-    if (data.updated) {
-
-      const date =
-        new Date(
-          data.updated
-        );
-
-      updated.textContent =
-        "UPDATED " +
-        date.toLocaleTimeString(
-          [],
-          {
-            hour:"2-digit",
-            minute:"2-digit"
-          }
-        );
-
-    } else {
-
-      updated.textContent =
-        "LIVE";
-
-    }
-
-  } catch (err) {
-
-    console.error(
-      "Trending error:",
-      err
-    );
-
-    errorBox.style.display =
-      "block";
-
-  } finally {
-
-    loading.style.display =
-      "none";
-
-  }
-
-}
-
-
-/* =====================================================
-   RENDER TRENDS
-===================================================== */
-
-function renderTrends(
-  trends
-) {
-
-  grid.innerHTML = "";
-
-  if (!trends.length) {
-
-    grid.innerHTML = `
-
-      <div
-        style="
-          grid-column:1/-1;
-          text-align:center;
-          color:#657086;
-          padding:50px;
-        "
-      >
-
-        No trends available.
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  trends.forEach(
-    (trend, index) => {
-
-      const card =
-        document.createElement(
-          "article"
-        );
-
-      card.className =
-        "trend-card";
-
-
-      const category =
-        trend.category ||
-        "Trending";
-
-
-      const title =
-        trend.title ||
-        trend.query ||
-        "Untitled trend";
-
-
-      const searches =
-        trend.searches ||
-        "Trending now";
-
-
-      const query =
-        trend.query ||
-        title;
-
-
-      card.innerHTML = `
-
-        <div class="trend-top">
-
-          <div class="rank">
-
-            #${String(
-              index + 1
-            ).padStart(2,"0")}
-
+      list.innerHTML = `
+        <div class="card">
+          <div class="rank">—</div>
+          <div>
+            <h2>No trends available</h2>
+            <p>Google Trends did not return any current searches.</p>
           </div>
-
-          <div class="category">
-
-            ${escapeHTML(
-              category
-            )}
-
-          </div>
-
+          <div class="meta">LIVE</div>
         </div>
-
-
-        <h2>
-
-          ${escapeHTML(
-            title
-          )}
-
-        </h2>
-
-
-        <div class="trend-meta">
-
-          <span class="fire">
-            🔥
-          </span>
-
-          <span>
-
-            ${escapeHTML(
-              searches
-            )}
-
-          </span>
-
-        </div>
-
-
-        <div class="investigate">
-
-          INVESTIGATE →
-
-        </div>
-
       `;
 
-
-      card.addEventListener(
-        "click",
-        () => {
-
-          const destination =
-            "index.html?query=" +
-            encodeURIComponent(
-              query
-            );
-
-          window.location.href =
-            destination;
-
-        }
-      );
-
-
-      grid.appendChild(
-        card
-      );
-
+      return;
     }
-  );
 
-}
+    list.innerHTML = "";
 
+    trends.forEach((trend, index) => {
 
-/* =====================================================
-   FILTERS
-===================================================== */
+      const card = document.createElement("div");
 
-document
-  .querySelectorAll(
-    ".filter"
-  )
-  .forEach(
-    button => {
+      card.className = "card";
 
-      button.addEventListener(
-        "click",
-        () => {
+      card.innerHTML = `
+        <div class="rank">
+          ${String(index + 1).padStart(2, "0")}
+        </div>
 
-          document
-            .querySelectorAll(
-              ".filter"
-            )
-            .forEach(
-              item =>
-                item.classList.remove(
-                  "active"
-                )
-            );
+        <div>
 
-          button.classList.add(
-            "active"
-          );
+          <h2>
+            🔥 ${escapeHTML(trend)}
+          </h2>
 
+          <p>
+            This topic is currently trending on Google.
+            Tap to investigate what is actually true.
+          </p>
 
-          const category =
-            button.dataset.category;
+        </div>
 
+        <div class="meta">
+          <span class="hot">TRENDING</span>
+        </div>
+      `;
 
-          if (
-            category === "all"
-          ) {
+      card.style.cursor = "pointer";
 
-            renderTrends(
-              allTrends
-            );
+      card.addEventListener("click", () => {
 
-            return;
+        const question =
+          `What is actually true about ${trend}?`;
 
-          }
+        window.location.href =
+          `index.html?query=${encodeURIComponent(question)}`;
 
+      });
 
-          const filtered =
-            allTrends.filter(
-              trend =>
-                String(
-                  trend.category
-                ).toLowerCase() ===
-                category.toLowerCase()
-            );
+      list.appendChild(card);
 
+    });
 
-          renderTrends(
-            filtered
-          );
+  } catch (error) {
 
-        }
-      );
+    console.error("Trending error:", error);
 
-    }
-  );
+    list.innerHTML = `
+      <div class="card">
 
+        <div class="rank">!</div>
 
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
+        <div>
+          <h2>Couldn't load trends</h2>
 
-function escapeHTML(
-  value
-) {
+          <p>
+            The latest Google Trends could not be
+            loaded right now. Try again shortly.
+          </p>
+        </div>
 
-  return String(value)
+        <div class="meta">ERROR</div>
 
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* =====================================================
-   MOBILE MENU
-===================================================== */
-
-const menuButton =
-  document.getElementById(
-    "menuButton"
-  );
-
-const mobileMenu =
-  document.getElementById(
-    "mobileMenu"
-  );
-
-
-menuButton.addEventListener(
-  "click",
-  () => {
-
-    const open =
-      mobileMenu.style.display ===
-      "block";
-
-    mobileMenu.style.display =
-      open
-        ? "none"
-        : "block";
+      </div>
+    `;
 
   }
-);
+
+}
 
 
-/* =====================================================
-   START
-===================================================== */
+/*
+  Prevent trend text from being interpreted
+  as HTML.
+*/
+
+function escapeHTML(value) {
+
+  const div = document.createElement("div");
+
+  div.textContent = value;
+
+  return div.innerHTML;
+
+}
+
+
+/*
+  Load immediately.
+*/
 
 loadTrends();
 
 </script>
-
-
 </body>
 
 </html>
