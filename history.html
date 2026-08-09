@@ -3,173 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>History — Debunk</title>
+<link rel="icon" href="/icon-512.png">
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
-font-family:Arial,Helvetica,sans-serif;
-background:#05070d;
-color:white;
-min-height:100vh;
-}
-
-.bg{
-position:fixed;
-inset:0;
-z-index:-1;
-background:
-radial-gradient(circle at 20% 15%,rgba(80,110,255,.17),transparent 30%),
-radial-gradient(circle at 80% 80%,rgba(0,210,170,.1),transparent 30%),
-#05070d;
-}
-
-nav{
-height:72px;
-padding:0 7%;
-display:flex;
-align-items:center;
-justify-content:space-between;
-background:rgba(5,7,13,.6);
-backdrop-filter:blur(15px);
-border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.logo{
-font-size:24px;
-font-weight:800;
-color:white;
-text-decoration:none;
-}
-
-.logo span{color:#6c8cff}
-
-.links{
-display:flex;
-gap:8px;
-}
-
-.links a{
-color:rgba(255,255,255,.65);
-text-decoration:none;
-padding:9px 13px;
-border-radius:10px;
-font-size:14px;
-}
-
-.links a:hover,
-.links a.active{
-background:rgba(255,255,255,.08);
-color:white;
-}
-
-.container{
-width:min(900px,92%);
-margin:55px auto;
-}
-
-h1{
-font-size:42px;
-letter-spacing:-2px;
-margin-bottom:10px;
-}
-
-.subtitle{
-color:rgba(255,255,255,.55);
-margin-bottom:30px;
-}
-
-.history{
-display:grid;
-gap:12px;
-}
-
-.item{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:20px;
-padding:19px;
-border:1px solid rgba(255,255,255,.08);
-background:rgba(255,255,255,.045);
-border-radius:16px;
-}
-
-.question{
-font-size:15px;
-margin-bottom:6px;
-}
-
-.date{
-font-size:12px;
-color:rgba(255,255,255,.4);
-}
-
-.result{
-font-size:12px;
-padding:7px 10px;
-border-radius:8px;
-background:rgba(108,140,255,.12);
-color:#91a7ff;
-white-space:nowrap;
-}
-
-.empty{
-padding:50px 20px;
-text-align:center;
-border:1px dashed rgba(255,255,255,.12);
-border-radius:18px;
-color:rgba(255,255,255,.45);
-}
-
-@media(max-width:600px){
-h1{font-size:34px}
-
-.links a{
-font-size:12px;
-padding:8px 7px;
-}
-
-.item{
-align-items:flex-start;
-flex-direction:column;
-}
-
-.result{
-white-space:normal;
-}
-}
+*{box-sizing:border-box}
+body{margin:0;background:#070a12;color:#dfe5f4;font-family:Arial,sans-serif;min-height:100vh}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.orb{position:absolute;width:400px;height:400px;border-radius:50%;filter:blur(100px);opacity:.15;animation:f 18s infinite alternate}
+.a{background:#6688ff;left:-160px;top:-150px}
+.b{background:#55e6d1;right:-170px;top:40%;animation-delay:-7s}
+@keyframes f{50%{transform:translate(70px,-50px) scale(1.15)}100%{transform:translate(-40px,60px) scale(.9)}}
+.grid{position:absolute;inset:-50%;background-image:linear-gradient(#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);background-size:55px 55px;transform:perspective(700px) rotateX(60deg)}
+header{height:74px;background:#070a12cc;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff12;position:sticky;top:0;z-index:10}
+nav{width:min(1180px,calc(100% - 36px));height:100%;margin:auto;display:flex;align-items:center;justify-content:space-between}
+.logo{color:white;text-decoration:none;font-size:23px;font-weight:800}.logo span{color:#55e6d1}
+.links{display:flex;gap:4px}.links a{color:#8992a9;text-decoration:none;padding:9px 12px;border-radius:9px;font-size:13px}.links a:hover,.active{color:white!important;background:#ffffff0d}
+main{width:min(900px,calc(100% - 32px));margin:auto;padding:70px 0}
+.kicker{font:10px monospace;letter-spacing:.15em;color:#55e6d1}
+h1{font-size:60px;letter-spacing:-4px;margin:10px 0}
+.sub{color:#8992a9;line-height:1.7}
+.controls{display:flex;justify-content:space-between;align-items:center;margin:35px 0 15px}
+.count{font:10px monospace;color:#59647a}
+.clear{border:1px solid #ffffff12;background:#ffffff05;color:#ff7884;padding:9px 12px;border-radius:8px;cursor:pointer}
+.history{display:grid;gap:9px}
+.item{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:18px;border:1px solid #ffffff10;border-radius:13px;background:#111627b8}
+.question{color:#f5f7ff;font-weight:600;font-size:14px}
+.verdict{color:#8992a9;font-size:11px;margin-top:7px}
+.time{font:9px monospace;color:#59647a;white-space:nowrap}
+.empty{text-align:center;padding:70px 20px;border:1px dashed #ffffff12;border-radius:16px;color:#667086}
+.empty strong{display:block;color:#dfe5f4;font-size:20px;margin-bottom:10px}
+@media(max-width:650px){h1{font-size:48px}.links a{font-size:11px;padding:7px}.item{display:block}.time{display:block;margin-top:12px}}
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<div class="bg"><div class="orb a"></div><div class="orb b"></div><div class="grid"></div></div>
 
+<header>
 <nav>
-
-<a href="index.html" class="logo">
-De<span>bunk</span>
-</a>
-
+<a class="logo" href="index.html">DEBUNK<span>.</span></a>
 <div class="links">
 <a href="index.html">Home</a>
 <a href="trending.html">Trending</a>
-<a href="history.html" class="active">History</a>
 <a href="community.html">Community</a>
+<a class="active" href="history.html">History</a>
+<a href="about.html">About</a>
 </div>
-
 </nav>
+</header>
 
-<main class="container">
+<main>
 
-<h1>Your history</h1>
+<div class="kicker">LOCAL // YOUR INVESTIGATIONS</div>
+<h1>History.</h1>
+<p class="sub">Questions you've investigated on this device.</p>
 
-<p class="subtitle">
-Questions you've checked on Debunk.
-</p>
+<div class="controls">
+<div class="count" id="count">0 INVESTIGATIONS</div>
+<button class="clear" id="clear">Clear history</button>
+</div>
 
 <div class="history" id="history"></div>
 
@@ -177,52 +71,54 @@ Questions you've checked on Debunk.
 
 <script>
 
-const historyBox =
-document.getElementById("history");
+const historyBox=document.getElementById("history");
+const count=document.getElementById("count");
 
-let history =
-JSON.parse(localStorage.getItem("debunkHistory") || "[]");
+function loadHistory(){
 
-if(history.length === 0){
+const data=JSON.parse(
+localStorage.getItem("debunk_history")||"[]"
+);
 
-historyBox.innerHTML = `
+count.textContent=
+`${data.length} INVESTIGATION${data.length===1?"":"S"}`;
+
+if(!data.length){
+
+historyBox.innerHTML=`
 <div class="empty">
-<h3>No searches yet</h3>
-<p style="margin-top:8px">
-Your verified questions will appear here.
-</p>
-</div>
-`;
+<strong>No investigations yet.</strong>
+Search something on Debunk and it will appear here.
+</div>`;
+return;
+}
 
-}else{
+historyBox.innerHTML="";
 
-history
-.slice()
-.reverse()
-.forEach(item=>{
+data.forEach(item=>{
 
-const div =
-document.createElement("div");
-
+const div=document.createElement("div");
 div.className="item";
 
+const date=new Date(item.at||Date.now());
+
 div.innerHTML=`
-
 <div>
-<div class="question">
-${escapeHTML(item.question || item)}
+<div class="question"></div>
+<div class="verdict"></div>
 </div>
-
-<div class="date">
-${item.date || "Recently"}
-</div>
-</div>
-
-<div class="result">
-Verified
-</div>
-
+<div class="time">${date.toLocaleString()}</div>
 `;
+
+div.querySelector(".question").textContent=item.query;
+div.querySelector(".verdict").textContent=item.verdict||"Investigation";
+
+div.onclick=()=>{
+location.href=
+"index.html?q="+encodeURIComponent(item.query);
+};
+
+div.style.cursor="pointer";
 
 historyBox.appendChild(div);
 
@@ -230,15 +126,17 @@ historyBox.appendChild(div);
 
 }
 
-function escapeHTML(text){
+document.getElementById("clear").onclick=()=>{
 
-const div=document.createElement("div");
+if(!confirm("Clear your Debunk history?")) return;
 
-div.textContent=text;
+localStorage.removeItem("debunk_history");
 
-return div.innerHTML;
+loadHistory();
 
-}
+};
+
+loadHistory();
 
 </script>
 
