@@ -1,90 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<script>(function(){try{if(localStorage.getItem('debunk_theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();</script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>About — Debunk</title>
 <link rel="icon" href="/icon-512.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg:#FAF7F1; --text:#1B1E27; --text-dim:#6B6558; --text-faint:#9A9384;
-    --border:#E6E0D4; --border-dashed:#D9D2C4; --accent-teal:#2E8C7E; --accent-red:#D8434B;
-  }
-  [data-theme="dark"] {
-    --bg:#0B0E14; --text:#F2F0EA; --text-dim:#8A93A6; --text-faint:#5B6272;
-    --border:#262B36; --border-dashed:#333A48; --accent-teal:#3FA796; --accent-red:#E5484D;
-  }
-  * { box-sizing: border-box; }
-  body { margin:0; background: var(--bg); color: var(--text); font-family:'Inter',sans-serif; transition: background .25s ease, color .25s ease; }
-  .wrap { max-width:640px; margin:0 auto; padding:24px 20px 80px; }
-  nav { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:8px 0 34px; font-family:'IBM Plex Mono',monospace; font-size:13px; }
-  .logo span.name { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:24px; }
-  .logo span.dot { color: var(--accent-red); font-size:24px; font-weight:800; }
-  .navlinks { display:flex; gap:16px; }
-  .navlinks a { color: var(--text-dim); text-decoration:none; }
-  .navlinks a:hover, .navlinks a.active { color: var(--text); }
-  #settingsBtn { background: transparent; border: 1px solid var(--border); color: var(--text-dim); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 14px; }
-  #rightControls { position: relative; }
-  .settings-panel { display:none; position:absolute; top:38px; right:0; background: var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px 16px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:40; }
-  .switch-row { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; }
-  .switch-row input { accent-color: var(--accent-teal); width:34px; height:18px; }
-  h1 { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:28px; margin-bottom:18px; }
-  p { color: var(--text-dim); line-height:1.7; font-size:15px; margin-bottom:16px; }
-  .tag { font-family:'IBM Plex Mono',monospace; font-size:12px; color: var(--accent-teal); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
-  .box { border:1px dashed var(--border-dashed); border-radius:12px; padding:22px; margin-top:28px; }
+*{box-sizing:border-box}
+body{margin:0;background:#070a12;color:#dfe5f4;font-family:Arial,sans-serif}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.orb{position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(110px);opacity:.15;animation:f 18s infinite alternate}
+.a{background:#6688ff;left:-170px;top:-150px}.b{background:#55e6d1;right:-170px;top:35%}.c{background:#9b72ff;left:35%;bottom:-230px}
+@keyframes f{50%{transform:translate(70px,-60px) scale(1.15)}100%{transform:translate(-50px,70px) scale(.9)}}
+header{height:74px;background:#070a12cc;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff12;position:sticky;top:0;z-index:10}
+nav{width:min(1180px,calc(100% - 36px));height:100%;margin:auto;display:flex;align-items:center;justify-content:space-between}
+.logo{color:white;text-decoration:none;font-size:23px;font-weight:800}.logo span{color:#55e6d1}
+.links{display:flex;gap:4px}.links a{color:#8992a9;text-decoration:none;padding:9px 12px;border-radius:9px;font-size:13px}.links a:hover,.active{color:white!important;background:#ffffff0d}
+main{width:min(900px,calc(100% - 32px));margin:auto;padding:80px 0 110px}
+.kicker{font:10px monospace;letter-spacing:.15em;color:#55e6d1}
+h1{font-size:clamp(52px,8vw,82px);letter-spacing:-5px;margin:10px 0 20px}
+.lead{font-size:19px;line-height:1.7;color:#a1aabd;max-width:700px}
+.card{margin-top:25px;padding:28px;border:1px solid #ffffff10;border-radius:18px;background:#111627b8}
+.card h2{font-size:22px;color:white;margin-top:0}.card p{color:#7f899d;font-size:14px;line-height:1.8}
+.manifest{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{padding:20px;border:1px solid #ffffff10;border-radius:13px;background:#ffffff04}
+.stat strong{display:block;color:#55e6d1;font:18px monospace;margin-bottom:8px}.stat span{font-size:10px;color:#687389}
+.quote{margin-top:30px;padding:25px;border-left:2px solid #55e6d1;background:#55e6d105;color:#b5bdce;font-size:18px;line-height:1.6}
+@media(max-width:650px){.links a{font-size:11px;padding:7px}.manifest{grid-template-columns:1fr}.lead{font-size:16px}}
 </style>
 </head>
+
 <body>
-<div class="wrap">
-  <nav>
-    <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
-    <div class="navlinks">
-      <a href="index.html">Home</a>
-      <a href="trending.html">Trending</a>
-      <a href="history.html">History</a>
-      <a href="about.html" class="active">About</a>
-    </div>
-    <div id="rightControls">
-      <button id="settingsBtn" onclick="toggleSettings()">⚙️</button>
-      <div id="settingsPanel" class="settings-panel">
-        <label class="switch-row">
-          <span>Dark mode</span>
-          <input type="checkbox" id="darkToggle" onchange="toggleTheme()">
-        </label>
-      </div>
-    </div>
-  </nav>
 
-  <div class="tag">The idea</div>
-  <h1>Settle it with sources, not vibes.</h1>
-  <p>Debunk exists for the moment you're arguing with a friend and there's no easy way to check who's right — and a normal Google search just buries you in unreliable results.</p>
-  <p>Instead of scraping the whole internet, Debunk figures out what kind of question you're asking and leans on the sources that are actually authoritative for that topic — ESPN and official federations for sports, Forbes and Bloomberg for wealth rankings, WHO and peer-reviewed research for health and science, Reuters and AP for general facts.</p>
-  <p>If the trusted sources agree, you get a clear "Verified" answer. If they don't — or the fact is time-sensitive — Debunk says so honestly instead of picking a side and pretending it's settled.</p>
-
-  <div class="box">
-    <div class="tag">Built by</div>
-    <p style="margin-bottom:0;">One person, on a phone, with free tools. Debunk is a work in progress — if something looks off, that's the build catching up to the ambition.</p>
-  </div>
+<div class="bg">
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
 </div>
 
-<script>
-  function toggleSettings(){
-    const panel = document.getElementById('settingsPanel');
-    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-  }
-  function toggleTheme(){
-    const checked = document.getElementById('darkToggle').checked;
-    if (checked) { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('debunk_theme','dark'); }
-    else { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('debunk_theme','light'); }
-  }
-  document.getElementById('darkToggle').checked = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.addEventListener('click', (e) => {
-    const wrap = document.getElementById('rightControls');
-    if (!wrap.contains(e.target)) document.getElementById('settingsPanel').style.display = 'none';
-  });
-</script>
+<header>
+<nav>
+<a class="logo" href="index.html">DEBUNK<span>.</span></a>
+<div class="links">
+<a href="index.html">Home</a>
+<a href="trending.html">Trending</a>
+<a href="community.html">Community</a>
+<a href="history.html">History</a>
+<a class="active" href="about.html">About</a>
+</div>
+</nav>
+</header>
+
+<main>
+
+<div class="kicker">SYSTEM // ABOUT DEBUNK</div>
+
+<h1>
+The internet is loud.<br>
+Evidence is quieter.
+</h1>
+
+<p class="lead">
+Debunk exists to make checking a claim easier.
+Instead of asking people to blindly trust a headline,
+a viral post or an AI answer, Debunk puts the evidence
+closer to the answer.
+</p>
+
+<div class="card">
+
+<h2>What is Debunk?</h2>
+
+<p>
+Debunk is an evidence-focused search experience for
+settling everyday arguments, checking viral claims and
+finding out whether something you saw online actually
+holds up.
+</p>
+
+<p>
+You ask a question. Debunk searches relevant information,
+compares the available evidence and presents a clear
+result together with the sources used.
+</p>
+
+</div>
+
+
+<div class="manifest">
+
+<div class="stat">
+<strong>01</strong>
+<span>SEARCH THE WEB</span>
+</div>
+
+<div class="stat">
+<strong>02</strong>
+<span>COMPARE EVIDENCE</span>
+</div>
+
+<div class="stat">
+<strong>03</strong>
+<span>SHOW THE SOURCES</span>
+</div>
+
+</div>
+
+
+<div class="quote">
+"Don't believe everything you see.
+Check it."
+</div>
+
+
+<div class="card">
+
+<h2>Our approach</h2>
+
+<p>
+Debunk isn't here to tell you what to think.
+It's here to make it easier to investigate what
+you're being told.
+</p>
+
+<p>
+Sources can be wrong. Information can change.
+Claims can be complicated. That's why the evidence
+should always be visible.
+</p>
+
+</div>
+
+</main>
+
 </body>
 </html>
