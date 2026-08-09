@@ -2,25 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<script>(function(){try{if(localStorage.getItem('debunk_theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>About — Debunk</title>
 <link rel="icon" href="/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg:#FAF7F1; --text:#1B1E27; --text-dim:#6B6558; --text-faint:#9A9384;
+    --border:#E6E0D4; --border-dashed:#D9D2C4; --accent-teal:#2E8C7E; --accent-red:#D8434B;
+  }
+  [data-theme="dark"] {
+    --bg:#0B0E14; --text:#F2F0EA; --text-dim:#8A93A6; --text-faint:#5B6272;
+    --border:#262B36; --border-dashed:#333A48; --accent-teal:#3FA796; --accent-red:#E5484D;
+  }
   * { box-sizing: border-box; }
-  body { margin:0; background:#0B0E14; color:#F2F0EA; font-family:'Inter',sans-serif; }
+  body { margin:0; background: var(--bg); color: var(--text); font-family:'Inter',sans-serif; transition: background .25s ease, color .25s ease; }
   .wrap { max-width:640px; margin:0 auto; padding:24px 20px 80px; }
   nav { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:8px 0 34px; font-family:'IBM Plex Mono',monospace; font-size:13px; }
   .logo span.name { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:24px; }
-  .logo span.dot { color:#E5484D; font-size:24px; font-weight:800; }
+  .logo span.dot { color: var(--accent-red); font-size:24px; font-weight:800; }
   .navlinks { display:flex; gap:16px; }
-  .navlinks a { color:#6B7280; text-decoration:none; }
-  .navlinks a:hover, .navlinks a.active { color:#F2F0EA; }
+  .navlinks a { color: var(--text-dim); text-decoration:none; }
+  .navlinks a:hover, .navlinks a.active { color: var(--text); }
+  #settingsBtn { background: transparent; border: 1px solid var(--border); color: var(--text-dim); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 14px; }
+  #rightControls { position: relative; }
+  .settings-panel { display:none; position:absolute; top:38px; right:0; background: var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px 16px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:40; }
+  .switch-row { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; }
+  .switch-row input { accent-color: var(--accent-teal); width:34px; height:18px; }
   h1 { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:28px; margin-bottom:18px; }
-  p { color:#B8BEC9; line-height:1.7; font-size:15px; margin-bottom:16px; }
-  .tag { font-family:'IBM Plex Mono',monospace; font-size:12px; color:#3FA796; text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
-  .box { border:1px dashed #333A48; border-radius:12px; padding:22px; margin-top:28px; }
+  p { color: var(--text-dim); line-height:1.7; font-size:15px; margin-bottom:16px; }
+  .tag { font-family:'IBM Plex Mono',monospace; font-size:12px; color: var(--accent-teal); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
+  .box { border:1px dashed var(--border-dashed); border-radius:12px; padding:22px; margin-top:28px; }
 </style>
 </head>
 <body>
@@ -32,6 +46,15 @@
       <a href="trending.html">Trending</a>
       <a href="history.html">History</a>
       <a href="about.html" class="active">About</a>
+    </div>
+    <div id="rightControls">
+      <button id="settingsBtn" onclick="toggleSettings()">⚙️</button>
+      <div id="settingsPanel" class="settings-panel">
+        <label class="switch-row">
+          <span>Dark mode</span>
+          <input type="checkbox" id="darkToggle" onchange="toggleTheme()">
+        </label>
+      </div>
     </div>
   </nav>
 
@@ -46,5 +69,22 @@
     <p style="margin-bottom:0;">One person, on a phone, with free tools. Debunk is a work in progress — if something looks off, that's the build catching up to the ambition.</p>
   </div>
 </div>
+
+<script>
+  function toggleSettings(){
+    const panel = document.getElementById('settingsPanel');
+    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+  }
+  function toggleTheme(){
+    const checked = document.getElementById('darkToggle').checked;
+    if (checked) { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('debunk_theme','dark'); }
+    else { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('debunk_theme','light'); }
+  }
+  document.getElementById('darkToggle').checked = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.addEventListener('click', (e) => {
+    const wrap = document.getElementById('rightControls');
+    if (!wrap.contains(e.target)) document.getElementById('settingsPanel').style.display = 'none';
+  });
+</script>
 </body>
 </html>
