@@ -1,106 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<script>(function(){try{if(localStorage.getItem('debunk_theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();</script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Trending — Debunk</title>
-<link rel="icon" href="/icon-512.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg:#FAF7F1; --text:#1B1E27; --text-dim:#6B6558; --text-faint:#9A9384;
-    --border:#E6E0D4; --accent-teal:#2E8C7E; --accent-red:#D8434B;
-  }
-  [data-theme="dark"] {
-    --bg:#0B0E14; --text:#F2F0EA; --text-dim:#8A93A6; --text-faint:#5B6272;
-    --border:#262B36; --accent-teal:#3FA796; --accent-red:#E5484D;
-  }
-  * { box-sizing: border-box; }
-  body { margin:0; background: var(--bg); color: var(--text); font-family:'Inter',sans-serif; transition: background .25s ease, color .25s ease; }
-  .wrap { max-width:640px; margin:0 auto; padding:24px 20px 80px; }
-  nav { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:8px 0 34px; font-family:'IBM Plex Mono',monospace; font-size:13px; }
-  .logo span.name { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:24px; }
-  .logo span.dot { color: var(--accent-red); font-size:24px; font-weight:800; }
-  .navlinks { display:flex; gap:16px; }
-  .navlinks a { color: var(--text-dim); text-decoration:none; }
-  .navlinks a:hover, .navlinks a.active { color: var(--text); }
-  #settingsBtn { background: transparent; border: 1px solid var(--border); color: var(--text-dim); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 14px; }
-  #rightControls { position: relative; }
-  .settings-panel { display:none; position:absolute; top:38px; right:0; background: var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px 16px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:40; }
-  .switch-row { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; }
-  .switch-row input { accent-color: var(--accent-teal); width:34px; height:18px; }
-  h1 { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:26px; margin-bottom:8px; }
-  p.sub { color: var(--text-faint); font-size:13.5px; margin-bottom:28px; font-family:'IBM Plex Mono',monospace; }
-  .list { display:flex; flex-direction:column; gap:10px; }
-  .item { display:flex; align-items:center; justify-content:space-between; text-decoration:none; border:1px solid var(--border); border-radius:10px; padding:16px 18px; color: var(--text); }
-  .item:hover { border-color: var(--accent-teal); }
-  .item .rank { font-family:'IBM Plex Mono',monospace; color: var(--text-faint); margin-right:12px; font-size:13px; }
-  .item .arrow { color: var(--text-faint); }
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:#05070d;
+color:white;
+min-height:100vh;
+overflow-x:hidden;
+}
+
+.bg{
+position:fixed;
+inset:0;
+z-index:-1;
+overflow:hidden;
+background:
+radial-gradient(circle at 15% 15%,rgba(70,100,255,.18),transparent 30%),
+radial-gradient(circle at 85% 75%,rgba(0,220,180,.12),transparent 30%),
+#05070d;
+}
+
+.orb{
+position:absolute;
+border-radius:50%;
+filter:blur(75px);
+animation:float 14s ease-in-out infinite alternate;
+}
+
+.o1{
+width:280px;height:280px;
+background:#315cff;
+top:-100px;left:-80px;
+}
+
+.o2{
+width:300px;height:300px;
+background:#00c9a7;
+right:-120px;bottom:-80px;
+animation-delay:-6s;
+}
+
+@keyframes float{
+0%{transform:translate(0,0)}
+50%{transform:translate(70px,-40px)}
+100%{transform:translate(-40px,60px)}
+}
+
+nav{
+height:72px;
+padding:0 7%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:rgba(5,7,13,.55);
+backdrop-filter:blur(15px);
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.logo{
+font-size:24px;
+font-weight:800;
+color:white;
+text-decoration:none;
+}
+
+.logo span{color:#6c8cff}
+
+.links{
+display:flex;
+gap:8px;
+}
+
+.links a{
+color:rgba(255,255,255,.65);
+text-decoration:none;
+font-size:14px;
+padding:9px 13px;
+border-radius:10px;
+}
+
+.links a:hover,
+.links a.active{
+background:rgba(255,255,255,.08);
+color:white;
+}
+
+.container{
+width:min(950px,92%);
+margin:55px auto;
+}
+
+.header{
+margin-bottom:30px;
+}
+
+.header h1{
+font-size:42px;
+letter-spacing:-2px;
+margin-bottom:10px;
+}
+
+.header p{
+color:rgba(255,255,255,.58);
+}
+
+.trends{
+display:grid;
+gap:15px;
+}
+
+.card{
+padding:22px;
+border:1px solid rgba(255,255,255,.09);
+border-radius:18px;
+background:rgba(255,255,255,.045);
+backdrop-filter:blur(15px);
+transition:.25s;
+}
+
+.card:hover{
+transform:translateY(-3px);
+background:rgba(255,255,255,.07);
+}
+
+.rank{
+color:#7895ff;
+font-weight:bold;
+font-size:13px;
+margin-bottom:10px;
+}
+
+.card h2{
+font-size:19px;
+margin-bottom:9px;
+}
+
+.card p{
+color:rgba(255,255,255,.55);
+font-size:14px;
+line-height:1.5;
+}
+
+.meta{
+display:flex;
+gap:12px;
+margin-top:15px;
+font-size:12px;
+color:rgba(255,255,255,.4);
+}
+
+@media(max-width:600px){
+.header h1{font-size:34px}
+.links a{font-size:12px;padding:8px 7px}
+}
 </style>
 </head>
+
 <body>
-<div class="wrap">
-  <nav>
-    <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
-    <div class="navlinks">
-      <a href="index.html">Home</a>
-      <a href="trending.html" class="active">Trending</a>
-      <a href="history.html">History</a>
-      <a href="about.html">About</a>
-    </div>
-    <div id="rightControls">
-      <button id="settingsBtn" onclick="toggleSettings()">⚙️</button>
-      <div id="settingsPanel" class="settings-panel">
-        <label class="switch-row">
-          <span>Dark mode</span>
-          <input type="checkbox" id="darkToggle" onchange="toggleTheme()">
-        </label>
-      </div>
-    </div>
-  </nav>
 
-  <h1>Trending debates</h1>
-  <p class="sub">A running list of popular questions people are settling. Tap one to see the verdict.</p>
-
-  <div class="list" id="list"></div>
+<div class="bg">
+<div class="orb o1"></div>
+<div class="orb o2"></div>
 </div>
 
-<script>
-  const TRENDING = [
-    "Who is the richest man alive?",
-    "Fastest 100m sprint time ever",
-    "Has Messi won a World Cup?",
-    "Tallest building in the world",
-    "Is coffee bad for you?",
-    "Who has the most Grammy awards?",
-    "What is the biggest company in the world by market cap?",
-    "Did Ronaldo score more goals than Messi?",
-  ];
-  const list = document.getElementById('list');
-  TRENDING.forEach((q, i) => {
-    const a = document.createElement('a');
-    a.className = 'item';
-    a.href = 'index.html?q=' + encodeURIComponent(q);
-    a.innerHTML = `<span><span class="rank">#${i+1}</span>${q}</span><span class="arrow">&#8594;</span>`;
-    list.appendChild(a);
-  });
+<nav>
 
-  function toggleSettings(){
-    const panel = document.getElementById('settingsPanel');
-    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-  }
-  function toggleTheme(){
-    const checked = document.getElementById('darkToggle').checked;
-    if (checked) { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('debunk_theme','dark'); }
-    else { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('debunk_theme','light'); }
-  }
-  document.getElementById('darkToggle').checked = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.addEventListener('click', (e) => {
-    const wrap = document.getElementById('rightControls');
-    if (!wrap.contains(e.target)) document.getElementById('settingsPanel').style.display = 'none';
-  });
-</script>
+<a href="index.html" class="logo">
+De<span>bunk</span>
+</a>
+
+<div class="links">
+<a href="index.html">Home</a>
+<a href="trending.html" class="active">Trending</a>
+<a href="history.html">History</a>
+<a href="community.html">Community</a>
+</div>
+
+</nav>
+
+<main class="container">
+
+<div class="header">
+<h1>Trending claims</h1>
+<p>Questions and claims people are checking right now.</p>
+</div>
+
+<div class="trends" id="trends">
+
+<div class="card">
+<div class="rank">#1 TRENDING</div>
+<h2>Is this viral claim actually true?</h2>
+<p>
+Debunk searches will appear here as your community
+starts checking popular claims.
+</p>
+
+<div class="meta">
+<span>🔥 Popular</span>
+<span>Recently checked</span>
+</div>
+</div>
+
+<div class="card">
+<div class="rank">#2 TRENDING</div>
+<h2>What information is spreading online?</h2>
+<p>
+See the claims people are curious about and investigate
+them using reliable sources.
+</p>
+
+<div class="meta">
+<span>🔥 Popular</span>
+<span>Recently checked</span>
+</div>
+</div>
+
+<div class="card">
+<div class="rank">#3 TRENDING</div>
+<h2>Today's most searched questions</h2>
+<p>
+This section can later be connected to your database
+or API to automatically update.
+</p>
+
+<div class="meta">
+<span>🔥 Popular</span>
+<span>Recently checked</span>
+</div>
+</div>
+
+</div>
+
+</main>
+
 </body>
 </html>
