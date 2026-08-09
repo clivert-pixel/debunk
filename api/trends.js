@@ -6,60 +6,81 @@ export default async function handler(req, res) {
     });
   }
 
-  /*
-    Google Trends does not provide a simple official
-    public API for this exact use case.
+  try {
 
-    For now this endpoint provides the structure
-    Debunk's Trending page will consume.
+    /*
+      Google Trends does not provide a simple
+      unrestricted official public API.
 
-    We can connect a proper Trends data provider
-    without changing trending.html later.
-  */
+      For now this endpoint uses Google's public
+      Trends RSS feed to retrieve current trending
+      searches.
+    */
 
-  const trends = [
-    {
-      title: "Latest AI developments",
-      category: "Technology",
-      searches: "Trending",
-      query: "latest AI developments"
-    },
-    {
-      title: "World Cup news",
-      category: "Sports",
-      searches: "Trending",
-      query: "World Cup latest news"
-    },
-    {
-      title: "Global news today",
-      category: "News",
-      searches: "Trending",
-      query: "global news today"
-    },
-    {
-      title: "Health claims people are searching",
-      category: "Health",
-      searches: "Trending",
-      query: "health claims"
-    },
-    {
-      title: "Latest celebrity news",
-      category: "Entertainment",
-      searches: "Trending",
-      query: "latest celebrity news"
-    },
-    {
-      title: "Money and business news",
-      category: "Business",
-      searches: "Trending",
-      query: "business news"
+    const response = await fetch(
+      "https://trends.google.com/trending/rss?geo=US"
+    );
+
+    if (!response.ok) {
+      return res.status(502).json({
+        error: "Could not fetch trending searches"
+      });
     }
-  ];
 
-  return res.status(200).json({
-    success: true,
-    source: "google-trends",
-    updated: new Date().toISOString(),
-    trends
-  });
+    const xml = await response.text();
+
+    /*
+      Extract RSS item titles.
+    */
+
+    const matches = [
+      ...xml.matchAll(
+        /<item>[\s\S]*?<title>([\s\S]*?)<\/title>[\s\S]*?<\/item>/gi
+      )
+    ];
+
+    const trends = matches
+      .map(match =>
+        match[1]
+          .replace(/<!\[CDATA\[/g, "")
+          .replace(/\]\]>/g, "")
+          .trim()
+      )
+      .filter(Boolean)
+      .slice(0, 20);
+
+
+    /*
+      Turn trending topics into questions
+      that fit Debunk's purpose.
+    */
+
+    const suggestions = trends.map(topic => {
+
+      return `What is actually true about ${topic}?`;
+
+    });
+
+
+    return res.status(200).json({
+
+      trends,
+
+      suggestions
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Trends error:",
+      error
+    );
+
+    return res.status(500).json({
+      error: "Failed to load trends"
+    });
+
+  }
+
 }
