@@ -1,124 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<script>(function(){try{if(localStorage.getItem('debunk_theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();</script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>History — Debunk</title>
-<link rel="icon" href="/icon-512.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg:#FAF7F1; --text:#1B1E27; --text-dim:#6B6558; --text-faint:#9A9384;
-    --border:#E6E0D4; --border-dashed:#D9D2C4; --accent-teal:#2E8C7E; --accent-red:#D8434B;
-  }
-  [data-theme="dark"] {
-    --bg:#0B0E14; --text:#F2F0EA; --text-dim:#8A93A6; --text-faint:#5B6272;
-    --border:#262B36; --border-dashed:#333A48; --accent-teal:#3FA796; --accent-red:#E5484D;
-  }
-  * { box-sizing: border-box; }
-  body { margin:0; background: var(--bg); color: var(--text); font-family:'Inter',sans-serif; transition: background .25s ease, color .25s ease; }
-  .wrap { max-width:640px; margin:0 auto; padding:24px 20px 80px; }
-  nav { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:8px 0 34px; font-family:'IBM Plex Mono',monospace; font-size:13px; }
-  .logo span.name { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:24px; }
-  .logo span.dot { color: var(--accent-red); font-size:24px; font-weight:800; }
-  .navlinks { display:flex; gap:16px; }
-  .navlinks a { color: var(--text-dim); text-decoration:none; }
-  .navlinks a:hover, .navlinks a.active { color: var(--text); }
-  #settingsBtn { background: transparent; border: 1px solid var(--border); color: var(--text-dim); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 14px; }
-  #rightControls { position: relative; }
-  .settings-panel { display:none; position:absolute; top:38px; right:0; background: var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px 16px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:40; }
-  .switch-row { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; }
-  .switch-row input { accent-color: var(--accent-teal); width:34px; height:18px; }
-  h1 { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:26px; margin-bottom:8px; }
-  p.sub { color: var(--text-faint); font-size:13.5px; margin-bottom:28px; font-family:'IBM Plex Mono',monospace; }
-  .empty { color: var(--text-faint); font-size:14px; border:1px dashed var(--border-dashed); border-radius:10px; padding:30px; text-align:center; }
-  .list { display:flex; flex-direction:column; gap:10px; }
-  .item { border:1px solid var(--border); border-radius:10px; padding:16px 18px; }
-  .item .q { font-weight:600; margin-bottom:6px; }
-  .item .v { color: var(--text-dim); font-size:13.5px; margin-bottom:10px; }
-  .item .row { display:flex; gap:10px; }
-  .item a, .item button { font-family:'IBM Plex Mono',monospace; font-size:12px; color: var(--accent-teal); background:none; border:none; cursor:pointer; text-decoration:none; padding:0; }
-  .item button.del { color: var(--accent-red); }
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:#05070d;
+color:white;
+min-height:100vh;
+}
+
+.bg{
+position:fixed;
+inset:0;
+z-index:-1;
+background:
+radial-gradient(circle at 20% 15%,rgba(80,110,255,.17),transparent 30%),
+radial-gradient(circle at 80% 80%,rgba(0,210,170,.1),transparent 30%),
+#05070d;
+}
+
+nav{
+height:72px;
+padding:0 7%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:rgba(5,7,13,.6);
+backdrop-filter:blur(15px);
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.logo{
+font-size:24px;
+font-weight:800;
+color:white;
+text-decoration:none;
+}
+
+.logo span{color:#6c8cff}
+
+.links{
+display:flex;
+gap:8px;
+}
+
+.links a{
+color:rgba(255,255,255,.65);
+text-decoration:none;
+padding:9px 13px;
+border-radius:10px;
+font-size:14px;
+}
+
+.links a:hover,
+.links a.active{
+background:rgba(255,255,255,.08);
+color:white;
+}
+
+.container{
+width:min(900px,92%);
+margin:55px auto;
+}
+
+h1{
+font-size:42px;
+letter-spacing:-2px;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:rgba(255,255,255,.55);
+margin-bottom:30px;
+}
+
+.history{
+display:grid;
+gap:12px;
+}
+
+.item{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:20px;
+padding:19px;
+border:1px solid rgba(255,255,255,.08);
+background:rgba(255,255,255,.045);
+border-radius:16px;
+}
+
+.question{
+font-size:15px;
+margin-bottom:6px;
+}
+
+.date{
+font-size:12px;
+color:rgba(255,255,255,.4);
+}
+
+.result{
+font-size:12px;
+padding:7px 10px;
+border-radius:8px;
+background:rgba(108,140,255,.12);
+color:#91a7ff;
+white-space:nowrap;
+}
+
+.empty{
+padding:50px 20px;
+text-align:center;
+border:1px dashed rgba(255,255,255,.12);
+border-radius:18px;
+color:rgba(255,255,255,.45);
+}
+
+@media(max-width:600px){
+h1{font-size:34px}
+
+.links a{
+font-size:12px;
+padding:8px 7px;
+}
+
+.item{
+align-items:flex-start;
+flex-direction:column;
+}
+
+.result{
+white-space:normal;
+}
+}
 </style>
 </head>
+
 <body>
-<div class="wrap">
-  <nav>
-    <div class="logo"><span class="name">DEBUNK</span><span class="dot">.</span></div>
-    <div class="navlinks">
-      <a href="index.html">Home</a>
-      <a href="trending.html">Trending</a>
-      <a href="history.html" class="active">History</a>
-      <a href="about.html">About</a>
-    </div>
-    <div id="rightControls">
-      <button id="settingsBtn" onclick="toggleSettings()">⚙️</button>
-      <div id="settingsPanel" class="settings-panel">
-        <label class="switch-row">
-          <span>Dark mode</span>
-          <input type="checkbox" id="darkToggle" onchange="toggleTheme()">
-        </label>
-      </div>
-    </div>
-  </nav>
 
-  <h1>Your history</h1>
-  <p class="sub">Answers you've saved, stored right on this device.</p>
+<div class="bg"></div>
 
-  <div id="content"></div>
+<nav>
+
+<a href="index.html" class="logo">
+De<span>bunk</span>
+</a>
+
+<div class="links">
+<a href="index.html">Home</a>
+<a href="trending.html">Trending</a>
+<a href="history.html" class="active">History</a>
+<a href="community.html">Community</a>
 </div>
 
+</nav>
+
+<main class="container">
+
+<h1>Your history</h1>
+
+<p class="subtitle">
+Questions you've checked on Debunk.
+</p>
+
+<div class="history" id="history"></div>
+
+</main>
+
 <script>
-  const saved = JSON.parse(localStorage.getItem('debunk_saved') || '[]');
-  const content = document.getElementById('content');
 
-  if (!saved.length) {
-    content.innerHTML = '<div class="empty">Nothing saved yet — tap 🔖 Save on any answer to keep it here.</div>';
-  } else {
-    const list = document.createElement('div');
-    list.className = 'list';
-    saved.forEach((item, i) => {
-      const div = document.createElement('div');
-      div.className = 'item';
-      div.innerHTML = `
-        <div class="q">${item.query}</div>
-        <div class="v">${item.verdict || ''}</div>
-        <div class="row">
-          <a href="index.html?q=${encodeURIComponent(item.query)}">Reopen</a>
-          <button class="del" data-i="${i}">Remove</button>
-        </div>
-      `;
-      list.appendChild(div);
-    });
-    content.appendChild(list);
+const historyBox =
+document.getElementById("history");
 
-    content.addEventListener('click', (e) => {
-      if (e.target.classList.contains('del')) {
-        const i = parseInt(e.target.dataset.i);
-        const arr = JSON.parse(localStorage.getItem('debunk_saved') || '[]');
-        arr.splice(i, 1);
-        localStorage.setItem('debunk_saved', JSON.stringify(arr));
-        location.reload();
-      }
-    });
-  }
+let history =
+JSON.parse(localStorage.getItem("debunkHistory") || "[]");
 
-  function toggleSettings(){
-    const panel = document.getElementById('settingsPanel');
-    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-  }
-  function toggleTheme(){
-    const checked = document.getElementById('darkToggle').checked;
-    if (checked) { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('debunk_theme','dark'); }
-    else { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('debunk_theme','light'); }
-  }
-  document.getElementById('darkToggle').checked = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.addEventListener('click', (e) => {
-    const wrap = document.getElementById('rightControls');
-    if (!wrap.contains(e.target)) document.getElementById('settingsPanel').style.display = 'none';
-  });
+if(history.length === 0){
+
+historyBox.innerHTML = `
+<div class="empty">
+<h3>No searches yet</h3>
+<p style="margin-top:8px">
+Your verified questions will appear here.
+</p>
+</div>
+`;
+
+}else{
+
+history
+.slice()
+.reverse()
+.forEach(item=>{
+
+const div =
+document.createElement("div");
+
+div.className="item";
+
+div.innerHTML=`
+
+<div>
+<div class="question">
+${escapeHTML(item.question || item)}
+</div>
+
+<div class="date">
+${item.date || "Recently"}
+</div>
+</div>
+
+<div class="result">
+Verified
+</div>
+
+`;
+
+historyBox.appendChild(div);
+
+});
+
+}
+
+function escapeHTML(text){
+
+const div=document.createElement("div");
+
+div.textContent=text;
+
+return div.innerHTML;
+
+}
+
 </script>
+
 </body>
 </html>
