@@ -4175,7 +4175,204 @@ $("dislikeButton").onclick =
     );
 
   };
+/* =========================================================
+   DEBUNK SEARCH SUGGESTIONS
+   ========================================================= */
 
+const suggestionsBox =
+  document.getElementById("suggestions");
+
+const queryInput =
+  document.getElementById("queryInput");
+
+
+const suggestionDatabase = [
+
+  "Is drinking cold water bad for you?",
+
+  "Is drinking water before bed good for you?",
+
+  "How much water should you drink every day?",
+
+  "Is coffee bad for you?",
+
+  "Does cracking your knuckles cause arthritis?",
+
+  "Is sleeping eight hours really necessary?",
+
+  "Does eating late at night make you gain weight?",
+
+  "Is sugar actually addictive?",
+
+  "Does breakfast really matter?",
+
+  "Is running every day bad for your knees?",
+
+  "Can phones damage your eyes?",
+
+  "Does blue light affect sleep?",
+
+  "Is artificial intelligence dangerous?",
+
+  "Can humans live on Mars?",
+
+  "Did humans really land on the Moon?",
+
+  "Is the Earth getting warmer?",
+
+  "Does climate change cause extreme weather?",
+
+  "Is Bitcoin still worth buying?",
+
+  "Can social media affect your mental health?",
+
+  "Does VPN make your internet faster?"
+
+];
+
+
+/* SHOW SUGGESTIONS */
+
+queryInput.addEventListener("input", function () {
+
+  const value =
+    queryInput.value.trim().toLowerCase();
+
+
+  if (!value) {
+
+    suggestionsBox.innerHTML = "";
+
+    suggestionsBox.classList.remove("show");
+
+    return;
+
+  }
+
+
+  const matches =
+    suggestionDatabase
+      .filter(question =>
+        question
+          .toLowerCase()
+          .includes(value)
+      )
+      .slice(0, 5);
+
+
+  if (!matches.length) {
+
+    suggestionsBox.innerHTML = "";
+
+    suggestionsBox.classList.remove("show");
+
+    return;
+
+  }
+
+
+  suggestionsBox.innerHTML =
+    matches.map(question => {
+
+      return `
+        <button
+          type="button"
+          class="suggestion"
+          data-question="${question.replace(/"/g, "&quot;")}"
+        >
+
+          <span class="suggestion-icon">
+            ⌕
+          </span>
+
+          <span class="suggestion-text">
+            ${question}
+          </span>
+
+        </button>
+      `;
+
+    }).join("");
+
+
+  suggestionsBox.classList.add("show");
+
+});
+
+
+/* CLICK SUGGESTION */
+
+suggestionsBox.addEventListener(
+  "click",
+  function(event) {
+
+    const button =
+      event.target.closest(".suggestion");
+
+
+    if (!button) return;
+
+
+    const question =
+      button.dataset.question;
+
+
+    queryInput.value = question;
+
+
+    suggestionsBox.innerHTML = "";
+
+    suggestionsBox.classList.remove("show");
+
+
+    /*
+      Automatically run Debunk.
+      This uses your existing runSearch()
+      function.
+    */
+
+    runSearch(question);
+
+  }
+);
+
+
+/* CLOSE SUGGESTIONS WHEN CLICKING OUTSIDE */
+
+document.addEventListener(
+  "click",
+  function(event) {
+
+    if (
+      !event.target.closest(".search-wrap")
+    ) {
+
+      suggestionsBox.innerHTML = "";
+
+      suggestionsBox.classList.remove("show");
+
+    }
+
+  }
+);
+
+
+/* ESCAPE KEY */
+
+queryInput.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (event.key === "Escape") {
+
+      suggestionsBox.innerHTML = "";
+
+      suggestionsBox.classList.remove("show");
+
+    }
+
+  }
+);
 
 </script>
 
