@@ -2,164 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Trending — Debunk</title>
+<link rel="icon" href="/icon-512.png">
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
+*{box-sizing:border-box}
 body{
-font-family:Arial,Helvetica,sans-serif;
-background:#05070d;
-color:white;
-min-height:100vh;
-overflow-x:hidden;
+margin:0;background:#070a12;color:#dfe5f4;
+font-family:Arial,sans-serif;overflow-x:hidden
 }
-
-.bg{
-position:fixed;
-inset:0;
-z-index:-1;
-overflow:hidden;
-background:
-radial-gradient(circle at 15% 15%,rgba(70,100,255,.18),transparent 30%),
-radial-gradient(circle at 85% 75%,rgba(0,220,180,.12),transparent 30%),
-#05070d;
-}
-
-.orb{
-position:absolute;
-border-radius:50%;
-filter:blur(75px);
-animation:float 14s ease-in-out infinite alternate;
-}
-
-.o1{
-width:280px;height:280px;
-background:#315cff;
-top:-100px;left:-80px;
-}
-
-.o2{
-width:300px;height:300px;
-background:#00c9a7;
-right:-120px;bottom:-80px;
-animation-delay:-6s;
-}
-
+.bg{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.orb{position:absolute;width:380px;height:380px;border-radius:50%;
+filter:blur(100px);opacity:.16;animation:float 18s infinite alternate}
+.a{background:#6688ff;top:-150px;left:-120px}
+.b{background:#55e6d1;right:-160px;top:35%;animation-delay:-6s}
+.c{background:#9b72ff;bottom:-200px;left:30%;animation-delay:-11s}
 @keyframes float{
-0%{transform:translate(0,0)}
-50%{transform:translate(70px,-40px)}
-100%{transform:translate(-40px,60px)}
+0%{transform:translate(0,0) scale(1)}
+50%{transform:translate(70px,-50px) scale(1.15)}
+100%{transform:translate(-50px,70px) scale(.9)}
 }
-
-nav{
-height:72px;
-padding:0 7%;
-display:flex;
-align-items:center;
-justify-content:space-between;
-background:rgba(5,7,13,.55);
-backdrop-filter:blur(15px);
-border-bottom:1px solid rgba(255,255,255,.08);
+.grid{position:absolute;inset:-50%;
+background-image:linear-gradient(#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);
+background-size:55px 55px;transform:perspective(700px) rotateX(60deg);
+animation:grid 18s linear infinite}
+@keyframes grid{to{background-position:0 55px}}
+header{
+height:74px;position:sticky;top:0;z-index:20;
+background:#070a12bb;backdrop-filter:blur(18px);
+border-bottom:1px solid #ffffff12
 }
-
-.logo{
-font-size:24px;
-font-weight:800;
-color:white;
-text-decoration:none;
-}
-
-.logo span{color:#6c8cff}
-
-.links{
-display:flex;
-gap:8px;
-}
-
-.links a{
-color:rgba(255,255,255,.65);
-text-decoration:none;
-font-size:14px;
-padding:9px 13px;
-border-radius:10px;
-}
-
-.links a:hover,
-.links a.active{
-background:rgba(255,255,255,.08);
-color:white;
-}
-
-.container{
-width:min(950px,92%);
-margin:55px auto;
-}
-
-.header{
-margin-bottom:30px;
-}
-
-.header h1{
-font-size:42px;
-letter-spacing:-2px;
-margin-bottom:10px;
-}
-
-.header p{
-color:rgba(255,255,255,.58);
-}
-
-.trends{
-display:grid;
-gap:15px;
-}
-
+nav{width:min(1180px,calc(100% - 36px));height:100%;margin:auto;
+display:flex;align-items:center;justify-content:space-between}
+.logo{color:#f5f7ff;text-decoration:none;font-size:23px;font-weight:800;letter-spacing:-1px}
+.logo span{color:#55e6d1}
+.links{display:flex;gap:4px}
+.links a{color:#8992a9;text-decoration:none;padding:9px 12px;border-radius:9px;font-size:13px}
+.links a:hover,.links .active{color:white;background:#ffffff0d}
+main{width:min(1050px,calc(100% - 32px));margin:auto;padding:70px 0 100px}
+.kicker{font-family:monospace;font-size:10px;letter-spacing:.15em;color:#55e6d1}
+h1{font-size:clamp(45px,7vw,75px);letter-spacing:-4px;margin:10px 0}
+.subtitle{max-width:620px;color:#8992a9;line-height:1.7}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:35px 0}
+.filter{background:#ffffff06;border:1px solid #ffffff12;color:#8992a9;padding:10px 14px;border-radius:9px;cursor:pointer}
+.filter.active,.filter:hover{color:#55e6d1;border-color:#55e6d155}
+.trending-list{display:grid;gap:12px}
 .card{
-padding:22px;
-border:1px solid rgba(255,255,255,.09);
-border-radius:18px;
-background:rgba(255,255,255,.045);
-backdrop-filter:blur(15px);
-transition:.25s;
+display:grid;grid-template-columns:70px 1fr auto;gap:18px;align-items:center;
+padding:22px;border:1px solid #ffffff10;border-radius:16px;
+background:#111627b8;backdrop-filter:blur(12px);transition:.25s
 }
-
-.card:hover{
-transform:translateY(-3px);
-background:rgba(255,255,255,.07);
-}
-
-.rank{
-color:#7895ff;
-font-weight:bold;
-font-size:13px;
-margin-bottom:10px;
-}
-
-.card h2{
-font-size:19px;
-margin-bottom:9px;
-}
-
-.card p{
-color:rgba(255,255,255,.55);
-font-size:14px;
-line-height:1.5;
-}
-
-.meta{
-display:flex;
-gap:12px;
-margin-top:15px;
-font-size:12px;
-color:rgba(255,255,255,.4);
-}
-
-@media(max-width:600px){
-.header h1{font-size:34px}
-.links a{font-size:12px;padding:8px 7px}
+.card:hover{transform:translateY(-3px);border-color:#ffffff22}
+.rank{font-family:monospace;color:#465069;font-size:20px}
+.card h2{margin:0 0 8px;color:#f5f7ff;font-size:18px}
+.card p{margin:0;color:#788398;font-size:12px;line-height:1.6}
+.meta{font-family:monospace;color:#59647a;font-size:9px;text-align:right}
+.hot{color:#55e6d1}
+@media(max-width:650px){
+.links a{font-size:11px;padding:7px}
+.card{grid-template-columns:42px 1fr}
+.meta{grid-column:2;text-align:left}
 }
 </style>
 </head>
@@ -167,74 +70,76 @@ color:rgba(255,255,255,.4);
 <body>
 
 <div class="bg">
-<div class="orb o1"></div>
-<div class="orb o2"></div>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="grid"></div>
 </div>
 
+<header>
 <nav>
-
-<a href="index.html" class="logo">
-De<span>bunk</span>
-</a>
-
+<a class="logo" href="index.html">DEBUNK<span>.</span></a>
 <div class="links">
 <a href="index.html">Home</a>
-<a href="trending.html" class="active">Trending</a>
-<a href="history.html">History</a>
+<a class="active" href="trending.html">Trending</a>
 <a href="community.html">Community</a>
+<a href="history.html">History</a>
+<a href="about.html">About</a>
 </div>
-
 </nav>
+</header>
 
-<main class="container">
+<main>
 
-<div class="header">
-<h1>Trending claims</h1>
-<p>Questions and claims people are checking right now.</p>
-</div>
-
-<div class="trends" id="trends">
-
-<div class="card">
-<div class="rank">#1 TRENDING</div>
-<h2>Is this viral claim actually true?</h2>
-<p>
-Debunk searches will appear here as your community
-starts checking popular claims.
+<div class="kicker">LIVE // WHAT PEOPLE ARE CHECKING</div>
+<h1>Trending claims.</h1>
+<p class="subtitle">
+The questions, rumors and claims people are currently trying to settle.
+Tap one to investigate it with Debunk.
 </p>
 
-<div class="meta">
-<span>🔥 Popular</span>
-<span>Recently checked</span>
+<div class="filters">
+<button class="filter active">All</button>
+<button class="filter">Science</button>
+<button class="filter">Technology</button>
+<button class="filter">Sports</button>
+<button class="filter">World</button>
+<button class="filter">Entertainment</button>
 </div>
-</div>
+
+<div class="trending-list">
 
 <div class="card">
-<div class="rank">#2 TRENDING</div>
-<h2>What information is spreading online?</h2>
-<p>
-See the claims people are curious about and investigate
-them using reliable sources.
-</p>
-
-<div class="meta">
-<span>🔥 Popular</span>
-<span>Recently checked</span>
+<div class="rank">01</div>
+<div>
+<h2>What claims are people arguing about today?</h2>
+<p>Explore the latest questions being investigated across the web.</p>
 </div>
+<div class="meta"><span class="hot">LIVE</span><br>NOW</div>
 </div>
 
 <div class="card">
-<div class="rank">#3 TRENDING</div>
-<h2>Today's most searched questions</h2>
-<p>
-This section can later be connected to your database
-or API to automatically update.
-</p>
-
-<div class="meta">
-<span>🔥 Popular</span>
-<span>Recently checked</span>
+<div class="rank">02</div>
+<div>
+<h2>Is artificial intelligence replacing jobs?</h2>
+<p>A claim worth examining from multiple perspectives and sources.</p>
 </div>
+<div class="meta">TECH<br>CHECK</div>
+</div>
+
+<div class="card">
+<div class="rank">03</div>
+<div>
+<h2>Which viral claims are actually true?</h2>
+<p>Separate social-media noise from evidence.</p>
+</div>
+<div class="meta">VIRAL<br>CLAIM</div>
+</div>
+
+<div class="card">
+<div class="rank">04</div>
+<div>
+<h2>What happened in the latest major news?</h2>
+<p>Check the facts behind stories spreading online.</p>
+</div>
+<div class="meta">WORLD<br>NEWS</div>
 </div>
 
 </div>
