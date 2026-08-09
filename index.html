@@ -4176,7 +4176,7 @@ $("dislikeButton").onclick =
 
   };
 /* =========================================================
-   DEBUNK SEARCH SUGGESTIONS
+   TREND-POWERED SEARCH SUGGESTIONS
    ========================================================= */
 
 const suggestionsBox =
@@ -4185,50 +4185,237 @@ const suggestionsBox =
 const queryInput =
   document.getElementById("queryInput");
 
+let trendSuggestions = [];
 
-const suggestionDatabase = [
 
-  "Is drinking cold water bad for you?",
+/* -----------------------------------------
+   LOAD CURRENT TRENDS
+----------------------------------------- */
 
-  "Is drinking water before bed good for you?",
+async function loadTrendSuggestions() {
 
-  "How much water should you drink every day?",
+  try {
 
-  "Is coffee bad for you?",
+    const response =
+      await fetch("/api/trends");
 
-  "Does cracking your knuckles cause arthritis?",
+    if (!response.ok) {
+      throw new Error("Trend request failed");
+    }
 
-  "Is sleeping eight hours really necessary?",
+    const data =
+      await response.json();
 
-  "Does eating late at night make you gain weight?",
+    if (
+      Array.isArray(data.suggestions)
+    ) {
 
-  "Is sugar actually addictive?",
+      trendSuggestions =
+        data.suggestions
+          .filter(
+            question =>
+              typeof question === "string" &&
+              question.trim()
+          )
+          .slice(0, 20);
 
-  "Does breakfast really matter?",
+    }
 
-  "Is running every day bad for your knees?",
+  } catch (error) {
 
-  "Can phones damage your eyes?",
+    console.error(
+      "Could not load trends:",
+      error
+    );
 
-  "Does blue light affect sleep?",
+    trendSuggestions = [];
 
-  "Is artificial intelligence dangerous?",
+  }
 
-  "Can humans live on Mars?",
+}
 
-  "Did humans really land on the Moon?",
 
-  "Is the Earth getting warmer?",
+/* -----------------------------------------
+   SHOW TREND SUGGESTIONS
+----------------------------------------- */
 
-  "Does climate change cause extreme weather?",
+queryInput.addEventListener(
+  "input",
+  function () {
 
-  "Is Bitcoin still worth buying?",
+    const value =
+      queryInput.value
+        .trim()
+        .toLowerCase();
 
-  "Can social media affect your mental health?",
 
-  "Does VPN make your internet faster?"
+    if (!value) {
 
-];
+      suggestionsBox.innerHTML = "";
+
+      suggestionsBox.classList.remove(
+        "show"
+      );
+
+      return;
+
+    }
+
+
+    const matches =
+      trendSuggestions
+        .filter(question =>
+          question
+            .toLowerCase()
+            .includes(value)
+        )
+        .slice(0, 5);
+
+
+    if (!matches.length) {
+
+      suggestionsBox.innerHTML = "";
+
+      suggestionsBox.classList.remove(
+        "show"
+      );
+
+      return;
+
+    }
+
+
+    suggestionsBox.innerHTML =
+      matches
+        .map(question => {
+
+          return `
+            <button
+              type="button"
+              class="suggestion"
+              data-question="${question
+                .replace(/"/g, "&quot;")}"
+            >
+
+              <span class="suggestion-icon">
+                🔥
+              </span>
+
+              <span class="suggestion-text">
+                ${question}
+              </span>
+
+            </button>
+          `;
+
+        })
+        .join("");
+
+
+    suggestionsBox.classList.add(
+      "show"
+    );
+
+  }
+);
+
+
+/* -----------------------------------------
+   CLICK A SUGGESTION
+----------------------------------------- */
+
+suggestionsBox.addEventListener(
+  "click",
+  function (event) {
+
+    const button =
+      event.target.closest(
+        ".suggestion"
+      );
+
+
+    if (!button) return;
+
+
+    const question =
+      button.dataset.question;
+
+
+    queryInput.value =
+      question;
+
+
+    suggestionsBox.innerHTML =
+      "";
+
+    suggestionsBox.classList.remove(
+      "show"
+    );
+
+
+    runSearch(question);
+
+  }
+);
+
+
+/* -----------------------------------------
+   CLOSE WHEN CLICKING OUTSIDE
+----------------------------------------- */
+
+document.addEventListener(
+  "click",
+  function (event) {
+
+    if (
+      !event.target.closest(
+        ".search-wrap"
+      )
+    ) {
+
+      suggestionsBox.innerHTML =
+        "";
+
+      suggestionsBox.classList.remove(
+        "show"
+      );
+
+    }
+
+  }
+);
+
+
+/* -----------------------------------------
+   ESCAPE
+----------------------------------------- */
+
+queryInput.addEventListener(
+  "keydown",
+  function (event) {
+
+    if (
+      event.key === "Escape"
+    ) {
+
+      suggestionsBox.innerHTML =
+        "";
+
+      suggestionsBox.classList.remove(
+        "show"
+      );
+
+    }
+
+  }
+);
+
+
+/* -----------------------------------------
+   START
+----------------------------------------- */
+
+loadTrendSuggestions();
 
 
 /* SHOW SUGGESTIONS */
