@@ -1,150 +1,1766 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
 <title>Trending — Debunk</title>
+
 <link rel="icon" href="/icon-512.png">
 
+<link
+  rel="preconnect"
+  href="https://fonts.googleapis.com"
+>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+  rel="stylesheet"
+>
+
 <style>
-*{box-sizing:border-box}
-body{
-margin:0;background:#070a12;color:#dfe5f4;
-font-family:Arial,sans-serif;overflow-x:hidden
+
+:root {
+
+  --bg:#070a12;
+  --bg2:#0c1020;
+
+  --panel:rgba(17,22,39,.72);
+
+  --white:#f5f7ff;
+  --text:#dfe5f4;
+  --muted:#8992a9;
+
+  --cyan:#55e6d1;
+  --blue:#6688ff;
+  --purple:#9b72ff;
+  --pink:#ef72c5;
+
+  --line:rgba(255,255,255,.09);
+
+  --yellow:#ffd166;
+
+  --radius:18px;
+
 }
-.bg{position:fixed;inset:0;z-index:-2;overflow:hidden}
-.orb{position:absolute;width:380px;height:380px;border-radius:50%;
-filter:blur(100px);opacity:.16;animation:float 18s infinite alternate}
-.a{background:#6688ff;top:-150px;left:-120px}
-.b{background:#55e6d1;right:-160px;top:35%;animation-delay:-6s}
-.c{background:#9b72ff;bottom:-200px;left:30%;animation-delay:-11s}
-@keyframes float{
-0%{transform:translate(0,0) scale(1)}
-50%{transform:translate(70px,-50px) scale(1.15)}
-100%{transform:translate(-50px,70px) scale(.9)}
+
+* {
+  box-sizing:border-box;
 }
-.grid{position:absolute;inset:-50%;
-background-image:linear-gradient(#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);
-background-size:55px 55px;transform:perspective(700px) rotateX(60deg);
-animation:grid 18s linear infinite}
-@keyframes grid{to{background-position:0 55px}}
-header{
-height:74px;position:sticky;top:0;z-index:20;
-background:#070a12bb;backdrop-filter:blur(18px);
-border-bottom:1px solid #ffffff12
+
+html {
+  scroll-behavior:smooth;
 }
-nav{width:min(1180px,calc(100% - 36px));height:100%;margin:auto;
-display:flex;align-items:center;justify-content:space-between}
-.logo{color:#f5f7ff;text-decoration:none;font-size:23px;font-weight:800;letter-spacing:-1px}
-.logo span{color:#55e6d1}
-.links{display:flex;gap:4px}
-.links a{color:#8992a9;text-decoration:none;padding:9px 12px;border-radius:9px;font-size:13px}
-.links a:hover,.links .active{color:white;background:#ffffff0d}
-main{width:min(1050px,calc(100% - 32px));margin:auto;padding:70px 0 100px}
-.kicker{font-family:monospace;font-size:10px;letter-spacing:.15em;color:#55e6d1}
-h1{font-size:clamp(45px,7vw,75px);letter-spacing:-4px;margin:10px 0}
-.subtitle{max-width:620px;color:#8992a9;line-height:1.7}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:35px 0}
-.filter{background:#ffffff06;border:1px solid #ffffff12;color:#8992a9;padding:10px 14px;border-radius:9px;cursor:pointer}
-.filter.active,.filter:hover{color:#55e6d1;border-color:#55e6d155}
-.trending-list{display:grid;gap:12px}
-.card{
-display:grid;grid-template-columns:70px 1fr auto;gap:18px;align-items:center;
-padding:22px;border:1px solid #ffffff10;border-radius:16px;
-background:#111627b8;backdrop-filter:blur(12px);transition:.25s
+
+body {
+
+  margin:0;
+
+  min-height:100vh;
+
+  overflow-x:hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      #263b7b33,
+      transparent 38%
+    ),
+    var(--bg);
+
+  color:var(--text);
+
+  font-family:"DM Sans",sans-serif;
+
 }
-.card:hover{transform:translateY(-3px);border-color:#ffffff22}
-.rank{font-family:monospace;color:#465069;font-size:20px}
-.card h2{margin:0 0 8px;color:#f5f7ff;font-size:18px}
-.card p{margin:0;color:#788398;font-size:12px;line-height:1.6}
-.meta{font-family:monospace;color:#59647a;font-size:9px;text-align:right}
-.hot{color:#55e6d1}
-@media(max-width:650px){
-.links a{font-size:11px;padding:7px}
-.card{grid-template-columns:42px 1fr}
-.meta{grid-column:2;text-align:left}
+
+
+/* =====================================================
+   LIVE BACKGROUND
+===================================================== */
+
+.background {
+
+  position:fixed;
+
+  inset:0;
+
+  overflow:hidden;
+
+  pointer-events:none;
+
+  z-index:-5;
+
 }
+
+.glow {
+
+  position:absolute;
+
+  width:420px;
+  height:420px;
+
+  border-radius:50%;
+
+  filter:blur(100px);
+
+  opacity:.18;
+
+  animation:drift 18s ease-in-out infinite alternate;
+
+}
+
+.glow.one {
+
+  background:var(--blue);
+
+  left:-180px;
+
+  top:5%;
+
+}
+
+.glow.two {
+
+  background:var(--cyan);
+
+  right:-170px;
+
+  top:30%;
+
+  animation-delay:-6s;
+
+}
+
+.glow.three {
+
+  background:var(--purple);
+
+  left:30%;
+
+  bottom:-250px;
+
+  animation-delay:-11s;
+
+}
+
+@keyframes drift {
+
+  0% {
+    transform:translate3d(0,0,0) scale(1);
+  }
+
+  50% {
+    transform:translate3d(80px,-60px,0) scale(1.15);
+  }
+
+  100% {
+    transform:translate3d(-50px,80px,0) scale(.9);
+  }
+
+}
+
+.grid {
+
+  position:absolute;
+
+  width:160%;
+  height:160%;
+
+  left:-30%;
+  top:-10%;
+
+  opacity:.055;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.35) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.35) 1px,
+      transparent 1px
+    );
+
+  background-size:55px 55px;
+
+  transform:
+    perspective(700px)
+    rotateX(62deg);
+
+  animation:gridMove 18s linear infinite;
+
+}
+
+@keyframes gridMove {
+
+  from {
+    background-position:0 0;
+  }
+
+  to {
+    background-position:0 55px;
+  }
+
+}
+
+.scanlines {
+
+  position:absolute;
+
+  inset:0;
+
+  opacity:.025;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      white 4px
+    );
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+.header {
+
+  position:sticky;
+
+  top:0;
+
+  z-index:50;
+
+  height:74px;
+
+  border-bottom:1px solid var(--line);
+
+  background:rgba(7,10,18,.72);
+
+  backdrop-filter:blur(18px);
+
+  -webkit-backdrop-filter:blur(18px);
+
+}
+
+.nav {
+
+  width:min(
+    1180px,
+    calc(100% - 36px)
+  );
+
+  height:100%;
+
+  margin:auto;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+}
+
+.logo {
+
+  color:var(--white);
+
+  text-decoration:none;
+
+  font-family:"Space Grotesk";
+
+  font-size:23px;
+
+  font-weight:700;
+
+  letter-spacing:-1px;
+
+}
+
+.logo span {
+
+  color:var(--cyan);
+
+}
+
+.logo::after {
+
+  content:"_";
+
+  color:var(--cyan);
+
+  animation:blink 1s infinite;
+
+}
+
+@keyframes blink {
+
+  50% {
+    opacity:0;
+  }
+
+}
+
+.nav-links {
+
+  display:flex;
+
+  align-items:center;
+
+  gap:4px;
+
+}
+
+.nav-links a {
+
+  color:var(--muted);
+
+  text-decoration:none;
+
+  padding:9px 12px;
+
+  border-radius:9px;
+
+  font-size:13px;
+
+  transition:.2s;
+
+}
+
+.nav-links a:hover {
+
+  color:var(--white);
+
+  background:rgba(255,255,255,.06);
+
+}
+
+.nav-links a.active {
+
+  color:var(--cyan);
+
+  background:rgba(85,230,209,.06);
+
+}
+
+.menu-button {
+
+  display:none;
+
+  width:42px;
+  height:42px;
+
+  border:1px solid var(--line);
+
+  border-radius:10px;
+
+  background:rgba(255,255,255,.04);
+
+  color:white;
+
+  font-size:20px;
+
+}
+
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+main {
+
+  width:min(
+    1080px,
+    calc(100% - 36px)
+  );
+
+  margin:auto;
+
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero {
+
+  padding:80px 0 55px;
+
+  text-align:center;
+
+}
+
+.kicker {
+
+  display:inline-flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  padding:7px 12px;
+
+  border:1px solid rgba(85,230,209,.2);
+
+  border-radius:100px;
+
+  background:rgba(85,230,209,.045);
+
+  color:#92aaa9;
+
+  font-family:"IBM Plex Mono";
+
+  font-size:9px;
+
+  letter-spacing:.13em;
+
+}
+
+.kicker-dot {
+
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:var(--cyan);
+
+  box-shadow:0 0 12px var(--cyan);
+
+  animation:pulse 2s infinite;
+
+}
+
+@keyframes pulse {
+
+  50% {
+    opacity:.35;
+  }
+
+}
+
+.hero h1 {
+
+  margin:24px 0 14px;
+
+  color:var(--white);
+
+  font-family:"Space Grotesk";
+
+  font-size:clamp(
+    45px,
+    7vw,
+    75px
+  );
+
+  line-height:.95;
+
+  letter-spacing:-4px;
+
+}
+
+.gradient {
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--cyan),
+      #7b9bff,
+      var(--purple),
+      var(--pink),
+      var(--cyan)
+    );
+
+  background-size:300% auto;
+
+  -webkit-background-clip:text;
+
+  background-clip:text;
+
+  color:transparent;
+
+  animation:gradientMove 7s linear infinite;
+
+}
+
+@keyframes gradientMove {
+
+  to {
+    background-position:300% center;
+  }
+
+}
+
+.hero p {
+
+  max-width:610px;
+
+  margin:auto;
+
+  color:var(--muted);
+
+  font-size:15px;
+
+  line-height:1.7;
+
+}
+
+
+/* =====================================================
+   CONTROLS
+===================================================== */
+
+.controls {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:15px;
+
+  margin-bottom:22px;
+
+}
+
+.filters {
+
+  display:flex;
+
+  gap:7px;
+
+  flex-wrap:wrap;
+
+}
+
+.filter {
+
+  border:1px solid var(--line);
+
+  border-radius:100px;
+
+  background:rgba(255,255,255,.035);
+
+  color:#737e94;
+
+  padding:8px 13px;
+
+  font-size:10px;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+}
+
+.filter:hover,
+.filter.active {
+
+  color:var(--cyan);
+
+  border-color:rgba(85,230,209,.4);
+
+  background:rgba(85,230,209,.05);
+
+}
+
+.updated {
+
+  color:#59647a;
+
+  font-family:"IBM Plex Mono";
+
+  font-size:8px;
+
+  white-space:nowrap;
+
+}
+
+
+/* =====================================================
+   TRENDING GRID
+===================================================== */
+
+.trending-grid {
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  gap:12px;
+
+  margin-bottom:90px;
+
+}
+
+.trend-card {
+
+  position:relative;
+
+  overflow:hidden;
+
+  min-height:190px;
+
+  padding:23px;
+
+  border:1px solid var(--line);
+
+  border-radius:17px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.015)
+    );
+
+  cursor:pointer;
+
+  transition:.25s;
+
+}
+
+.trend-card::before {
+
+  content:"";
+
+  position:absolute;
+
+  width:150px;
+  height:150px;
+
+  right:-80px;
+  top:-80px;
+
+  border-radius:50%;
+
+  background:var(--cyan);
+
+  filter:blur(50px);
+
+  opacity:.07;
+
+}
+
+.trend-card:hover {
+
+  transform:translateY(-5px);
+
+  border-color:rgba(85,230,209,.3);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.2);
+
+}
+
+.rank {
+
+  color:#4f596e;
+
+  font-family:"IBM Plex Mono";
+
+  font-size:10px;
+
+}
+
+.trend-top {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:25px;
+
+}
+
+.category {
+
+  padding:5px 8px;
+
+  border:1px solid rgba(85,230,209,.14);
+
+  border-radius:6px;
+
+  color:var(--cyan);
+
+  background:rgba(85,230,209,.035);
+
+  font-family:"IBM Plex Mono";
+
+  font-size:8px;
+
+  letter-spacing:.06em;
+
+}
+
+.trend-card h2 {
+
+  margin:0 0 10px;
+
+  max-width:600px;
+
+  color:var(--white);
+
+  font-family:"Space Grotesk";
+
+  font-size:20px;
+
+  line-height:1.3;
+
+}
+
+.trend-meta {
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  color:#59647a;
+
+  font-size:10px;
+
+}
+
+.trend-meta .fire {
+
+  color:#ff7b55;
+
+}
+
+.investigate {
+
+  margin-top:22px;
+
+  color:var(--cyan);
+
+  font-family:"IBM Plex Mono";
+
+  font-size:9px;
+
+  letter-spacing:.1em;
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading {
+
+  padding:60px 20px;
+
+  text-align:center;
+
+  border:1px solid var(--line);
+
+  border-radius:17px;
+
+  background:rgba(255,255,255,.025);
+
+  margin-bottom:90px;
+
+}
+
+.loader {
+
+  width:24px;
+  height:24px;
+
+  margin:0 auto 15px;
+
+  border:2px solid #30384e;
+
+  border-top-color:var(--cyan);
+
+  border-radius:50%;
+
+  animation:spin .8s linear infinite;
+
+}
+
+@keyframes spin {
+
+  to {
+    transform:rotate(360deg);
+  }
+
+}
+
+.loading-text {
+
+  color:#657086;
+
+  font-family:"IBM Plex Mono";
+
+  font-size:9px;
+
+  letter-spacing:.1em;
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error {
+
+  display:none;
+
+  padding:30px;
+
+  margin-bottom:90px;
+
+  text-align:center;
+
+  border:1px solid rgba(255,107,122,.15);
+
+  border-radius:15px;
+
+  background:rgba(255,107,122,.025);
+
+}
+
+.error-title {
+
+  color:#ff6b7a;
+
+  font-family:"Space Grotesk";
+
+  margin-bottom:8px;
+
+}
+
+.error-text {
+
+  color:#777f91;
+
+  font-size:11px;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+
+  padding:50px 20px 45px;
+
+  border-top:1px solid var(--line);
+
+  color:#4f596d;
+
+  font-family:"IBM Plex Mono";
+
+  font-size:9px;
+
+  text-align:center;
+
+  letter-spacing:.06em;
+
+}
+
+.footer-logo {
+
+  color:#69748a;
+
+  font-family:"Space Grotesk";
+
+  font-size:20px;
+
+  font-weight:700;
+
+  margin-bottom:10px;
+
+}
+
+.footer-logo span {
+
+  color:var(--cyan);
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:760px) {
+
+  .nav {
+
+    width:calc(100% - 28px);
+
+  }
+
+  .nav-links {
+
+    display:none;
+
+  }
+
+  .menu-button {
+
+    display:block;
+
+  }
+
+  main {
+
+    width:calc(100% - 28px);
+
+  }
+
+  .hero {
+
+    padding:60px 0 40px;
+
+  }
+
+  .hero h1 {
+
+    font-size:52px;
+
+    letter-spacing:-3px;
+
+  }
+
+  .controls {
+
+    align-items:flex-start;
+
+    flex-direction:column;
+
+  }
+
+  .updated {
+
+    margin-left:3px;
+
+  }
+
+  .trending-grid {
+
+    grid-template-columns:1fr;
+
+  }
+
+}
+
+@media(max-width:430px) {
+
+  .hero h1 {
+
+    font-size:45px;
+
+    letter-spacing:-2px;
+
+  }
+
+  .trend-card {
+
+    min-height:175px;
+
+    padding:20px;
+
+  }
+
+  .trend-card h2 {
+
+    font-size:18px;
+
+  }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
-<div class="bg">
-<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="grid"></div>
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<div class="background">
+
+  <div class="glow one"></div>
+
+  <div class="glow two"></div>
+
+  <div class="glow three"></div>
+
+  <div class="grid"></div>
+
+  <div class="scanlines"></div>
+
 </div>
 
-<header>
-<nav>
-<a class="logo" href="index.html">DEBUNK<span>.</span></a>
-<div class="links">
-<a href="index.html">Home</a>
-<a class="active" href="trending.html">Trending</a>
-<a href="community.html">Community</a>
-<a href="history.html">History</a>
-<a href="about.html">About</a>
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="header">
+
+<nav class="nav">
+
+<a href="index.html" class="logo">
+DEBUNK<span>.</span>
+</a>
+
+<div class="nav-links">
+
+<a href="index.html">
+Home
+</a>
+
+<a
+  href="trending.html"
+  class="active"
+>
+Trending
+</a>
+
+<a href="community.html">
+Community
+</a>
+
+<a href="history.html">
+History
+</a>
+
+<a href="about.html">
+About
+</a>
+
 </div>
+
+<button
+  class="menu-button"
+  id="menuButton"
+  aria-label="Open menu"
+>
+☰
+</button>
+
 </nav>
+
 </header>
+
+
+<!-- =====================================================
+     MOBILE MENU
+===================================================== -->
+
+<div
+  id="mobileMenu"
+  style="
+    display:none;
+    position:fixed;
+    z-index:100;
+    inset:74px 0 auto 0;
+    padding:18px;
+    background:rgba(7,10,18,.97);
+    border-bottom:1px solid rgba(255,255,255,.1);
+    backdrop-filter:blur(20px);
+  "
+>
+
+<a
+  href="index.html"
+  style="
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:13px;
+  "
+>
+Home
+</a>
+
+<a
+  href="trending.html"
+  style="
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:13px;
+  "
+>
+Trending
+</a>
+
+<a
+  href="community.html"
+  style="
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:13px;
+  "
+>
+Community
+</a>
+
+<a
+  href="history.html"
+  style="
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:13px;
+  "
+>
+History
+</a>
+
+<a
+  href="about.html"
+  style="
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:13px;
+  "
+>
+About
+</a>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <main>
 
-<div class="kicker">LIVE // WHAT PEOPLE ARE CHECKING</div>
-<h1>Trending claims.</h1>
-<p class="subtitle">
-The questions, rumors and claims people are currently trying to settle.
-Tap one to investigate it with Debunk.
+
+<section class="hero">
+
+<div class="kicker">
+
+<span class="kicker-dot"></span>
+
+LIVE TREND INTELLIGENCE
+
+</div>
+
+<h1>
+
+What's
+<span class="gradient">
+trending?
+</span>
+
+</h1>
+
+<p>
+
+Discover the questions and topics people are
+investigating right now — then let Debunk
+check what is actually true.
+
 </p>
 
+</section>
+
+
+<!-- =====================================================
+     CONTROLS
+===================================================== -->
+
+<div class="controls">
+
 <div class="filters">
-<button class="filter active">All</button>
-<button class="filter">Science</button>
-<button class="filter">Technology</button>
-<button class="filter">Sports</button>
-<button class="filter">World</button>
-<button class="filter">Entertainment</button>
+
+<button
+  class="filter active"
+  data-category="all"
+>
+ALL
+</button>
+
+<button
+  class="filter"
+  data-category="Technology"
+>
+TECH
+</button>
+
+<button
+  class="filter"
+  data-category="Sports"
+>
+SPORTS
+</button>
+
+<button
+  class="filter"
+  data-category="News"
+>
+NEWS
+</button>
+
+<button
+  class="filter"
+  data-category="Health"
+>
+HEALTH
+</button>
+
+<button
+  class="filter"
+  data-category="Entertainment"
+>
+ENTERTAINMENT
+</button>
+
+<button
+  class="filter"
+  data-category="Business"
+>
+BUSINESS
+</button>
+
 </div>
 
-<div class="trending-list">
-
-<div class="card">
-<div class="rank">01</div>
-<div>
-<h2>What claims are people arguing about today?</h2>
-<p>Explore the latest questions being investigated across the web.</p>
-</div>
-<div class="meta"><span class="hot">LIVE</span><br>NOW</div>
-</div>
-
-<div class="card">
-<div class="rank">02</div>
-<div>
-<h2>Is artificial intelligence replacing jobs?</h2>
-<p>A claim worth examining from multiple perspectives and sources.</p>
-</div>
-<div class="meta">TECH<br>CHECK</div>
-</div>
-
-<div class="card">
-<div class="rank">03</div>
-<div>
-<h2>Which viral claims are actually true?</h2>
-<p>Separate social-media noise from evidence.</p>
-</div>
-<div class="meta">VIRAL<br>CLAIM</div>
-</div>
-
-<div class="card">
-<div class="rank">04</div>
-<div>
-<h2>What happened in the latest major news?</h2>
-<p>Check the facts behind stories spreading online.</p>
-</div>
-<div class="meta">WORLD<br>NEWS</div>
+<div
+  class="updated"
+  id="updated"
+>
+UPDATING...
 </div>
 
 </div>
+
+
+<!-- =====================================================
+     LOADING
+===================================================== -->
+
+<div
+  class="loading"
+  id="loading"
+>
+
+<div class="loader"></div>
+
+<div class="loading-text">
+
+LOADING TREND INTELLIGENCE...
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     ERROR
+===================================================== -->
+
+<div
+  class="error"
+  id="error"
+>
+
+<div class="error-title">
+
+TREND DATA UNAVAILABLE
+
+</div>
+
+<div class="error-text">
+
+Debunk couldn't load the latest trends.
+Please try again.
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     TRENDING RESULTS
+===================================================== -->
+
+<section
+  class="trending-grid"
+  id="trendingGrid"
+>
+</section>
+
 
 </main>
 
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+<div class="footer-logo">
+
+DEBUNK<span>.</span>
+
+</div>
+
+<div>
+
+FACTS SHOULD SURVIVE THE SEARCH.
+
+</div>
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const grid =
+  document.getElementById(
+    "trendingGrid"
+  );
+
+const loading =
+  document.getElementById(
+    "loading"
+  );
+
+const errorBox =
+  document.getElementById(
+    "error"
+  );
+
+const updated =
+  document.getElementById(
+    "updated"
+  );
+
+
+let allTrends = [];
+
+
+/* =====================================================
+   LOAD TRENDS
+===================================================== */
+
+async function loadTrends() {
+
+  loading.style.display = "block";
+
+  errorBox.style.display = "none";
+
+  grid.innerHTML = "";
+
+  try {
+
+    const response =
+      await fetch("/api/trends");
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Trend request failed"
+      );
+
+    }
+
+    const data =
+      await response.json();
+
+    if (
+      !data ||
+      !Array.isArray(data.trends)
+    ) {
+
+      throw new Error(
+        "Invalid trend data"
+      );
+
+    }
+
+    allTrends =
+      data.trends;
+
+    renderTrends(
+      allTrends
+    );
+
+    if (data.updated) {
+
+      const date =
+        new Date(
+          data.updated
+        );
+
+      updated.textContent =
+        "UPDATED " +
+        date.toLocaleTimeString(
+          [],
+          {
+            hour:"2-digit",
+            minute:"2-digit"
+          }
+        );
+
+    } else {
+
+      updated.textContent =
+        "LIVE";
+
+    }
+
+  } catch (err) {
+
+    console.error(
+      "Trending error:",
+      err
+    );
+
+    errorBox.style.display =
+      "block";
+
+  } finally {
+
+    loading.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =====================================================
+   RENDER TRENDS
+===================================================== */
+
+function renderTrends(
+  trends
+) {
+
+  grid.innerHTML = "";
+
+  if (!trends.length) {
+
+    grid.innerHTML = `
+
+      <div
+        style="
+          grid-column:1/-1;
+          text-align:center;
+          color:#657086;
+          padding:50px;
+        "
+      >
+
+        No trends available.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  trends.forEach(
+    (trend, index) => {
+
+      const card =
+        document.createElement(
+          "article"
+        );
+
+      card.className =
+        "trend-card";
+
+
+      const category =
+        trend.category ||
+        "Trending";
+
+
+      const title =
+        trend.title ||
+        trend.query ||
+        "Untitled trend";
+
+
+      const searches =
+        trend.searches ||
+        "Trending now";
+
+
+      const query =
+        trend.query ||
+        title;
+
+
+      card.innerHTML = `
+
+        <div class="trend-top">
+
+          <div class="rank">
+
+            #${String(
+              index + 1
+            ).padStart(2,"0")}
+
+          </div>
+
+          <div class="category">
+
+            ${escapeHTML(
+              category
+            )}
+
+          </div>
+
+        </div>
+
+
+        <h2>
+
+          ${escapeHTML(
+            title
+          )}
+
+        </h2>
+
+
+        <div class="trend-meta">
+
+          <span class="fire">
+            🔥
+          </span>
+
+          <span>
+
+            ${escapeHTML(
+              searches
+            )}
+
+          </span>
+
+        </div>
+
+
+        <div class="investigate">
+
+          INVESTIGATE →
+
+        </div>
+
+      `;
+
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          const destination =
+            "index.html?query=" +
+            encodeURIComponent(
+              query
+            );
+
+          window.location.href =
+            destination;
+
+        }
+      );
+
+
+      grid.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   FILTERS
+===================================================== */
+
+document
+  .querySelectorAll(
+    ".filter"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          document
+            .querySelectorAll(
+              ".filter"
+            )
+            .forEach(
+              item =>
+                item.classList.remove(
+                  "active"
+                )
+            );
+
+          button.classList.add(
+            "active"
+          );
+
+
+          const category =
+            button.dataset.category;
+
+
+          if (
+            category === "all"
+          ) {
+
+            renderTrends(
+              allTrends
+            );
+
+            return;
+
+          }
+
+
+          const filtered =
+            allTrends.filter(
+              trend =>
+                String(
+                  trend.category
+                ).toLowerCase() ===
+                category.toLowerCase()
+            );
+
+
+          renderTrends(
+            filtered
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   MOBILE MENU
+===================================================== */
+
+const menuButton =
+  document.getElementById(
+    "menuButton"
+  );
+
+const mobileMenu =
+  document.getElementById(
+    "mobileMenu"
+  );
+
+
+menuButton.addEventListener(
+  "click",
+  () => {
+
+    const open =
+      mobileMenu.style.display ===
+      "block";
+
+    mobileMenu.style.display =
+      open
+        ? "none"
+        : "block";
+
+  }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadTrends();
+
+</script>
+
+
 </body>
+
 </html>
