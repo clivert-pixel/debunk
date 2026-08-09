@@ -1534,7 +1534,792 @@ footer {
     gap: 11px;
   }
 }
+/* =========================================================
+   DEBUNK INVESTIGATION RESULT
+   ========================================================= */
 
+.result-card {
+  display: none;
+
+  max-width: 920px;
+
+  margin: 0 auto 100px;
+
+  padding: 30px;
+
+  border: 1px solid rgba(255,255,255,.10);
+
+  border-radius: 22px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(85,230,209,.07),
+      transparent 35%
+    ),
+    rgba(13,18,32,.90);
+
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.28),
+    inset 0 1px rgba(255,255,255,.035);
+
+  backdrop-filter: blur(20px);
+
+  animation: investigationAppear .55s ease both;
+}
+
+@keyframes investigationAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* HEADER */
+
+.investigation-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 25px;
+
+  padding-bottom: 25px;
+
+  border-bottom: 1px solid var(--line);
+
+}
+
+
+.result-kicker {
+
+  color: var(--cyan);
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 9px;
+
+  letter-spacing: .14em;
+
+  margin-bottom: 20px;
+
+}
+
+
+.claim-label {
+
+  color: #59647a;
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 9px;
+
+  letter-spacing: .12em;
+
+  margin-bottom: 8px;
+
+}
+
+
+.claim {
+
+  max-width: 700px;
+
+  color: var(--white);
+
+  font-family: "Space Grotesk";
+
+  font-size: 22px;
+
+  font-weight: 600;
+
+  line-height: 1.35;
+
+}
+
+
+.confidence-box {
+
+  min-width: 140px;
+
+  height: fit-content;
+
+  padding: 14px;
+
+  border: 1px solid var(--line);
+
+  border-radius: 11px;
+
+  background: rgba(255,255,255,.025);
+
+  text-align: right;
+
+}
+
+
+.confidence-label {
+
+  color: #59647a;
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 8px;
+
+  letter-spacing: .1em;
+
+  margin-bottom: 7px;
+
+}
+
+
+.confidence-value {
+
+  color: var(--cyan);
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 10px;
+
+}
+
+
+/* VERDICT */
+
+.verdict-panel {
+
+  margin: 25px 0;
+
+  padding: 25px;
+
+  border-radius: 15px;
+
+  border: 1px solid rgba(85,230,209,.16);
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(85,230,209,.08),
+      transparent 40%
+    ),
+    rgba(85,230,209,.025);
+
+}
+
+
+.verdict-heading {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: var(--cyan);
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 9px;
+
+  letter-spacing: .13em;
+
+  margin-bottom: 14px;
+
+}
+
+
+.verdict-icon {
+
+  font-size: 15px;
+
+}
+
+
+.verdict-heading .status {
+
+  margin-left: auto;
+
+  font-size: 8px;
+
+  padding: 5px 8px;
+
+}
+
+
+.verdict {
+
+  margin: 0;
+
+  color: var(--white);
+
+  font-family: "Space Grotesk";
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  line-height: 1.25;
+
+}
+
+
+.verdict-line {
+
+  width: 45px;
+
+  height: 2px;
+
+  margin-top: 17px;
+
+  background: var(--cyan);
+
+  box-shadow: 0 0 15px rgba(85,230,209,.4);
+
+}
+
+
+/* SECTIONS */
+
+.investigation-section {
+
+  padding: 25px 0;
+
+  border-bottom: 1px solid var(--line);
+
+}
+
+
+.section-title {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  color: #8992a9;
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 9px;
+
+  letter-spacing: .13em;
+
+  margin-bottom: 17px;
+
+}
+
+
+.section-number {
+
+  color: var(--cyan);
+
+}
+
+
+.source-count {
+
+  margin-left: auto;
+
+  color: #59647a;
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 8px;
+
+}
+
+
+/* WHY */
+
+.result-explanation {
+
+  max-width: 780px;
+
+  color: #9aa4b8;
+
+  font-size: 14px;
+
+  line-height: 1.85;
+
+}
+
+
+/* EVIDENCE */
+
+.evidence-timeline {
+
+  position: relative;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 22px;
+
+  padding-left: 4px;
+
+}
+
+
+.timeline-line {
+
+  position: absolute;
+
+  left: 9px;
+
+  top: 10px;
+
+  bottom: 10px;
+
+  width: 1px;
+
+  background: rgba(85,230,209,.18);
+
+}
+
+
+.evidence-item {
+
+  position: relative;
+
+  display: flex;
+
+  gap: 17px;
+
+}
+
+
+.timeline-dot {
+
+  position: relative;
+
+  z-index: 2;
+
+  flex-shrink: 0;
+
+  width: 11px;
+
+  height: 11px;
+
+  margin-top: 3px;
+
+  border-radius: 50%;
+
+  background: var(--cyan);
+
+  box-shadow: 0 0 12px rgba(85,230,209,.35);
+
+}
+
+
+.evidence-item-title {
+
+  color: var(--white);
+
+  font-family: "Space Grotesk";
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  margin-bottom: 5px;
+
+}
+
+
+.evidence-item-text {
+
+  max-width: 650px;
+
+  color: #687389;
+
+  font-size: 11px;
+
+  line-height: 1.65;
+
+}
+
+
+/* SOURCES */
+
+.sources {
+
+  display: grid;
+
+  grid-template-columns: repeat(2,1fr);
+
+  gap: 9px;
+
+}
+
+
+.source {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 15px;
+
+  border: 1px solid var(--line);
+
+  border-radius: 11px;
+
+  background: rgba(255,255,255,.025);
+
+  color: var(--text);
+
+  text-decoration: none;
+
+  transition: .2s;
+
+}
+
+
+.source:hover {
+
+  transform: translateY(-2px);
+
+  border-color: rgba(85,230,209,.35);
+
+  background: rgba(85,230,209,.035);
+
+}
+
+
+.source-name {
+
+  display: block;
+
+  color: var(--white);
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+}
+
+
+.source-domain {
+
+  display: block;
+
+  margin-top: 5px;
+
+  color: #59647a;
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 8px;
+
+}
+
+
+/* IMAGES */
+
+.debunk-images {
+
+  display: grid;
+
+  grid-template-columns: repeat(3,1fr);
+
+  gap: 9px;
+
+}
+
+
+.debunk-image {
+
+  display: block;
+
+  width: 100%;
+
+  height: 160px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  border: 1px solid var(--line);
+
+  transition: .25s;
+
+}
+
+
+.debunk-image:hover {
+
+  transform: translateY(-3px);
+
+  border-color: rgba(85,230,209,.4);
+
+}
+
+
+/* REMEMBER */
+
+.uncertainty-box {
+
+  display: flex;
+
+  gap: 13px;
+
+  margin-top: 25px;
+
+  padding: 17px;
+
+  border: 1px solid rgba(255,209,102,.12);
+
+  border-radius: 12px;
+
+  background: rgba(255,209,102,.025);
+
+}
+
+
+.uncertainty-icon {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  flex-shrink: 0;
+
+  width: 24px;
+
+  height: 24px;
+
+  border-radius: 50%;
+
+  background: rgba(255,209,102,.1);
+
+  color: var(--yellow);
+
+  font-family: "IBM Plex Mono";
+
+  font-size: 11px;
+
+}
+
+
+.uncertainty-title {
+
+  color: #d8c88f;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  margin-bottom: 5px;
+
+}
+
+
+.uncertainty-text {
+
+  color: #77745f;
+
+  font-size: 10px;
+
+  line-height: 1.65;
+
+}
+
+
+/* RELATED */
+
+.related {
+
+  display: grid;
+
+  gap: 7px;
+
+}
+
+
+.related button {
+
+  width: 100%;
+
+  padding: 12px 14px;
+
+  border: 1px solid var(--line);
+
+  border-radius: 9px;
+
+  background: rgba(255,255,255,.025);
+
+  color: #7d879c;
+
+  text-align: left;
+
+  font-size: 11px;
+
+  transition: .2s;
+
+}
+
+
+.related button:hover {
+
+  color: var(--cyan);
+
+  border-color: rgba(85,230,209,.35);
+
+}
+
+
+/* ACTIONS */
+
+.result-actions {
+
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  padding-top: 22px;
+
+}
+
+
+.feedback {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  margin-left: auto;
+
+}
+
+
+.feedback > span {
+
+  margin-right: 5px;
+
+  color: #59647a;
+
+  font-size: 9px;
+
+}
+
+
+.result-actions .action {
+
+  border: 1px solid var(--line);
+
+  border-radius: 8px;
+
+  background: rgba(255,255,255,.035);
+
+  color: #7e899e;
+
+  padding: 9px 12px;
+
+  font-size: 10px;
+
+  transition: .2s;
+
+}
+
+
+.result-actions .action:hover,
+
+.result-actions .action.active {
+
+  color: var(--cyan);
+
+  border-color: rgba(85,230,209,.4);
+
+}
+
+
+/* MOBILE */
+
+@media(max-width:700px) {
+
+  .investigation-header {
+
+    flex-direction: column;
+
+  }
+
+
+  .confidence-box {
+
+    width: 100%;
+
+    text-align: left;
+
+  }
+
+
+  .verdict {
+
+    font-size: 25px;
+
+  }
+
+
+  .sources {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .debunk-images {
+
+    grid-template-columns: repeat(2,1fr);
+
+  }
+
+
+  .feedback {
+
+    width: 100%;
+
+    margin-left: 0;
+
+    margin-top: 8px;
+
+  }
+
+}
+
+
+@media(max-width:430px) {
+
+  .debunk-images {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
 </style>
 </head>
 
@@ -1832,7 +2617,7 @@ footer {
 
 
 <!-- ======================================================
-     RESULT
+     DEBUNK INVESTIGATION RESULT
      ====================================================== -->
 
 <section
@@ -1840,70 +2625,320 @@ footer {
   id="resultCard"
 >
 
+  <!-- HEADER -->
 
-  <div class="result-top">
+  <div class="investigation-header">
 
-    <div
-      class="status"
-      id="status"
-    ></div>
+    <div class="claim-area">
 
-    <div
-      class="confidence"
-      id="confidenceText"
-    ></div>
+      <div class="result-kicker">
+        DEBUNK // INVESTIGATION COMPLETE
+      </div>
 
-  </div>
-
-
-  <div
-    class="verdict"
-    id="verdict"
-  ></div>
-
-
-  <div
-    class="result-explanation"
-    id="resultExplanation"
-  ></div>
-
-
-  <div class="evidence-box">
-
-    <div class="evidence-head">
-
-      <div class="evidence-title">
-        🔎 How we know
+      <div class="claim-label">
+        CLAIM CHECKED
       </div>
 
       <div
-        class="evidence-count"
-        id="sourceCount"
-      ></div>
+        class="claim"
+        id="claimText"
+      >
+        —
+      </div>
 
     </div>
 
 
-    <div class="evidence-text">
+    <div class="confidence-box">
 
-      Debunk compares the returned sources and
-      presents the evidence behind the result.
-      For important decisions, always open the
-      original sources.
+      <div class="confidence-label">
+        CONFIDENCE
+      </div>
+
+      <div
+        class="confidence-value"
+        id="confidenceText"
+      >
+        —
+      </div>
 
     </div>
 
   </div>
 
 
-  <div class="actions">
+  <!-- VERDICT -->
+
+  <div class="verdict-panel">
+
+    <div class="verdict-heading">
+
+      <span class="verdict-icon">◉</span>
+
+      <span>VERDICT</span>
+
+      <span
+        class="status"
+        id="status"
+      ></span>
+
+    </div>
+
+
+    <div
+      class="verdict"
+      id="verdict"
+    >
+      —
+    </div>
+
+
+    <div class="verdict-line"></div>
+
+  </div>
+
+
+  <!-- WHY -->
+
+  <div class="investigation-section">
+
+    <div class="section-title">
+
+      <span class="section-number">
+        01
+      </span>
+
+      <span>
+        WHY
+      </span>
+
+    </div>
+
+
+    <div
+      class="result-explanation"
+      id="resultExplanation"
+    ></div>
+
+  </div>
+
+
+  <!-- EVIDENCE -->
+
+  <div class="investigation-section">
+
+    <div class="section-title">
+
+      <span class="section-number">
+        02
+      </span>
+
+      <span>
+        EVIDENCE
+      </span>
+
+      <span
+        class="source-count"
+        id="sourceCount"
+      >
+        0 SOURCES CHECKED
+      </span>
+
+    </div>
+
+
+    <div class="evidence-timeline">
+
+      <div class="timeline-line"></div>
+
+
+      <div class="evidence-item">
+
+        <div class="timeline-dot"></div>
+
+        <div>
+
+          <div class="evidence-item-title">
+            Sources were checked
+          </div>
+
+          <div class="evidence-item-text">
+            Debunk searched and compared the
+            information returned by its sources.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="evidence-item">
+
+        <div class="timeline-dot"></div>
+
+        <div>
+
+          <div class="evidence-item-title">
+            Evidence was compared
+          </div>
+
+          <div class="evidence-item-text">
+            Supporting and conflicting information
+            was considered before producing the verdict.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="evidence-item">
+
+        <div class="timeline-dot"></div>
+
+        <div>
+
+          <div class="evidence-item-title">
+            Verdict generated
+          </div>
+
+          <div class="evidence-item-text">
+            The result reflects the evidence available
+            to Debunk at the time of the search.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SOURCES -->
+
+  <div
+    class="investigation-section"
+    id="sourcesSection"
+  >
+
+    <div class="section-title">
+
+      <span class="section-number">
+        03
+      </span>
+
+      <span>
+        SOURCES
+      </span>
+
+    </div>
+
+
+    <div
+      class="sources"
+      id="sources"
+    ></div>
+
+  </div>
+
+
+  <!-- VISUAL EVIDENCE -->
+
+  <div
+    class="investigation-section"
+    id="imagesSection"
+    style="display:none"
+  >
+
+    <div class="section-title">
+
+      <span class="section-number">
+        04
+      </span>
+
+      <span>
+        VISUAL EVIDENCE
+      </span>
+
+    </div>
+
+
+    <div
+      class="debunk-images"
+      id="debunkImages"
+    ></div>
+
+  </div>
+
+
+  <!-- REMEMBER -->
+
+  <div class="uncertainty-box">
+
+    <div class="uncertainty-icon">
+      ?
+    </div>
+
+    <div>
+
+      <div class="uncertainty-title">
+        REMEMBER
+      </div>
+
+      <div class="uncertainty-text">
+        No web search is perfect. Sources can be
+        incomplete, outdated or disagree with one
+        another. Open the original sources before
+        making important decisions.
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- RELATED -->
+
+  <div
+    class="investigation-section"
+    id="relatedSection"
+    style="display:none"
+  >
+
+    <div class="section-title">
+
+      <span class="section-number">
+        05
+      </span>
+
+      <span>
+        KEEP INVESTIGATING
+      </span>
+
+    </div>
+
+
+    <div
+      class="related"
+      id="related"
+    ></div>
+
+  </div>
+
+
+  <!-- ACTIONS -->
+
+  <div class="result-actions">
 
     <button
       class="action"
       id="copyButton"
     >
-      Copy
+      Copy verdict
     </button>
+
 
     <button
       class="action"
@@ -1912,6 +2947,7 @@ footer {
       Share
     </button>
 
+
     <button
       class="action"
       id="saveButton"
@@ -1919,21 +2955,34 @@ footer {
       Save
     </button>
 
-    <button
-      class="action"
-      id="likeButton"
-    >
-      👍 Helpful
-    </button>
 
-    <button
-      class="action"
-      id="dislikeButton"
-    >
-      👎 Not helpful
-    </button>
+    <div class="feedback">
+
+      <span>
+        Was this useful?
+      </span>
+
+
+      <button
+        class="action"
+        id="likeButton"
+      >
+        👍
+      </button>
+
+
+      <button
+        class="action"
+        id="dislikeButton"
+      >
+        👎
+      </button>
+
+    </div>
 
   </div>
+
+</section>
 
 
   <!-- SOURCES -->
@@ -2576,9 +3625,10 @@ async function runSearch(query) {
         : "EVIDENCE CHECKED";
 
 
-    $("verdict").textContent =
-      data.verdict ||
-      "No verdict returned.";
+    $("claimText").textContent = query;
+
+$("verdict").textContent =
+  data.verdict || "No verdict returned.";
 
 
     $("resultExplanation").textContent =
