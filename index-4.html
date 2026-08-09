@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Debunk — Settle it with sources</title>
+<link rel="icon" href="/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f7f8f5;color:#172326;font-family:Inter,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+:root{--accent:#2f8f83;--accent2:#27786e;--ink:#172326;--muted:#697577;--line:#dfe1db;--card:#fff;--warm:#fffdf8}
+
+.header{height:76px;max-width:1180px;margin:auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:20}
+.logo{font:700 26px "Space Grotesk";letter-spacing:-1.2px}
+.logo span,.menu-title span{color:var(--accent)}
+.menu-button{width:44px;height:44px;border:1px solid #d8d9d3;border-radius:10px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.menu-button span{width:19px;height:2px;background:var(--ink);border-radius:2px}
+
+.menu-overlay{position:fixed;inset:0;background:#17232655;opacity:0;visibility:hidden;transition:.25s;z-index:90}
+.menu-overlay.open{opacity:1;visibility:visible}
+.side-menu{position:fixed;top:0;right:0;width:330px;max-width:90vw;height:100vh;background:var(--warm);border-left:1px solid var(--line);padding:24px;transform:translateX(100%);transition:.3s;z-index:100;box-shadow:-20px 0 60px #00000012}
+.side-menu.open{transform:none}
+.menu-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+.menu-title{font:700 21px "Space Grotesk"}
+.close-button{width:36px;height:36px;border:1px solid #d8d9d3;border-radius:8px;background:#fff;font-size:21px;line-height:1}
+.menu-links{display:flex;flex-direction:column;gap:5px}
+.menu-links a,.menu-links button{width:100%;padding:13px 12px;border:0;border-radius:8px;background:transparent;color:#4e595b;text-align:left;text-decoration:none;font-size:14px}
+.menu-links a:hover,.menu-links button:hover{background:#eef1ec;color:var(--ink)}
+.menu-divider{height:1px;background:var(--line);margin:15px 0}
+.login-button{color:var(--accent)!important;font-weight:700}
+
+main{max-width:1080px;margin:auto;padding:0 24px 80px}
+.hero{min-height:650px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,#2f8f8318,transparent 68%);top:30px;z-index:-1;filter:blur(2px)}
+.hero-kicker{font:500 11px "IBM Plex Mono";letter-spacing:.16em;color:var(--accent);margin-bottom:22px;animation:rise .7s ease both}
+.hero h1{margin:0;font:700 clamp(48px,8vw,86px)/.96 "Space Grotesk";letter-spacing:-4px;animation:rise .8s .08s ease both}
+.hero h1 .accent{color:var(--accent)}
+.hero-sub{max-width:650px;margin:25px auto 34px;color:var(--muted);font-size:16px;line-height:1.75;animation:rise .8s .16s ease both}
+.search-form{width:min(760px,100%);display:flex;gap:8px;padding:7px;background:#fff;border:1px solid #d7d9d3;border-radius:14px;box-shadow:0 18px 55px #2330320d;animation:rise .8s .24s ease both;transition:.25s}
+.search-form:focus-within{border-color:var(--accent);box-shadow:0 18px 60px #2f8f831b}
+.search-input{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:14px 15px;color:var(--ink);font-size:15px}
+.search-input::placeholder{color:#9a9f9f}
+.search-button{border:0;background:var(--accent);color:#fff;border-radius:9px;padding:0 23px;font-weight:700}
+.search-button:hover{background:var(--accent2)}
+.search-button:disabled{opacity:.55}
+.examples{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:14px;animation:rise .8s .32s ease both}
+.example{border:1px solid #dedfd9;background:#fff8;color:#70797a;border-radius:20px;padding:8px 12px;font-size:12px}
+.example:hover{border-color:var(--accent);color:var(--accent)}
+.hero-trust{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:28px;color:#8a9293;font:10px "IBM Plex Mono";letter-spacing:.04em;animation:rise .8s .4s ease both}
+.hero-trust span{display:flex;gap:6px;align-items:center}
+.dot{width:5px;height:5px;background:var(--accent);border-radius:50%}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.home-section{margin:20px 0 80px}
+.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:18px}
+.section-label{font:500 10px "IBM Plex Mono";letter-spacing:.13em;color:var(--accent)}
+.section-head h2{font:700 28px "Space Grotesk";letter-spacing:-.8px;margin:7px 0 0}
+.section-link{font-size:12px;color:var(--accent);text-decoration:none}
+
+.trending-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.trend-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px;text-align:left;transition:.22s;position:relative;overflow:hidden}
+.trend-card:hover{transform:translateY(-3px);border-color:#a9cbc6;box-shadow:0 15px 40px #1723260a}
+.trend-number{font:500 10px "IBM Plex Mono";color:#9ba2a2}
+.trend-card h3{font:600 16px/1.4 "Space Grotesk";margin:18px 0 20px}
+.trend-meta{font:11px;color:#8b9495}
+.trend-card button{border:0;background:none;color:var(--accent);padding:0;font-size:12px;font-weight:700}
+
+.categories{display:flex;gap:9px;flex-wrap:wrap}
+.category{padding:11px 15px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#4e595b;font-size:12px}
+.category:hover{border-color:var(--accent);color:var(--accent)}
+
+.loading-panel{display:none;margin:35px auto;max-width:700px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:28px}
+.loading-title{font:600 18px "Space Grotesk";margin-bottom:18px}
+.investigation{display:flex;flex-direction:column;gap:12px}
+.investigation-row{display:flex;align-items:center;gap:10px;color:#7a8384;font-size:13px}
+.spinner{width:15px;height:15px;border:2px solid #d8dfdd;border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+.investigation-row.done{color:var(--ink)}
+.investigation-row.done .spinner{animation:none;border-color:var(--accent);background:var(--accent);position:relative}
+.investigation-row.done .spinner:after{content:"✓";position:absolute;color:white;font-size:9px;left:2px;top:-2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.error{text-align:center;color:#c04c54;font-size:13px;margin:15px;display:none}
+.result-card{display:none;margin:35px auto 0;max-width:900px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;box-shadow:0 18px 55px #1e282a0a}
+.result-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.status{display:inline-block;font:500 10px "IBM Plex Mono";letter-spacing:.08em;padding:6px 9px;border:1px solid;border-radius:5px}
+.confidence{font:500 10px "IBM Plex Mono";color:#899293}
+.verdict{font:700 29px/1.25 "Space Grotesk";margin:15px 0}
+.result-explanation{color:#647072;font-size:14px;line-height:1.8;margin-bottom:25px}
+.actions{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
+.action{border:1px solid #dadbd5;background:#fff;color:#687274;border-radius:7px;padding:8px 12px;font-size:12px}
+.action:hover,.action.active{color:var(--accent);border-color:var(--accent)}
+
+.evidence-box{border:1px solid #dfe3dd;border-radius:12px;padding:18px;margin:0 0 24px;background:#fbfcf9}
+.evidence-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px}
+.evidence-title{font:600 15px "Space Grotesk"}
+.evidence-count{font:10px "IBM Plex Mono";color:#8b9495}
+.evidence-text{font-size:12px;line-height:1.7;color:#687274}
+.result-label{font:500 10px "IBM Plex Mono";letter-spacing:.1em;color:#8a9293;margin-bottom:10px}
+.sources{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:25px}
+.source{display:flex;align-items:center;justify-content:space-between;padding:14px;border:1px solid #e1e2dd;border-radius:9px;color:#263538;text-decoration:none;font-size:12px;background:#fff}
+.source:hover{border-color:var(--accent);background:#fbfffd}
+.source-name{font-weight:600}
+.source-domain{display:block;color:#929a9a;font-size:10px;margin-top:4px}
+.debunk-images{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:25px}
+.debunk-image{width:100%;height:170px;object-fit:cover;border-radius:9px;border:1px solid var(--line);display:block}
+.debunk-image:hover{border-color:var(--accent)}
+.related{display:flex;flex-direction:column;gap:7px}
+.related button{border:1px solid #e1e2dd;background:#fff;color:#687274;text-align:left;border-radius:8px;padding:11px}
+.related button:hover{border-color:var(--accent);color:var(--ink)}
+
+.community-section{margin-top:70px;border-top:1px solid var(--line);padding-top:30px}
+.community-banner{background:#172326;color:#fff;border-radius:16px;padding:28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.community-banner h2{font:700 28px "Space Grotesk";margin:6px 0}
+.community-banner p{color:#b8c1c1;font-size:13px;line-height:1.6;margin:0}
+.community-button{border:0;background:#fff;color:var(--ink);border-radius:9px;padding:12px 16px;font-weight:700;white-space:nowrap}
+.community-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}
+.debate-card,.comment-card,.activity-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px}
+.debate-card h3{font:600 17px "Space Grotesk";margin:10px 0}
+.debate-tag{font:10px "IBM Plex Mono";color:var(--accent);letter-spacing:.08em}
+.debate-stats{display:flex;gap:16px;color:#899293;font-size:11px;margin-top:16px}
+.comment-row{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #eef0eb}
+.comment-row:last-child{border-bottom:0}
+.avatar{width:30px;height:30px;border-radius:50%;background:#e8efed;color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:11px;flex:none}
+.comment-content{font-size:12px;line-height:1.55}
+.comment-user{font-weight:700;margin-right:5px}
+.comment-actions{display:flex;gap:12px;margin-top:6px;color:#8a9293;font-size:10px}
+.comment-input{display:flex;gap:7px;margin-top:14px}
+.comment-input input{flex:1;border:1px solid var(--line);border-radius:8px;padding:10px;outline:none}
+.comment-input button{border:0;background:var(--accent);color:#fff;border-radius:8px;padding:0 14px;font-size:12px}
+
+.history-section{margin-top:70px}
+.history-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.history-item{border:1px solid var(--line);background:#fff;border-radius:9px;padding:13px;text-align:left}
+.history-item strong{display:block;font-size:12px;margin-bottom:6px}
+.history-item span{font-size:10px;color:#8c9596}
+
+.explanation-section{margin-top:90px;display:grid;grid-template-columns:1fr 1.6fr;gap:35px;padding:35px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.explanation-section h2{margin:8px 0 0;font:700 27px/1.2 "Space Grotesk";letter-spacing:-.7px}
+.explanation-section p{margin:0;color:#697577;font-size:14px;line-height:1.8}
+
+.quote-section{max-width:650px;margin:80px auto 0;text-align:center}
+.quote-mark{font:50px Georgia;color:var(--accent)}
+.quote{margin:15px 0;font:23px/1.5 "Space Grotesk";color:#263538}
+.quote-note{font:10px "IBM Plex Mono";color:#929998}
+footer{text-align:center;margin-top:90px;color:#929998;font:10px "IBM Plex Mono"}
+
+.auth-modal{display:none;position:fixed;inset:0;z-index:200;background:#19202173;align-items:center;justify-content:center;padding:20px}
+.auth-box{width:100%;max-width:360px;background:var(--warm);border:1px solid var(--line);border-radius:13px;padding:28px;box-shadow:0 25px 70px #0002}
+.auth-box h3{margin:0 0 20px;font:700 21px "Space Grotesk"}
+.google-button,.auth-input,.auth-row button{width:100%;padding:12px;border-radius:7px}
+.google-button{border:1px solid #d4d5d0;background:#fff;font-weight:600}
+.divider{text-align:center;color:#999f9f;font-size:11px;margin:17px 0}
+.auth-input{border:1px solid #d8d9d3;outline:none;background:#fff;color:var(--ink);margin-bottom:8px}
+.auth-input:focus{border-color:var(--accent)}
+.auth-row{display:flex;gap:7px}
+.auth-row button{flex:1;font-weight:600}
+.signup{border:0;background:var(--accent);color:#fff}
+.signin{border:1px solid #d5d6d0;background:#fff}
+.auth-error{color:#c04c54;font-size:12px;margin-top:10px;line-height:1.5}
+.cancel-auth{display:block;margin:15px auto 0;border:0;background:none;color:#7c8586}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#172326;color:#fff;padding:10px 15px;border-radius:9px;font-size:12px;transition:.25s;z-index:300}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:760px){
+  main{padding:0 18px 60px}
+  .hero{min-height:600px}
+  .hero h1{font-size:54px;letter-spacing:-2.5px}
+  .search-form{flex-direction:column}
+  .search-button{height:46px}
+  .trending-grid,.community-grid{grid-template-columns:1fr}
+  .sources{grid-template-columns:1fr}
+  .debunk-images{grid-template-columns:repeat(2,1fr)}
+  .explanation-section{grid-template-columns:1fr;gap:15px;margin-top:70px}
+  .community-banner{flex-direction:column;align-items:flex-start}
+  .history-list{grid-template-columns:1fr}
+  .result-card{padding:21px}
+  .result-top{flex-direction:column;gap:8px}
+}
+@media(max-width:430px){
+  .hero h1{font-size:47px}
+  .hero-sub{font-size:14px}
+  .debunk-images{grid-template-columns:1fr}
+  .debunk-image{height:180px}
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo">DEBUNK<span>.</span></div>
+  <button class="menu-button" id="menuButton" aria-label="Open menu"><span></span><span></span><span></span></button>
+</header>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+<aside class="side-menu" id="sideMenu">
+  <div class="menu-header">
+    <div class="menu-title">DEBUNK<span>.</span></div>
+    <button class="close-button" id="closeMenu">×</button>
+  </div>
+  <nav class="menu-links">
+    <a href="#home" onclick="closeMenu()">Home</a>
+    <a href="#trending" onclick="closeMenu()">Trending</a>
+    <a href="#community" onclick="closeMenu()">Community</a>
+    <a href="#history" onclick="closeMenu()">History</a>
+    <a href="#about" onclick="closeMenu()">About</a>
+    <div class="menu-divider"></div>
+    <button class="login-button" id="openLogin">Sign in</button>
+    <button id="guestButton">Continue as guest</button>
+    <button id="logoutButton" style="display:none">Log out</button>
+  </nav>
+</aside>
+
+<main id="home">
+  <section class="hero">
+    <div class="hero-kicker">SOURCES OVER OPINIONS</div>
+    <h1>Got a claim?<br><span class="accent">Let's settle it.</span></h1>
+    <p class="hero-sub">Search the web. Compare the evidence. Get the verdict.<br>Debunk helps you separate facts from internet noise.</p>
+    <form class="search-form" id="searchForm">
+      <input class="search-input" id="query" autocomplete="off" placeholder="What are you trying to settle?" />
+      <button class="search-button" id="goButton" type="submit">Settle it</button>
+    </form>
+    <div class="examples">
+      <button class="example" data-q="Is cracking your knuckles bad for you?">Is cracking your knuckles bad for you?</button>
+      <button class="example" data-q="Who is the richest man alive?">Who is the richest man alive?</button>
+      <button class="example" data-q="Has Messi won a World Cup?">Has Messi won a World Cup?</button>
+    </div>
+    <div class="hero-trust">
+      <span><i class="dot"></i> MULTIPLE SOURCES</span>
+      <span><i class="dot"></i> EVIDENCE FIRST</span>
+      <span><i class="dot"></i> NO RANDOM NOISE</span>
+    </div>
+  </section>
+
+  <section class="home-section" id="trending">
+    <div class="section-head">
+      <div>
+        <div class="section-label">🔥 TRENDING DEBUNKS</div>
+        <h2>What people are settling</h2>
+      </div>
+      <a class="section-link" href="#community">See community →</a>
+    </div>
+    <div class="trending-grid">
+      <article class="trend-card">
+        <span class="trend-number">01</span>
+        <h3>Does cold water actually make you sick?</h3>
+        <div class="trend-meta">Health · Popular now</div>
+        <button class="trend-search" data-q="Does drinking cold water make you sick?">Debunk →</button>
+      </article>
+      <article class="trend-card">
+        <span class="trend-number">02</span>
+        <h3>Can humans really see the Great Wall from space?</h3>
+        <div class="trend-meta">Science · Popular now</div>
+        <button class="trend-search" data-q="Can humans see the Great Wall of China from space?">Debunk →</button>
+      </article>
+      <article class="trend-card">
+        <span class="trend-number">03</span>
+        <h3>Does shaving make hair grow back thicker?</h3>
+        <div class="trend-meta">Science · Popular now</div>
+        <button class="trend-search" data-q="Does shaving make hair grow back thicker?">Debunk →</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-head">
+      <div>
+        <div class="section-label">EXPLORE</div>
+        <h2>Pick a rabbit hole</h2>
+      </div>
+    </div>
+    <div class="categories">
+      <button class="category" data-q="Latest science claims">🧠 Science</button>
+      <button class="category" data-q="Latest technology claims">💻 Technology</button>
+      <button class="category" data-q="Latest world claims">🌍 World</button>
+      <button class="category" data-q="Latest sports claims">⚽ Sports</button>
+      <button class="category" data-q="Latest money claims">💰 Money</button>
+      <button class="category" data-q="Latest entertainment claims">🎬 Entertainment</button>
+      <button class="category" data-q="Latest health claims">🧬 Health</button>
+    </div>
+  </section>
+
+  <div class="loading-panel" id="loadingPanel">
+    <div class="loading-title">Debunk is investigating.</div>
+    <div class="investigation">
+      <div class="investigation-row" id="step1"><span class="spinner"></span> Searching trusted sources...</div>
+      <div class="investigation-row" id="step2"><span class="spinner"></span> Comparing evidence...</div>
+      <div class="investigation-row" id="step3"><span class="spinner"></span> Checking conflicting claims...</div>
+      <div class="investigation-row" id="step4"><span class="spinner"></span> Building your verdict...</div>
+    </div>
+  </div>
+
+  <div class="error" id="error"></div>
+
+  <section class="result-card" id="resultCard">
+    <div class="result-top">
+      <div class="status" id="status"></div>
+      <div class="confidence" id="confidenceText"></div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+    <div class="result-explanation" id="resultExplanation"></div>
+
+    <div class="evidence-box">
+      <div class="evidence-head">
+        <div class="evidence-title">🔎 How we know</div>
+        <div class="evidence-count" id="sourceCount"></div>
+      </div>
+      <div class="evidence-text">
+        Debunk compares the returned sources and presents the evidence behind the result. Always open the original sources for important decisions.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="action" id="copyButton">Copy</button>
+      <button class="action" id="shareButton">Share</button>
+      <button class="action" id="saveButton">Save</button>
+      <button class="action" id="likeButton">👍 Helpful</button>
+      <button class="action" id="dislikeButton">👎 Not helpful</button>
+    </div>
+
+    <div id="sourcesSection">
+      <div class="result-label">SOURCES</div>
+      <div class="sources" id="sources"></div>
+    </div>
+
+    <div id="imagesSection" style="display:none">
+      <div class="result-label">VISUAL EVIDENCE</div>
+      <div class="debunk-images" id="debunkImages"></div>
+    </div>
+
+    <div id="relatedSection" style="display:none">
+      <div class="result-label">RELATED DEBUNKS</div>
+      <div class="related" id="related"></div>
+    </div>
+  </section>
+
+  <section class="community-section" id="community">
+    <div class="community-banner">
+      <div>
+        <div class="section-label">THE DEBUNK COMMUNITY</div>
+        <h2>Don't just read the verdict.</h2>
+        <p>Challenge it. Discuss it. Bring better evidence.<br>Turn internet arguments into evidence-based conversations.</p>
+      </div>
+      <button class="community-button" id="joinCommunity">Join the discussion</button>
+    </div>
+
+    <div class="community-grid">
+      <div>
+        <div class="section-head" style="margin-top:22px">
+          <div>
+            <div class="section-label">🔥 POPULAR DEBATE</div>
+            <h2>What is the community arguing about?</h2>
+          </div>
+        </div>
+        <article class="debate-card">
+          <div class="debate-tag">TECHNOLOGY · 2H AGO</div>
+          <h3>Will AI actually replace most programmers?</h3>
+          <div class="debate-stats"><span>💬 86 comments</span><span>👍 214</span><span>↗ 47 shares</span></div>
+          <button class="action" style="margin-top:18px" onclick="focusComment()">Join debate →</button>
+        </article>
+      </div>
+
+      <div>
+        <div class="section-head" style="margin-top:22px">
+          <div>
+            <div class="section-label">💬 LATEST</div>
+            <h2>Community voices</h2>
+          </div>
+        </div>
+        <div class="comment-card" id="commentCard">
+          <div class="comment-row">
+            <div class="avatar">A</div>
+            <div class="comment-content">
+              <span class="comment-user">Alex</span> Show me the sources. That's what matters here.
+              <div class="comment-actions"><span>👍 12</span><span>Reply</span></div>
+            </div>
+          </div>
+          <div class="comment-row">
+            <div class="avatar">J</div>
+            <div class="comment-content">
+              <span class="comment-user">Jay</span> I changed my mind after reading the evidence.
+              <div class="comment-actions"><span>👍 8</span><span>Reply</span></div>
+            </div>
+          </div>
+          <div id="userComments"></div>
+          <div class="comment-input">
+            <input id="commentInput" placeholder="Join the conversation..." />
+            <button id="commentButton">Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="history-section" id="history">
+    <div class="section-head">
+      <div>
+        <div class="section-label">YOUR ACTIVITY</div>
+        <h2>Recent Debunks</h2>
+      </div>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </section>
+
+  <section class="explanation-section" id="about">
+    <div>
+      <div class="section-label">WHY DEBUNK</div>
+      <h2>Because winning an argument isn't the same as being right.</h2>
+    </div>
+    <p>
+      The internet is full of answers. Some are reliable. Some aren't.<br><br>
+      Debunk searches for credible sources and puts the evidence in front of you, so you can decide what actually holds up.
+    </p>
+  </section>
+
+  <section class="quote-section">
+    <div class="quote-mark">“</div>
+    <div class="quote">
+      A journalist asked an old man how he lived so long.<br><br>
+      “I stopped arguing with people.”<br>
+      “That's impossible.”<br>
+      “You're right.”
+    </div>
+    <div class="quote-note">Some arguments aren't worth winning.</div>
+  </section>
+
+  <footer>DEBUNK — built to settle arguments, not start them.</footer>
+</main>
+
+<div class="auth-modal" id="authModal">
+  <div class="auth-box">
+    <h3>Sign in to Debunk</h3>
+    <button class="google-button" id="googleButton">Continue with Google</button>
+    <div class="divider">OR USE EMAIL</div>
+    <input class="auth-input" id="authEmail" type="email" placeholder="Email" />
+    <input class="auth-input" id="authPassword" type="password" placeholder="Password" />
+    <div class="auth-row">
+      <button class="signup" id="signupButton">Sign up</button>
+      <button class="signin" id="signinButton">Sign in</button>
+    </div>
+    <div class="auth-error" id="authError"></div>
+    <button class="cancel-auth" id="cancelAuth">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL="https://axjavfnqxdlqpjirvpmn.supabase.co";
+const SUPABASE_KEY="sb_publishable_VZ5GKmIEmUQvDh7VsFvuBA_QTTUwu6o";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const $=id=>document.getElementById(id);
+const toastEl=$("toast");
+function toast(message){
+  toastEl.textContent=message;
+  toastEl.classList.add("show");
+  clearTimeout(window.__toast);
+  window.__toast=setTimeout(()=>toastEl.classList.remove("show"),1800);
+}
+function closeMenu(){
+  $("sideMenu").classList.remove("open");
+  $("menuOverlay").classList.remove("open");
+}
+$("menuButton").onclick=()=>{$("sideMenu").classList.add("open");$("menuOverlay").classList.add("open")};
+$("closeMenu").onclick=closeMenu;
+$("menuOverlay").onclick=closeMenu;
+
+$("openLogin").onclick=()=>{$("authError").textContent="";$("authModal").style.display="flex";closeMenu()};
+$("cancelAuth").onclick=()=>{$("authModal").style.display="none"};
+$("guestButton").onclick=()=>{localStorage.setItem("debunk_guest","1");toast("You're browsing as a guest.");closeMenu()};
+$("googleButton").onclick=async()=>{
+  try{
+    const {error}=await supabaseClient.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});
+    if(error)throw error;
+  }catch(e){
+    $("authError").textContent=e.message;
+  }
+};
+$("signupButton").onclick=async()=>{
+  const email=$("authEmail").value.trim(),password=$("authPassword").value;
+  if(!email||!password){$("authError").textContent="Enter an email and password.";return}
+  if(password.length<6){$("authError").textContent="Password must be at least 6 characters.";return}
+  try{
+    const {error}=await supabaseClient.auth.signUp({email,password});
+    if(error)throw error;
+    $("authError").textContent="Account created. Check your email to confirm it.";
+  }catch(e){
+    $("authError").textContent=e.message||"Sign up failed.";
+  }
+};
+$("signinButton").onclick=async()=>{
+  const email=$("authEmail").value.trim(),password=$("authPassword").value;
+  if(!email||!password){$("authError").textContent="Enter an email and password.";return}
+  try{
+    const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+    if(error)throw error;
+    $("authModal").style.display="none";
+    updateAuthUI();
+    toast("Welcome back.");
+  }catch(e){
+    $("authError").textContent=e.message||"Sign in failed.";
+  }
+};
+$("logoutButton").onclick=async()=>{
+  await supabaseClient.auth.signOut();
+  localStorage.removeItem("debunk_guest");
+  updateAuthUI();
+  closeMenu();
+  toast("Logged out.");
+};
+async function updateAuthUI(){
+  try{
+    const {data}=await supabaseClient.auth.getUser();
+    const signed=!!data?.user;
+    $("openLogin").style.display=signed?"none":"block";
+    $("guestButton").style.display=signed?"none":"block";
+    $("logoutButton").style.display=signed?"block":"none";
+  }catch(e){}
+}
+updateAuthUI();
+
+let currentData=null,currentQuery="";
+const statusStyles={Verified:{color:"#2f8f83",label:"VERIFIED"},Disputed:{color:"#c78a22",label:"DISPUTED"},Unclear:{color:"#7b8587",label:"NO CLEAN SOURCE"}};
+
+function setInvestigation(active){
+  $("loadingPanel").style.display=active?"block":"none";
+  if(active){
+    ["step1","step2","step3","step4"].forEach((id,i)=>{
+      const el=$(id);
+      el.classList.remove("done");
+      el.style.opacity=i===0?"1":".45";
+    });
+    let i=0;
+    clearInterval(window.__investigate);
+    window.__investigate=setInterval(()=>{
+      if(i>0){
+        const el=$("step"+i);
+        if(el){el.classList.add("done");el.style.opacity="1";}
+      }
+      i++;
+      if(i>4)clearInterval(window.__investigate);
+    },650);
+  }else{
+    clearInterval(window.__investigate);
+  }
+}
+
+function escapeHtml(s){
+  return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function saveHistory(query,data){
+  let arr=JSON.parse(localStorage.getItem("debunk_history")||"[]");
+  arr=arr.filter(x=>x.query!==query);
+  arr.unshift({query,...data,at:Date.now()});
+  localStorage.setItem("debunk_history",JSON.stringify(arr.slice(0,20)));
+  renderHistory();
+}
+function renderHistory(){
+  const box=$("historyList");
+  const arr=JSON.parse(localStorage.getItem("debunk_history")||"[]");
+  box.innerHTML="";
+  if(!arr.length){
+    box.innerHTML='<div class="history-item"><strong>No Debunks yet.</strong><span>Your recent questions will appear here.</span></div>';
+    return;
+  }
+  arr.slice(0,6).forEach(x=>{
+    const b=document.createElement("button");
+    b.className="history-item";
+    b.innerHTML=`<strong>${escapeHtml(x.query)}</strong><span>${new Date(x.at).toLocaleDateString()}</span>`;
+    b.onclick=()=>runSearch(x.query);
+    box.appendChild(b);
+  });
+}
+renderHistory();
+
+async function runSearch(query){
+  query=String(query||"").trim();
+  if(!query)return;
+  currentQuery=query;
+  $("query").value=query;
+  $("resultCard").style.display="none";
+  $("error").textContent="";
+  $("error").style.display="none";
+  $("goButton").disabled=true;
+  $("goButton").textContent="Checking...";
+  setInvestigation(true);
+  try{
+    const response=await fetch("/api/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query})});
+    const data=await response.json();
+    if(!response.ok||data.error)throw new Error(data.error||"Search failed.");
+    currentData=data;
+    const st=statusStyles[data.confidence]||statusStyles.Unclear;
+    $("status").textContent=st.label;
+    $("status").style.color=st.color;
+    $("status").style.borderColor=st.color;
+    $("confidenceText").textContent=data.confidence?`CONFIDENCE · ${data.confidence}`:"EVIDENCE CHECKED";
+    $("verdict").textContent=data.verdict||"No verdict returned.";
+    $("resultExplanation").textContent=data.explanation||"";
+    const sources=Array.isArray(data.sources)?data.sources:[];
+    $("sourceCount").textContent=`${sources.length} SOURCE${sources.length===1?"":"S"} CHECKED`;
+    const sourcesBox=$("sources");
+    sourcesBox.innerHTML="";
+    $("sourcesSection").style.display=sources.length?"block":"none";
+    sources.forEach(s=>{
+      const url=s?.url||s?.link||s?.href;
+      if(!url)return;
+      const a=document.createElement("a");
+      a.className="source";
+      a.href=url;
+      a.target="_blank";
+      a.rel="noopener noreferrer";
+      const name=s?.name||s?.title||s?.source||"Source";
+      let domain="";
+      try{domain=new URL(url).hostname.replace(/^www\./,"")}catch(e){}
+      a.innerHTML=`<span><span class="source-name">${escapeHtml(name)}</span><span class="source-domain">${escapeHtml(domain)}</span></span><span>↗</span>`;
+      sourcesBox.appendChild(a);
+    });
+    const images=Array.isArray(data.images)?data.images:[];
+    const imgBox=$("debunkImages");
+    imgBox.innerHTML="";
+    $("imagesSection").style.display=images.length?"block":"none";
+    images.slice(0,6).forEach(im=>{
+      const url=typeof im==="string"?(im):(im?.url||im?.image||im?.src||"");
+      if(!url)return;
+      const a=document.createElement("a");
+      a.href=url;
+      a.target="_blank";
+      a.rel="noopener noreferrer";
+      const img=document.createElement("img");
+      img.className="debunk-image";
+      img.src=url;
+      img.alt=im?.title||"Debunk source image";
+      img.loading="lazy";
+      img.onerror=()=>a.remove();
+      a.appendChild(img);
+      imgBox.appendChild(a);
+    });
+    const related=Array.isArray(data.related)?data.related:[];
+    $("related").innerHTML="";
+    $("relatedSection").style.display=related.length?"block":"none";
+    related.forEach(q=>{
+      const text=typeof q==="string"?(q):(q?.question||q?.title||"");
+      if(!text)return;
+      const b=document.createElement("button");
+      b.textContent=text;
+      b.onclick=()=>runSearch(text);
+      $("related").appendChild(b);
+    });
+    saveHistory(query,data);
+    setInvestigation(false);
+    $("resultCard").style.display="block";
+    setTimeout(()=>$("resultCard").scrollIntoView({behavior:"smooth",block:"start"}),100);
+  }catch(e){
+    setInvestigation(false);
+    $("error").textContent=e.message||"Couldn't reach the sources. Try again.";
+    $("error").style.display="block";
+  }finally{
+    $("goButton").disabled=false;
+    $("goButton").textContent="Settle it";
+  }
+}
+
+$("searchForm").onsubmit=e=>{e.preventDefault();runSearch($("query").value)};
+document.querySelectorAll(".example,.trend-search,.category").forEach(b=>b.onclick=()=>runSearch(b.dataset.q));
+
+$("copyButton").onclick=async()=>{
+  if(!currentData)return;
+  try{
+    await navigator.clipboard.writeText(`${currentData.verdict||""}\n\n${currentData.explanation||""}`);
+    toast("Verdict copied.");
+  }catch(e){}
+};
+$("shareButton").onclick=async()=>{
+  if(!currentData)return;
+  const text=`${currentQuery}\n\n${currentData.verdict||""}\n\n${currentData.explanation||""}`;
+  if(navigator.share){
+    try{await navigator.share({title:"Debunk",text,url:window.location.href})}catch(e){}
+  }else{
+    try{
+      await navigator.clipboard.writeText(text+"\n\n"+location.href);
+      toast("Share text copied.");
+    }catch(e){}
+  }
+};
+$("saveButton").onclick=()=>{
+  if(!currentData)return;
+  let a=JSON.parse(localStorage.getItem("debunk_saved")||"[]");
+  a.unshift({query:currentQuery,...currentData,savedAt:Date.now()});
+  localStorage.setItem("debunk_saved",JSON.stringify(a.slice(0,50)));
+  $("saveButton").classList.add("active");
+  $("saveButton").textContent="Saved ✓";
+  toast("Debunk saved.");
+};
+$("likeButton").onclick=()=>{
+  $("likeButton").classList.add("active");
+  $("dislikeButton").classList.remove("active");
+  toast("Thanks for the feedback.");
+};
+$("dislikeButton").onclick=()=>{
+  $("dislikeButton").classList.add("active");
+  $("likeButton").classList.remove("active");
+  toast("Thanks for the feedback.");
+};
+
+function focusComment(){
+  document.querySelector("#commentInput").focus();
+  document.querySelector("#commentCard").scrollIntoView({behavior:"smooth",block:"center"});
+}
+$("joinCommunity").onclick=()=>{focusComment();toast("Join the conversation.")};
+
+$("commentButton").onclick=postComment;
+$("commentInput").addEventListener("keydown",e=>{if(e.key==="Enter")postComment()});
+function postComment(){
+  const input=$("commentInput"),text=input.value.trim();
+  if(!text){input.focus();return}
+  const arr=JSON.parse(localStorage.getItem("debunk_comments")||"[]");
+  arr.push({text,at:Date.now()});
+  localStorage.setItem("debunk_comments",JSON.stringify(arr));
+  input.value="";
+  renderComments();
+  toast("Comment posted.");
+}
+function renderComments(){
+  const box=$("userComments");
+  const arr=JSON.parse(localStorage.getItem("debunk_comments")||"[]");
+  box.innerHTML="";
+  arr.slice(-5).forEach(x=>{
+    const row=document.createElement("div");
+    row.className="comment-row";
+    row.innerHTML=`<div class="avatar">Y</div><div class="comment-content"><span class="comment-user">You</span> ${escapeHtml(x.text)}<div class="comment-actions"><span>👍 0</span><span>Reply</span></div></div>`;
+    box.appendChild(row);
+  });
+}
+renderComments();
+</script>
+</body>
+</html>
